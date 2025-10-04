@@ -1,19 +1,23 @@
 using System;
 using System.Globalization;
+using System.Linq;
+using System.Windows;
 using System.Windows.Data;
-using WpfExample.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Blazing.Extensions.DependencyInjection;
+using WpfExample.Views;
 
 namespace WpfExample.Converters;
 
 /// <summary>
-/// Converts a View Type to its tab header text using static metadata.
-/// NO service resolution - completely safe for startup!
+/// Converts a View Type to its tab header text using dynamic discovery.
+/// Uses dependency injection to get the actual ITabView instance.
 /// </summary>
 public class ViewTypeToTabHeaderConverter : IValueConverter
 {
     /// <summary>
-    /// Converts a Type to its TabHeader string using static metadata.
-    /// SAFE: No service resolution - uses TabMetadata.GetTabHeader()
+    /// Converts a Type to its TabHeader string using dynamic discovery.
+    /// Gets the actual ITabView instance to read the TabHeader property.
     /// </summary>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
@@ -22,8 +26,12 @@ public class ViewTypeToTabHeaderConverter : IValueConverter
 
         try
         {
-            // SAFE: No service resolution - uses static metadata
-            return TabMetadata.GetTabHeader(viewType);
+            // Get the service provider and find the ITabView instance of the requested type
+            var serviceProvider = Application.Current.GetServices();
+            var tabView = serviceProvider.GetServices<ITabView>()
+                .FirstOrDefault(view => view.GetType() == viewType);
+            
+            return tabView?.TabHeader ?? viewType.Name;
         }
         catch (Exception ex)
         {

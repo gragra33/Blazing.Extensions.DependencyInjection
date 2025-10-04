@@ -1,33 +1,66 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using Blazing.Extensions.DependencyInjection;
 using WpfExample.ViewModels;
+using WpfExample.Views;
 
 namespace WpfExample.Services;
 
 /// <summary>
-/// Implementation of ITabViewHandler that uses static metadata.
-/// No View instantiation during startup - completely safe for DI resolution.
+/// Implementation of ITabViewHandler that uses dynamic discovery.
+/// Discovers tab views automatically via dependency injection.
 /// </summary>
 public class TabViewHandler : ITabViewHandler
 {
     public IEnumerable<Type> GetAvailableTabViewTypes()
     {
-        return TabMetadata.GetTabViewTypes();
+        // Get all registered ITabView services and return their types
+        var serviceProvider = Application.Current.GetServices();
+        var tabViews = serviceProvider.GetServices<ITabView>();
+        return tabViews.Select(view => view.GetType()).OrderBy(GetTabOrder);
     }
 
     public IEnumerable<TabInfo> GetTabMetadata()
     {
-        return TabMetadata.GetAllTabs();
+        // Get all registered ITabView services and create TabInfo records
+        var serviceProvider = Application.Current.GetServices();
+        var tabViews = serviceProvider.GetServices<ITabView>();
+        return tabViews
+            .Select(view => new TabInfo(view.GetType(), view.TabHeader, view.Order))
+            .OrderBy(tab => tab.Order);
     }
     
     public IEnumerable<TabViewModel> GetTabViewModels()
     {
-        var tabViewModels = TabMetadata.GetAllTabs()
-            .Select((tab, index) => new TabViewModel(tab.ViewType, tab.Header, tab.Order))
+        // Get all registered ITabView services and create TabViewModel wrappers
+        var serviceProvider = Application.Current.GetServices();
+        var tabViews = serviceProvider.GetServices<ITabView>();
+        var tabViewModels = tabViews
+            .Select(view => new TabViewModel(view.GetType(), view.TabHeader, view.Order))
             .OrderBy(vm => vm.Order)
             .ToList();
         
         return tabViewModels;
+    }
+
+    /// <summary>
+    /// Gets the order of a tab view type by creating an instance and checking its Order property.
+    /// Used for sorting when we only have the Type.
+    /// </summary>
+    private int GetTabOrder(Type viewType)
+    {
+        try
+        {
+            var serviceProvider = Application.Current.GetServices();
+            var view = serviceProvider.GetRequiredService(viewType) as ITabView;
+            return view?.Order ?? int.MaxValue;
+        }
+        catch
+        {
+            return int.MaxValue;
+        }
     }
 }

@@ -27,7 +27,7 @@ public class TemperatureConverter : IValueConverter, IMultiValueConverter
             return value;
 
         // If parameter is true or null, use Celsius (default)
-        bool useCelsius = parameter == null || (parameter is bool paramBool && paramBool);
+        bool useCelsius = parameter == null || parameter is bool and true;
         
         return ConvertTemperature(weatherText, useCelsius);
     }
@@ -45,7 +45,7 @@ public class TemperatureConverter : IValueConverter, IMultiValueConverter
         if (values.Length < 2 || values[0] is not string weatherText)
             return values[0];
 
-        bool useCelsius = values[1] is bool celsius && celsius;
+        bool useCelsius = values[1] is bool and true;
         
         return ConvertTemperature(weatherText, useCelsius);
     }

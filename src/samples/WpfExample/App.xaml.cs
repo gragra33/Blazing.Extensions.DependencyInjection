@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Diagnostics;
 using System.Windows;
 using Blazing.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,11 +41,8 @@ public partial class App : Application
                 services.AddTransient<DataView>();
                 services.AddTransient<SettingsView>();
 
-                // Register Views as ITabView for automatic discovery by TabViewHandler
-                services.AddTransient<ITabView, HomeView>();
-                services.AddTransient<ITabView, WeatherView>();
-                services.AddTransient<ITabView, DataView>();
-                services.AddTransient<ITabView, SettingsView>();
+                // Auto-discover and register all ITabView implementations from current assembly
+                services.Register<ITabView>(ServiceLifetime.Transient);
 
                 // Register Services
                 services.AddSingleton<IDataService, DataService>();
@@ -64,13 +62,13 @@ public partial class App : Application
             var serviceProvider = this.BuildServiceProvider(services);
 
             // STEP 3: Test that service provider is working
-            System.Diagnostics.Debug.WriteLine("Service provider built successfully");
+            Debug.WriteLine("Service provider built successfully");
             
             // STEP 4: Resolve MainWindow directly from the service provider to avoid extension method issues
             var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
             
-            System.Diagnostics.Debug.WriteLine("MainWindow created and shown successfully");
+            Debug.WriteLine("MainWindow created and shown successfully");
         }
         catch (Exception ex)
         {

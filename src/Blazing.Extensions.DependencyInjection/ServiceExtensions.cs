@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazing.Extensions.DependencyInjection;
@@ -21,9 +22,13 @@ namespace Blazing.Extensions.DependencyInjection;
 /// </summary>
 public static class ServiceExtensions
 {
-    // ConditionalWeakTable allows objects to be garbage collected when no longer referenced
-    // The IServiceProvider will be disposed when the key object is collected
-    private static readonly ConditionalWeakTable<object, IServiceProvider> _serviceProviders = new();
+    // ConditionalWeakTable allows objects to be garbage collected automatically
+    // This prevents memory leaks while maintaining the association between instances and their context
+    private static readonly ConditionalWeakTable<object, InstanceContext> _instanceContexts = new();
+    
+    // Thread-local storage for the current instance being configured
+    // This allows Register methods to access the instance context during configuration
+    private static readonly ThreadLocal<object?> _currentInstance = new();
 
     /// <summary>
     /// Gets the service provider associated with this object instance.
@@ -36,8 +41,7 @@ public static class ServiceExtensions
     /// <returns>The service provider, or null if not configured</returns>
     public static IServiceProvider? GetServices(this object instance)
     {
-        _serviceProviders.TryGetValue(instance, out var provider);
-        return provider;
+        return _instanceContexts.TryGetValue(instance, out var context) ? context.ServiceProvider : null;
     }
 
     /// <summary>
@@ -54,11 +58,20 @@ public static class ServiceExtensions
     {
         if (serviceProvider is null)
         {
-            _serviceProviders.Remove(instance);
+            _instanceContexts.Remove(instance);
         }
         else
         {
-            _serviceProviders.AddOrUpdate(instance, serviceProvider);
+            if (_instanceContexts.TryGetValue(instance, out var existingContext))
+            {
+                var newContext = existingContext with { ServiceProvider = serviceProvider };
+                _instanceContexts.AddOrUpdate(instance, newContext);
+            }
+            else
+            {
+                var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+                _instanceContexts.AddOrUpdate(instance, newContext);
+            }
         }
     }
 
@@ -80,12 +93,34 @@ public static class ServiceExtensions
     public static IServiceProvider ConfigureServices<T>(this T instance, Action<IServiceCollection> configureServices) where T : class
     {
         ArgumentNullException.ThrowIfNull(configureServices);
-        
+
         var services = new ServiceCollection();
-        configureServices(services);
+        
+        // Set the current instance for thread-local access during service configuration
+        _currentInstance.Value = instance;
+        try
+        {
+            configureServices(services);
+        }
+        finally
+        {
+            _currentInstance.Value = null;
+        }
+        
         var serviceProvider = services.BuildServiceProvider();
-        // Bypass extension property setter bug - directly manipulate ConditionalWeakTable
-        _serviceProviders.AddOrUpdate(instance, serviceProvider);
+        
+        // Set the service provider in the instance context
+        if (_instanceContexts.TryGetValue(instance, out var existingContext))
+        {
+            var newContext = existingContext with { ServiceProvider = serviceProvider };
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+        else
+        {
+            var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+        
         return serviceProvider;
     }
 
@@ -99,22 +134,32 @@ public static class ServiceExtensions
     /// <param name="postBuildAction">Action to perform after building but before assigning to instance.Services</param>
     /// <returns>The configured service provider</returns>
     public static IServiceProvider ConfigureServices<T>(
-        this T instance, 
+        this T instance,
         Action<IServiceCollection> configureServices,
         Action<IServiceProvider> postBuildAction) where T : class
     {
         ArgumentNullException.ThrowIfNull(configureServices);
         ArgumentNullException.ThrowIfNull(postBuildAction);
-        
+
         var services = new ServiceCollection();
         configureServices(services);
         var serviceProvider = services.BuildServiceProvider();
-        
+
         // Perform post-build actions
         postBuildAction(serviceProvider);
+
+        // Set the service provider in the instance context
+        if (_instanceContexts.TryGetValue(instance, out var existingContext))
+        {
+            var newContext = existingContext with { ServiceProvider = serviceProvider };
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+        else
+        {
+            var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
         
-        // Bypass extension property setter bug - directly manipulate ConditionalWeakTable
-        _serviceProviders.AddOrUpdate(instance, serviceProvider);
         return serviceProvider;
     }
 
@@ -131,11 +176,22 @@ public static class ServiceExtensions
         Func<IServiceCollection, IServiceProvider> configureServices) where T : class
     {
         ArgumentNullException.ThrowIfNull(configureServices);
-        
+
         var services = new ServiceCollection();
         var serviceProvider = configureServices(services);
-        // Bypass extension property setter bug - directly manipulate ConditionalWeakTable
-        _serviceProviders.AddOrUpdate(instance, serviceProvider);
+        
+        // Set the service provider in the instance context
+        if (_instanceContexts.TryGetValue(instance, out var existingContext))
+        {
+            var newContext = existingContext with { ServiceProvider = serviceProvider };
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+        else
+        {
+            var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+        
         return serviceProvider;
     }
 
@@ -152,7 +208,7 @@ public static class ServiceExtensions
         Action<IServiceCollection> configureServices) where T : class
     {
         ArgumentNullException.ThrowIfNull(configureServices);
-        
+
         var services = new ServiceCollection();
         configureServices(services);
         return services;
@@ -172,12 +228,22 @@ public static class ServiceExtensions
         IServiceCollection services,
         ServiceProviderOptions? options = null) where T : class
     {
-        var serviceProvider = options != null 
+        var serviceProvider = options != null
             ? services.BuildServiceProvider(options)
             : services.BuildServiceProvider();
-            
-        // Bypass extension property setter bug - directly manipulate ConditionalWeakTable
-        _serviceProviders.AddOrUpdate(instance, serviceProvider);
+
+        // Set the service provider in the instance context
+        if (_instanceContexts.TryGetValue(instance, out var existingContext))
+        {
+            var newContext = existingContext with { ServiceProvider = serviceProvider };
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+        else
+        {
+            var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+
         return serviceProvider;
     }
 
@@ -191,11 +257,20 @@ public static class ServiceExtensions
     /// <exception cref="InvalidOperationException">Thrown when service provider is null or service is not found</exception>
     public static TService GetRequiredService<T, TService>(this T instance) where T : class where TService : notnull
     {
-        // Bypass extension property getter bug - directly access ConditionalWeakTable
-        if (!_serviceProviders.TryGetValue(instance, out var serviceProvider))
-            throw new InvalidOperationException("Service provider is not configured.");
-            
-        return serviceProvider.GetRequiredService<TService>();
+        // Access service provider from conditional weak table - use the same instance directly
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
+        {
+            // Use the non-generic GetService(Type) method to avoid recursive calls to our extension methods
+            // This follows the same pattern as CommunityToolkit.Mvvm.Ioc
+            var service = context.ServiceProvider.GetService(typeof(TService));
+            if (service is null)
+            {
+                throw new InvalidOperationException($"Service of type {typeof(TService).Name} is not registered.");
+            }
+            return (TService)service;
+        }
+
+        throw new InvalidOperationException("Service provider is not configured.");
     }
 
     /// <summary>
@@ -207,43 +282,291 @@ public static class ServiceExtensions
     /// <returns>The requested service or null if not found</returns>
     public static TService? GetService<T, TService>(this T instance) where T : class where TService : class
     {
-        // Bypass extension property getter bug - directly access ConditionalWeakTable
-        if (_serviceProviders.TryGetValue(instance, out var serviceProvider))
+        // Access service provider from conditional weak table - use the same instance directly
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
         {
-            return serviceProvider.GetService<TService>();
+            // Use the non-generic GetService(Type) method to avoid recursive calls to our extension methods
+            // This follows the same pattern as CommunityToolkit.Mvvm.Ioc
+            return (TService?)context.ServiceProvider.GetService(typeof(TService));
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Helper method to get a required keyed service from any object's service provider.
+    /// </summary>
+    /// <typeparam name="T">The type of the instance</typeparam>
+    /// <typeparam name="TService">The type of service to retrieve</typeparam>
+    /// <param name="instance">The object instance</param>
+    /// <param name="serviceKey">The service key</param>
+    /// <returns>The requested service</returns>
+    /// <exception cref="InvalidOperationException">Thrown when service provider is null or service is not found</exception>
+    public static TService GetRequiredKeyedService<T, TService>(this T instance, object? serviceKey) where T : class where TService : notnull
+    {
+        // Access service provider from conditional weak table - use the same instance directly
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
+        {
+            // Use Microsoft's extension method directly - this is safe since keyed services are newer and less likely to conflict
+            return ServiceProviderKeyedServiceExtensions.GetRequiredKeyedService<TService>(context.ServiceProvider, serviceKey);
+        }
+
+        throw new InvalidOperationException("Service provider is not configured.");
+    }
+
+    /// <summary>
+    /// Helper method to get an optional keyed service from any object's service provider.
+    /// </summary>
+    /// <typeparam name="T">The type of the instance</typeparam>
+    /// <typeparam name="TService">The type of service to retrieve</typeparam>
+    /// <param name="instance">The object instance</param>
+    /// <param name="serviceKey">The service key</param>
+    /// <returns>The requested service or null if not found</returns>
+    public static TService? GetKeyedService<T, TService>(this T instance, object? serviceKey) where T : class where TService : class
+    {
+        // Access service provider from conditional weak table - use the same instance directly
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
+        {
+            // Use Microsoft's extension method directly - this is safe since keyed services are newer and less likely to conflict
+            return ServiceProviderKeyedServiceExtensions.GetKeyedService<TService>(context.ServiceProvider, serviceKey);
         }
         return null;
     }
 
     // Convenience overloads for simpler syntax when the instance type is known
-    
+
     /// <summary>
+    /// Convenience method to get a required keyed service with simpler syntax.
+    /// </summary>
+    /// <typeparam name="TService">The type of service to retrieve</typeparam>
+    /// <param name="instance">The object instance</param>
+    /// <param name="serviceKey">The service key</param>
+    /// <returns>The requested service</returns>
+    public static TService GetRequiredKeyedService<TService>(this object instance, object? serviceKey) where TService : notnull
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
+        {
+            // Use Microsoft's extension method directly - this is safe since keyed services are newer and less likely to conflict
+            return ServiceProviderKeyedServiceExtensions.GetRequiredKeyedService<TService>(context.ServiceProvider, serviceKey);
+        }
+        
+        throw new InvalidOperationException("Service provider is not configured.");
+    }
+
+    /// <summary>
+    /// Convenience method to get an optional keyed service with simpler syntax.
+    /// </summary>
+    /// <typeparam name="TService">The type of service to retrieve</typeparam>
+    /// <param name="instance">The object instance</param>
+    /// <param name="serviceKey">The service key</param>
+    /// <returns>The requested service or null if not found</returns>
+    public static TService? GetKeyedService<TService>(this object instance, object? serviceKey) where TService : class
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
+        {
+            // Use Microsoft's extension method directly - this is safe since keyed services are newer and less likely to conflict
+            return ServiceProviderKeyedServiceExtensions.GetKeyedService<TService>(context.ServiceProvider, serviceKey);
+        }
+        return null;
+    }    /// <summary>
     /// Convenience method to get a required service with simpler syntax.
+    /// This method only works on objects that have been configured with a service provider via ConfigureServices().
     /// </summary>
     /// <typeparam name="TService">The type of service to retrieve</typeparam>
     /// <param name="instance">The object instance</param>
     /// <returns>The requested service</returns>
     public static TService GetRequiredService<TService>(this object instance) where TService : notnull
     {
-        if (_serviceProviders.TryGetValue(instance, out var serviceProvider))
+        ArgumentNullException.ThrowIfNull(instance);
+
+        // Only handle objects that have explicitly configured service providers via our extension methods
+        // This prevents interference with Microsoft's ServiceProvider.GetService<T>() methods
+        if (instance is IServiceProvider)
         {
-            return serviceProvider.GetRequiredService<TService>();
+            throw new InvalidOperationException(
+                "GetRequiredService extension method should not be called on IServiceProvider instances. " +
+                "Use the standard Microsoft.Extensions.DependencyInjection methods instead.");
         }
-        throw new InvalidOperationException("Service provider is not configured.");
+
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
+        {
+            // Use the non-generic GetService(Type) method to avoid recursive calls to our extension methods
+            // This follows the same pattern as CommunityToolkit.Mvvm.Ioc
+            var service = context.ServiceProvider.GetService(typeof(TService));
+            if (service is null)
+            {
+                throw new InvalidOperationException($"Service of type {typeof(TService).Name} is not registered.");
+            }
+            return (TService)service;
+        }
+
+        throw new InvalidOperationException(
+            $"Service provider is not configured for {instance.GetType().Name}. " +
+            "Call ConfigureServices() first or use serviceProvider.GetRequiredService<T>() directly.");
     }
 
     /// <summary>
     /// Convenience method to get an optional service with simpler syntax.
+    /// This method only works on objects that have been configured with a service provider via ConfigureServices().
     /// </summary>
     /// <typeparam name="TService">The type of service to retrieve</typeparam>
     /// <param name="instance">The object instance</param>
     /// <returns>The requested service or null if not found</returns>
     public static TService? GetService<TService>(this object instance) where TService : class
     {
-        if (_serviceProviders.TryGetValue(instance, out var serviceProvider))
+        ArgumentNullException.ThrowIfNull(instance);
+
+        // Only handle objects that have explicitly configured service providers via our extension methods
+        // This prevents interference with Microsoft's ServiceProvider.GetService<T>() methods
+        if (instance is IServiceProvider)
         {
-            return serviceProvider.GetService<TService>();
+            throw new InvalidOperationException(
+                "GetService extension method should not be called on IServiceProvider instances. " +
+                "Use the standard Microsoft.Extensions.DependencyInjection methods instead.");
         }
+
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
+        {
+            // Use the non-generic GetService(Type) method to avoid recursive calls to our extension methods
+            // This follows the same pattern as CommunityToolkit.Mvvm.Ioc
+            return (TService?)context.ServiceProvider.GetService(typeof(TService));
+        }
+
         return null;
+    }
+
+    /// <summary>
+    /// Removes the service provider for this object instance.
+    /// Call this when the object is no longer needed to prevent memory leaks.
+    /// </summary>
+    /// <param name="instance">The object instance</param>
+    /// <returns>True if the service provider was removed, false if it wasn't found</returns>
+    public static bool ClearServices(this object instance)
+    {
+        return _instanceContexts.Remove(instance);
+    }
+
+    /// <summary>
+    /// Adds an assembly to the instance's assembly collection for auto-discovery.
+    /// Multiple calls will add to the existing collection.
+    /// 
+    /// Usage:
+    ///   host.AddAssembly(typeof(MyClass).Assembly)
+    ///       .AddAssembly(typeof(OtherClass).Assembly);
+    /// </summary>
+    /// <typeparam name="T">The type of the instance</typeparam>
+    /// <param name="instance">The object instance</param>
+    /// <param name="assembly">The assembly to add</param>
+    /// <returns>The instance for fluent chaining</returns>
+    public static T AddAssembly<T>(this T instance, Assembly assembly) where T : class
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        ArgumentNullException.ThrowIfNull(assembly);
+
+        if (_instanceContexts.TryGetValue(instance, out var existingContext))
+        {
+            existingContext.Assemblies.Add(assembly);
+        }
+        else
+        {
+            var assemblies = new HashSet<Assembly> { assembly };
+            var newContext = new InstanceContext(null, assemblies);
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+        
+        return instance;
+    }
+
+    /// <summary>
+    /// Adds multiple assemblies to the instance's assembly collection for auto-discovery.
+    /// Multiple calls will add to the existing collection.
+    /// 
+    /// Usage:
+    ///   host.AddAssemblies(typeof(MyClass).Assembly, typeof(OtherClass).Assembly)
+    ///       .AddAssemblies(typeof(ThirdClass).Assembly);
+    /// </summary>
+    /// <typeparam name="T">The type of the instance</typeparam>
+    /// <param name="instance">The object instance</param>
+    /// <param name="assemblies">The assemblies to add</param>
+    /// <returns>The instance for fluent chaining</returns>
+    public static T AddAssemblies<T>(this T instance, params Assembly[] assemblies) where T : class
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        ArgumentNullException.ThrowIfNull(assemblies);
+
+        if (_instanceContexts.TryGetValue(instance, out var existingContext))
+        {
+            foreach (var assembly in assemblies)
+            {
+                existingContext.Assemblies.Add(assembly);
+            }
+        }
+        else
+        {
+            var instanceAssemblies = new HashSet<Assembly>();
+            foreach (var assembly in assemblies)
+            {
+                instanceAssemblies.Add(assembly);
+            }
+            var newContext = new InstanceContext(null, instanceAssemblies);
+            _instanceContexts.AddOrUpdate(instance, newContext);
+        }
+        
+        return instance;
+    }
+
+    /// <summary>
+    /// Gets the assemblies associated with this instance for auto-discovery.
+    /// If no assemblies have been added, returns the calling assembly.
+    /// </summary>
+    /// <param name="instance">The object instance</param>
+    /// <returns>The assemblies to scan for auto-discovery</returns>
+    internal static Assembly[] GetAssembliesForDiscovery(this object instance)
+    {
+        if (_instanceContexts.TryGetValue(instance, out var context) && context.Assemblies.Count > 0)
+        {
+            return context.Assemblies.ToArray();
+        }
+
+        // Default to calling assembly if no assemblies specified
+        return [Assembly.GetCallingAssembly()];
+    }
+
+    /// <summary>
+    /// Gets the assemblies for the current instance being configured.
+    /// This is used by Register methods during service configuration.
+    /// </summary>
+    /// <returns>The assemblies to scan for auto-discovery</returns>
+    internal static Assembly[] GetCurrentInstanceAssemblies()
+    {
+        var currentInstance = _currentInstance.Value;
+        if (currentInstance != null)
+        {
+            return currentInstance.GetAssembliesForDiscovery();
+        }
+
+        // Fallback: Use reflection to get the calling assembly 2 levels up
+        // This handles cases where Register() is called directly on ServiceCollection without instance context
+        var stackTrace = new System.Diagnostics.StackTrace();
+        for (int i = 2; i < stackTrace.FrameCount; i++)
+        {
+            var frame = stackTrace.GetFrame(i);
+            var method = frame?.GetMethod();
+            if (method?.DeclaringType?.Assembly != null)
+            {
+                var assembly = method.DeclaringType.Assembly;
+                // Skip our own assemblies to find the actual calling assembly
+                if (!assembly.FullName?.StartsWith("Blazing.Extensions.DependencyInjection", StringComparison.Ordinal) == true)
+                {
+                    return [assembly];
+                }
+            }
+        }
+
+        // Final fallback to calling assembly
+        return [Assembly.GetCallingAssembly()];
     }
 }

@@ -271,6 +271,10 @@ public class TabViewModel
 
 ### Step 7: Clean Service Registration with Blazing.Extensions.DependencyInjection
 
+You can register tab views using either **manual registration** or **auto-discovery** methods:
+
+#### Option A: Auto-Discovery Registration (Recommended)
+
 ```csharp
 // App.xaml.cs
 protected override void OnStartup(StartupEventArgs e)
@@ -293,6 +297,13 @@ protected override void OnStartup(StartupEventArgs e)
         services.AddTransient<DataView>();
         services.AddTransient<SettingsView>();
 
+        // AUTO-DISCOVERY: Automatically find and register all ITabView implementations
+        // Scans current assembly by default
+        services.Register<ITabView>(ServiceScope.Transient);
+
+        // Or scan specific assemblies:
+        // services.Register<ITabView>(ServiceScope.Transient, typeof(MyView).Assembly, typeof(OtherAssembly).Assembly);
+
         // Register TabViewHandler for automatic tab discovery
         services.AddSingleton<ITabViewHandler, TabViewHandler>();
 
@@ -312,6 +323,32 @@ protected override void OnStartup(StartupEventArgs e)
     mainWindow.Show();
 }
 ```
+
+#### Option B: Manual Registration (Traditional)
+
+```csharp
+// App.xaml.cs - Manual registration approach
+var services = this.GetServiceCollection(services =>
+{
+    // ... ViewModels and Views registration same as above ...
+
+    // MANUAL: Register each ITabView implementation individually
+    services.AddTransient<ITabView, HomeView>();
+    services.AddTransient<ITabView, WeatherView>();
+    services.AddTransient<ITabView, DataView>();
+    services.AddTransient<ITabView, SettingsView>();
+
+    // ... rest of service registration same as above ...
+});
+```
+
+**Key Benefits of Auto-Discovery:**
+
+-   ✅ **Zero Configuration**: No need to manually register new tab views
+-   ✅ **Default Assembly Scan**: Automatically scans current assembly if no assemblies specified
+-   ✅ **Multiple Assembly Support**: Can scan multiple assemblies for implementations
+-   ✅ **Consistent Lifetime**: All discovered services get the same specified scope
+-   ✅ **Automatic Updates**: New `ITabView` implementations are discovered automatically
 
 ## Benefits of TabViewHandler Pattern
 
@@ -339,7 +376,9 @@ protected override void OnStartup(StartupEventArgs e)
 
 ## Adding a New Tab
 
-To add a new tab, you only need to:
+With **auto-discovery**, adding a new tab is incredibly simple:
+
+### Using Auto-Discovery (Recommended)
 
 1. **Create the View** implementing ITabView:
 
@@ -367,13 +406,22 @@ services.AddTransient<ProfileView>();
 services.AddTransient<ProfileViewModel>();
 ```
 
-4. **Add to TabMetadata**:
+**That's it!** The `services.Register<ITabView>(ServiceScope.Transient)` call automatically discovers and registers your new `ProfileView` as an `ITabView`. No additional registration needed!
+
+### Using Manual Registration (Alternative)
+
+If you prefer manual registration, you would also need to add:
 
 ```csharp
-new(typeof(ProfileView), "👤 Profile", 5)
+services.AddTransient<ITabView, ProfileView>();
 ```
 
-**That's it!** No changes to MainViewModel, no XAML changes, no other modifications needed.
+**Benefits of Auto-Discovery:**
+
+-   ✅ No need to remember to register each new `ITabView` implementation
+-   ✅ Consistent with the "convention over configuration" principle
+-   ✅ Automatically maintains registration as you add/remove tabs
+-   ✅ Works across multiple assemblies when specified
 
 ## Running the Example
 
