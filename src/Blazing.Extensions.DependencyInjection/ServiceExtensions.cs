@@ -159,7 +159,7 @@ public static class ServiceExtensions
     }
 
     /// <summary>
-    /// BuildServices and assign a service collection to this instance.
+    /// BuildServiceProvider and assign a service collection to this instance.
     /// Use this after GetServiceCollection when you're ready to build.
     /// </summary>
     /// <typeparam name="T">The type of the instance</typeparam>
@@ -167,7 +167,7 @@ public static class ServiceExtensions
     /// <param name="services">The service collection to build</param>
     /// <param name="options">Optional service provider options for validation, scopes, etc.</param>
     /// <returns>The built service provider</returns>
-    public static IServiceProvider BuildServices<T>(
+    public static IServiceProvider BuildServiceProvider<T>(
         this T instance,
         IServiceCollection services,
         ServiceProviderOptions? options = null) where T : class

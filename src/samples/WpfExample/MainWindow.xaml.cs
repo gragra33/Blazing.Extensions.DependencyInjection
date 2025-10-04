@@ -33,7 +33,7 @@ public partial class MainWindow : Window
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         // Find the TabControl and select the first tab
-        var tabControl = this.FindName("MainTabControl") as TabControl;
+        var tabControl = FindName("MainTabControl") as TabControl;
         if (tabControl?.Items.Count > 0)
         {
             tabControl.SelectedIndex = 0;

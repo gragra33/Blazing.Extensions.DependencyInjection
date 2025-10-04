@@ -30,7 +30,6 @@ public class TabViewModel
     public int Order { get; }
     
     private object _viewInstance;
-    private readonly bool _isFirstTab;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TabViewModel"/> class.
@@ -39,12 +38,11 @@ public class TabViewModel
     /// <param name="header">The tab header text.</param>
     /// <param name="order">The display order of the tab.</param>
     /// <param name="isFirstTab">Whether this is the first tab (used for initial selection).</param>
-    public TabViewModel(Type viewType, string header, int order, bool isFirstTab = false)
+    public TabViewModel(Type viewType, string header, int order)
     {
         ViewType = viewType;
         Header = header;
         Order = order;
-        _isFirstTab = isFirstTab;
         
         // Resolve view immediately - no lazy loading needed
         ResolveView();
@@ -54,10 +52,7 @@ public class TabViewModel
     /// Gets the actual View instance - resolved immediately during construction.
     /// The view is paired with its corresponding ViewModel using naming conventions.
     /// </summary>
-    public object ViewInstance
-    {
-        get => _viewInstance;
-    }
+    public object ViewInstance => _viewInstance;
 
     /// <summary>
     /// Resolves the actual View instance from DI immediately and automatically sets the correct ViewModel as DataContext.

@@ -177,7 +177,7 @@ var services = Application.Current.GetServiceCollection(services =>
 });
 
 // Step 2: Build and assign services
-var serviceProvider = Application.Current.BuildServices(services);
+var serviceProvider = Application.Current.BuildServiceProvider(services);
 
 // Step 3: Resolve services
 var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
@@ -245,7 +245,7 @@ The **Blazing.Extensions.DependencyInjection** library provides a set of extensi
 | `ConfigureServices<T>` (with post-build) | Configures services with post-build action     | Execute code after service provider is built |
 | `ConfigureServicesAdvanced<T>`           | Configure with custom `ServiceProviderOptions` | Custom validation, scope validation settings |
 | `GetServiceCollection<T>`                | Get service collection for delayed building    | Build service provider manually later        |
-| `BuildServices<T>`                       | Build and assign from existing collection      | Separate configuration and building phases   |
+| `BuildServiceProvider<T>`                       | Build and assign from existing collection      | Separate configuration and building phases   |
 
 ### Memory Management
 

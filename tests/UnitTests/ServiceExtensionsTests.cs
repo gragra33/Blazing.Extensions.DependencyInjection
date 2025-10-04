@@ -260,7 +260,7 @@ public class ServiceExtensionsTests
 
     #endregion
 
-    #region GetServiceCollection and BuildServices Tests
+    #region GetServiceCollection and BuildServiceProvider Tests
 
     [Fact]
     public void GetServiceCollection_Should_ReturnConfigurableServiceCollection()
@@ -281,7 +281,7 @@ public class ServiceExtensionsTests
     }
 
     [Fact]
-    public void BuildServices_Should_BuildAndAssignProvider()
+    public void BuildServiceProvider_Should_BuildAndAssignProvider()
     {
         // Arrange
         var host = new TestHost();
@@ -291,7 +291,7 @@ public class ServiceExtensionsTests
         });
 
         // Act
-        var serviceProvider = host.BuildServices(services);
+        var serviceProvider = host.BuildServiceProvider(services);
 
         // Assert
         serviceProvider.ShouldNotBeNull();
@@ -300,7 +300,7 @@ public class ServiceExtensionsTests
     }
 
     [Fact]
-    public void BuildServices_Should_AcceptServiceProviderOptions()
+    public void BuildServiceProvider_Should_AcceptServiceProviderOptions()
     {
         // Arrange
         var host = new TestHost();
@@ -310,7 +310,7 @@ public class ServiceExtensionsTests
         });
 
         // Act
-        var serviceProvider = host.BuildServices(services, new ServiceProviderOptions
+        var serviceProvider = host.BuildServiceProvider(services, new ServiceProviderOptions
         {
             ValidateOnBuild = true
         });
@@ -646,8 +646,8 @@ public class ServiceExtensionsTests
         // Act - Add more services
         services.AddTransient<IDependentService, DependentService>();
 
-        // Act - BuildServices
-        host.BuildServices(services);
+        // Act - BuildServiceProvider
+        host.BuildServiceProvider(services);
 
         // Assert
         host.GetRequiredService<ITestService>().ShouldNotBeNull();

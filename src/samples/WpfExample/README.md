@@ -305,7 +305,7 @@ protected override void OnStartup(StartupEventArgs e)
     });
 
     // STEP 2: Build and assign services - critical for proper DI setup
-    var serviceProvider = this.BuildServices(services);
+    var serviceProvider = this.BuildServiceProvider(services);
 
     // STEP 3: One line resolves entire application!
     var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
@@ -440,7 +440,7 @@ Upon running, the application opens with:
 
 ```
 WpfExample/
-├── App.xaml.cs                 # Service registration with BuildServices
+├── App.xaml.cs                 # Service registration with BuildServiceProvider
 ├── MainWindow.xaml             # Simple TabControl with ItemsSource binding
 ├── Views/
 │   ├── ITabView.cs             # Interface for automatic tab discovery
@@ -495,7 +495,7 @@ This example showcases the power of **Blazing.Extensions.DependencyInjection** f
 ### Key Features Used:
 
 1. **GetServiceCollection()** - Configure services before building
-2. **BuildServices()** - Proper service provider setup
+2. **BuildServiceProvider()** - Proper service provider setup
 3. **GetRequiredService<T>()** - Clean service resolution
 4. **Application.Current.GetServices()** - Access service provider from anywhere
 5. **Automatic Dependency Injection** - No manual wiring required

@@ -59,9 +59,9 @@ public partial class App : Application
                 services.AddTransient<MainWindow>();
             });
 
-            // STEP 2: BuildServices and assign services - this is the critical step!
+            // STEP 2: BuildServiceProvider and assign services - this is the critical step!
             // This ensures the service provider is fully built before resolving any services
-            var serviceProvider = this.BuildServices(services);
+            var serviceProvider = this.BuildServiceProvider(services);
 
             // STEP 3: Test that service provider is working
             System.Diagnostics.Debug.WriteLine("Service provider built successfully");
@@ -74,7 +74,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            System.Windows.MessageBox.Show($"Startup Error: {ex.Message}\n\nStack Trace: {ex.StackTrace}", "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Startup Error: {ex.Message}\n\nStack Trace: {ex.StackTrace}", "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown(1);
         }
     }
