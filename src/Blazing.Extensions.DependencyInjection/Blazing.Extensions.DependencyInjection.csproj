@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Multi-target both .NET 8.0 and .NET 9.0 for maximum compatibility -->
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Version managed centrally in Directory.Packages.props -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <!-- Only use SourceLink when in a git repository to avoid warnings -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Condition="Exists('.git')">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

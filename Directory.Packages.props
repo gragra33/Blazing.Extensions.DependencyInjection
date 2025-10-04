@@ -1,0 +1,30 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enable Central Package Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Microsoft.Extensions.DependencyInjection - Use stable v9.0.0 (v10 RC has breaking bugs) -->
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    
+    <!-- xUnit Testing Framework v2 - Stable and mature -->
+    <PackageVersion Include="xunit" Version="2.9.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageVersion Include="xunit.analyzers" Version="1.18.0" />
+    
+    <!-- Microsoft Testing Platform -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    
+    <!-- Shouldly for readable assertions -->
+    <PackageVersion Include="Shouldly" Version="4.2.1" />
+    
+    <!-- Code coverage -->
+    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+
+    <!-- SourceLink for debugging -->
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    
+    <!-- CommunityToolkit.Mvvm for WPF MVVM -->
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+  </ItemGroup>
+</Project>

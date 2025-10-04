@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Multi-target both .NET 8.0 and .NET 9.0 -->
+    <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
+    
+    <!-- WPF-specific settings -->
+    <UseWPF>true</UseWPF>
+    <OutputType>Library</OutputType>
+    
+    <!-- Assembly and namespace settings -->
+    <RootNamespace>Blazing.ToggleSwitch.Wpf</RootNamespace>
+    <AssemblyName>Blazing.ToggleSwitch.Wpf</AssemblyName>
+    
+    <!-- Override inherited nullable setting for this legacy project -->
+    <Nullable>disable</Nullable>
+    
+    <!-- Enable XML documentation generation -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    
+    <!-- Package metadata -->
+    <PackageId>Blazing.ToggleSwitch.Wpf</PackageId>
+    <Title>Blazing ToggleSwitch for WPF</Title>
+    <Description>A modern toggle switch control for WPF applications, supporting both .NET 8.0 and .NET 9.0</Description>
+    <Authors>Blazing Controls</Authors>
+    <Copyright>Copyright © Blazing Controls</Copyright>
+    <PackageTags>wpf;toggleswitch;control;blazing;net8;net9</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    
+    <!-- Version -->
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    
+    <!-- Suppress some CA rules for legacy code -->
+    <NoWarn>$(NoWarn);CA1823;CA1724</NoWarn>
+  </PropertyGroup>
+
+  <!-- Package references for SourceLink (inherited from Directory.Packages.props) -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+
+  <!-- Include README for NuGet package -->
+  <ItemGroup>
+    <None Include="../../../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>

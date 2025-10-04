@@ -1,0 +1,8 @@
+<Project>
+  <!-- Test projects don't require XML documentation -->
+  <PropertyGroup>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- Tests use underscores and nested types which is fine for test code -->
+    <NoWarn>$(NoWarn);CA1707;CA1034;CA1063;CA1040;CA1816;CA1724</NoWarn>
+  </PropertyGroup>
+</Project>

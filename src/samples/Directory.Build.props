@@ -1,0 +1,8 @@
+<Project>
+  <!-- Sample projects don't require XML documentation -->
+  <PropertyGroup>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- Samples are for demonstration, so we can relax some rules -->
+    <NoWarn>$(NoWarn);CA5394;CA1031</NoWarn>
+  </PropertyGroup>
+</Project>

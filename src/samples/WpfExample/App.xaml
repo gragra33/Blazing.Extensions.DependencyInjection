@@ -1,0 +1,8 @@
+﻿<Application x:Class="WpfExample.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WpfExample">
+    <Application.Resources>
+        <!-- Global styles can be added here -->
+    </Application.Resources>
+</Application>
