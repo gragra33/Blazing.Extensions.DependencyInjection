@@ -371,7 +371,9 @@ public static class ServiceExtensions
             return ServiceProviderKeyedServiceExtensions.GetKeyedService<TService>(context.ServiceProvider, serviceKey);
         }
         return null;
-    }    /// <summary>
+    }
+    
+    /// <summary>
     /// Convenience method to get a required service with simpler syntax.
     /// This method only works on objects that have been configured with a service provider via ConfigureServices().
     /// </summary>
