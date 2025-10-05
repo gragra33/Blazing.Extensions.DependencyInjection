@@ -1,0 +1,16 @@
+global using System;
+global using Microsoft.Extensions.DependencyInjection;
+global using Blazing.Extensions.DependencyInjection;
+global using ConsoleExample.Examples;
+global using ConsoleExample.Helpers;
+global using ConsoleExample.Hosts;
+global using ConsoleExample.Repositories;
+global using ConsoleExample.Services;
+global using ConsoleExample.Models;
+global using ConsoleExample.Notifications;
+global using ConsoleExample.Logging;
+global using ConsoleExample.Scanning;
+global using ConsoleExample.Attributes;
+global using ConsoleExample.Utilities;
+global using ConsoleExample.Data;
+global using ConsoleExample.Processing;

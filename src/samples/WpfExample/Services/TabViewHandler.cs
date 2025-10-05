@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using Microsoft.Extensions.DependencyInjection;
-using Blazing.Extensions.DependencyInjection;
-using WpfExample.ViewModels;
-using WpfExample.Views;
-
 namespace WpfExample.Services;
 
 /// <summary>

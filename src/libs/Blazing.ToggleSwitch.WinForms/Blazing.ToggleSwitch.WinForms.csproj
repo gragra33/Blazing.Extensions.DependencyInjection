@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageId>Blazing.ToggleSwitch.WinForms</PackageId>
+    <Description>A modern toggle switch control for WinForms applications</Description>
+    <PackageTags>winforms;toggleswitch;control;ui</PackageTags>
+    <!-- Disable some code analysis rules for the control library -->
+    <NoWarn>$(NoWarn);CA1805;CA1062;CA1724;CS1591;WFO1000</NoWarn>
+  </PropertyGroup>
+
+</Project>

@@ -1,7 +1,3 @@
-using System;
-using CommunityToolkit.Mvvm.Input;
-using WpfExample.Services;
-
 namespace WpfExample.ViewModels;
 
 /// <summary>

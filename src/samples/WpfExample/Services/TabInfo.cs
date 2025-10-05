@@ -1,5 +1,3 @@
-using System;
-
 namespace WpfExample.Services;
 
 /// <summary>

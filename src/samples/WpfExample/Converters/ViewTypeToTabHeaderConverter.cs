@@ -1,11 +1,5 @@
-using System;
 using System.Globalization;
-using System.Linq;
-using System.Windows;
 using System.Windows.Data;
-using Microsoft.Extensions.DependencyInjection;
-using Blazing.Extensions.DependencyInjection;
-using WpfExample.Views;
 
 namespace WpfExample.Converters;
 

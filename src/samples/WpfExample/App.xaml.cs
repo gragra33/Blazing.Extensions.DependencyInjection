@@ -1,12 +1,3 @@
-using System;
-using System.Diagnostics;
-using System.Windows;
-using Blazing.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using WpfExample.Services;
-using WpfExample.ViewModels;
-using WpfExample.Views;
-
 namespace WpfExample;
 
 /// <summary>
@@ -62,13 +53,13 @@ public partial class App : Application
             var serviceProvider = this.BuildServiceProvider(services);
 
             // STEP 3: Test that service provider is working
-            Debug.WriteLine("Service provider built successfully");
+            Console.WriteLine("Service provider built successfully");
             
             // STEP 4: Resolve MainWindow directly from the service provider to avoid extension method issues
             var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
             
-            Debug.WriteLine("MainWindow created and shown successfully");
+            Console.WriteLine("MainWindow created and shown successfully");
         }
         catch (Exception ex)
         {

@@ -1,10 +1,3 @@
-using System;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
-using Blazing.Extensions.DependencyInjection;
-
 namespace WpfExample.ViewModels;
 
 /// <summary>

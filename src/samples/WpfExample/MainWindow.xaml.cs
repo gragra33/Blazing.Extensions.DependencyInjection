@@ -1,8 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using WpfExample.ViewModels;
-
-namespace WpfExample;
+﻿namespace WpfExample;
 
 /// <summary>
 /// Main window for WPF MVVM tab-based example with dependency injection.

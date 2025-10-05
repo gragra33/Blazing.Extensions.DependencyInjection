@@ -1,5 +1,3 @@
-using System.Windows;
-
 namespace WpfExample.Services;
 
 public class NavigationService : INavigationService

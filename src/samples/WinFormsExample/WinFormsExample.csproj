@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Support both .NET 8.0 and .NET 9.0 -->
+    <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Blazing.Extensions.DependencyInjection\Blazing.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\libs\Blazing.ToggleSwitch.WinForms\Blazing.ToggleSwitch.WinForms.csproj" />
+  </ItemGroup>
+
+
+
+</Project>

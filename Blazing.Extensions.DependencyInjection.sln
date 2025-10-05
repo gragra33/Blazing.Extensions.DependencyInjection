@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{D1B4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{228E8D26-E6F2-470C-9C13-D57D72F6153C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs.wpf", "libs.wpf", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazing.ToggleSwitch.Wpf", "src\libs\Blazing.ToggleSwitch.Wpf\Blazing.ToggleSwitch.Wpf.csproj", "{98AC4AF6-2BC1-680B-543C-DE84567C6C70}"
 EndProject
@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CONTRIBUTING.md = CONTRIBUTING.md
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
+		HISTORY.md = HISTORY.md
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -31,6 +32,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfExample", "src\samples\WpfExample\WpfExample.csproj", "{2A907B16-EB13-2A26-4788-E77665180A38}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleExample", "src\samples\ConsoleExample\ConsoleExample.csproj", "{E6B2D06A-7407-C555-16CB-80FF205DA0D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazing.ToggleSwitch.WinForms", "src\libs\Blazing.ToggleSwitch.WinForms\Blazing.ToggleSwitch.WinForms.csproj", "{377DCBB7-D827-BEBE-041A-F3B1E03DF757}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsExample", "src\samples\WinFormsExample\WinFormsExample.csproj", "{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,6 +107,30 @@ Global
 		{E6B2D06A-7407-C555-16CB-80FF205DA0D8}.Release|x64.Build.0 = Release|Any CPU
 		{E6B2D06A-7407-C555-16CB-80FF205DA0D8}.Release|x86.ActiveCfg = Release|Any CPU
 		{E6B2D06A-7407-C555-16CB-80FF205DA0D8}.Release|x86.Build.0 = Release|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Debug|x64.Build.0 = Debug|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Debug|x86.Build.0 = Debug|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Release|Any CPU.Build.0 = Release|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Release|x64.ActiveCfg = Release|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Release|x64.Build.0 = Release|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Release|x86.ActiveCfg = Release|Any CPU
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757}.Release|x86.Build.0 = Release|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Debug|x64.Build.0 = Debug|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Debug|x86.Build.0 = Debug|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|x64.ActiveCfg = Release|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|x64.Build.0 = Release|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|x86.ActiveCfg = Release|Any CPU
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,6 +143,8 @@ Global
 		{98AC4AF6-2BC1-680B-543C-DE84567C6C70} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{2A907B16-EB13-2A26-4788-E77665180A38} = {D1B4CF99-7947-DD6C-81D0-5B5B3989814C}
 		{E6B2D06A-7407-C555-16CB-80FF205DA0D8} = {D1B4CF99-7947-DD6C-81D0-5B5B3989814C}
+		{377DCBB7-D827-BEBE-041A-F3B1E03DF757} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F} = {D1B4CF99-7947-DD6C-81D0-5B5B3989814C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D79F5621-11D8-45CC-BB22-2190C1F03E91}

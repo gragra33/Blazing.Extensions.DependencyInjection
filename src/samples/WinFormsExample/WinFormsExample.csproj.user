@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Views\DataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Views\HomeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Views\SettingsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Views\WeatherView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Views\WeatherView.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

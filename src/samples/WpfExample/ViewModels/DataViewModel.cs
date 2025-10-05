@@ -1,7 +1,4 @@
-using System;
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.Input;
-using WpfExample.Services;
 
 namespace WpfExample.ViewModels;
 
