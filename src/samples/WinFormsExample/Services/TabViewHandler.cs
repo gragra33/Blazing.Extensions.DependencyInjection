@@ -1,27 +1,6 @@
 namespace WinFormsExample.Services;
 
 /// <summary>
-/// Information about a tab view.
-/// </summary>
-public record TabInfo(Type ViewType, string TabHeader, int Order);
-
-/// <summary>
-/// Interface for handling tab view discovery and management.
-/// </summary>
-public interface ITabViewHandler
-{
-    /// <summary>
-    /// Gets all available tab view types.
-    /// </summary>
-    IEnumerable<Type> GetAvailableTabViewTypes();
-    
-    /// <summary>
-    /// Gets metadata for all tab views.
-    /// </summary>
-    IEnumerable<TabInfo> GetTabMetadata();
-}
-
-/// <summary>
 /// Implementation of ITabViewHandler that uses dynamic discovery.
 /// Discovers tab views automatically via dependency injection.
 /// </summary>

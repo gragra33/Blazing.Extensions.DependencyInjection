@@ -3,39 +3,6 @@ using System.Threading.Tasks;
 namespace WinFormsExample.Services;
 
 /// <summary>
-/// Interface for handling data operations.
-/// </summary>
-public interface IDataService
-{
-    /// <summary>
-    /// Gets sample data items asynchronously.
-    /// </summary>
-    Task<IEnumerable<DataItem>> GetDataAsync();
-    
-    /// <summary>
-    /// Saves a data item asynchronously.
-    /// </summary>
-    Task SaveDataAsync(DataItem item);
-    
-    /// <summary>
-    /// Deletes a data item asynchronously.
-    /// </summary>
-    Task DeleteDataAsync(int id);
-}
-
-/// <summary>
-/// Represents a data item for demonstration purposes.
-/// </summary>
-public class DataItem
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public DateTime CreatedDate { get; set; }
-    public bool IsActive { get; set; }
-}
-
-/// <summary>
 /// Implementation of IDataService with mock data.
 /// </summary>
 [AutoRegister(ServiceLifetime.Singleton, typeof(IDataService))]

@@ -3,35 +3,6 @@ using System.Threading.Tasks;
 namespace WinFormsExample.Services;
 
 /// <summary>
-/// Interface for weather service operations.
-/// </summary>
-public interface IWeatherService
-{
-    /// <summary>
-    /// Gets weather data for the specified location asynchronously.
-    /// </summary>
-    Task<WeatherData> GetWeatherAsync(string location);
-    
-    /// <summary>
-    /// Gets available locations for weather data.
-    /// </summary>
-    IEnumerable<string> GetAvailableLocations();
-}
-
-/// <summary>
-/// Represents weather data for demonstration purposes.
-/// </summary>
-public class WeatherData
-{
-    public string Location { get; set; } = string.Empty;
-    public double Temperature { get; set; }
-    public string Condition { get; set; } = string.Empty;
-    public int Humidity { get; set; }
-    public double WindSpeed { get; set; }
-    public DateTime LastUpdated { get; set; }
-}
-
-/// <summary>
 /// Implementation of IWeatherService with mock data.
 /// </summary>
 [AutoRegister(ServiceLifetime.Transient, typeof(IWeatherService))]
@@ -39,7 +10,7 @@ public class WeatherService : IWeatherService
 {
     private readonly Random _random = new Random();
     private readonly string[] _conditions = { "Sunny", "Cloudy", "Rainy", "Snowy", "Partly Cloudy" };
-    private readonly string[] _locations = { "New York", "London", "Tokyo", "Sydney", "Paris", "Berlin", "Toronto" };
+    private readonly string[] _locations = { "Sydney", "New York", "London", "Tokyo", "Paris", "Berlin", "Toronto" };
 
     public WeatherService()
     {
