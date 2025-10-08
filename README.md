@@ -1,5 +1,10 @@
 # Blazing.Extensions.DependencyInjection: A Simplified Universal Dependency Injection for .NET
 
+[![NuGet Version](https://img.shields.io/nuget/v/Blazing.Extensions.DependencyInjection.svg)](https://www.nuget.org/packages/Blazing.Extensions.DependencyInjection)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Blazing.Extensions.DependencyInjection.svg)](https://www.nuget.org/packages/Blazing.Extensions.DependencyInjection)
+
+## Overview
+
 This project provides universal dependency injection capabilities for any .NET application, bringing **Microsoft's Dependency Injection** container to WPF, WinForms, Console apps, and more without framework-specific integration requirements. Built as extension methods for Microsoft.Extensions.DependencyInjection, it features full **keyed services support** for advanced dependency resolution scenarios and **attribute-based auto-registration** for declarative service configuration.
 
 ## Table of Contents
