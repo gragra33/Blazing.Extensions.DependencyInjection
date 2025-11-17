@@ -1,3 +1,7 @@
+### V2.0.0 - 17 November 2025
+
+ -   **.NET 10.0 Support** - Added support for .NET 10.0 applications
+
 ### V1.0.0 (.Net 8.0+) - 5 October, 2025
 
 -   **Universal DI Support** - Added universal dependency injection support for any .NET object

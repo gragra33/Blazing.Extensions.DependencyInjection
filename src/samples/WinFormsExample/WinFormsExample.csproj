@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <!-- Support both .NET 8.0 and .NET 9.0 -->
-    <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
+    <!-- Multi-target .NET 8.0, .NET 9.0, and .NET 10.0 -->
+    <TargetFrameworks>net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
   </PropertyGroup>

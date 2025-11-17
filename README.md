@@ -751,6 +751,9 @@ dotnet run --project src/samples/WpfExample --framework net8.0-windows
 
 # .NET 9.0
 dotnet run --project src/samples/WpfExample --framework net9.0-windows
+
+# .NET 10.0
+dotnet run --project src/samples/WpfExample --framework net10.0-windows
 ```
 
 **Key Features**:
@@ -1076,6 +1079,9 @@ dotnet run --project src/samples/WpfExample --framework net8.0-windows
 # Run WPF example (.NET 9.0)
 dotnet run --project src/samples/WpfExample --framework net9.0-windows
 
+# Run WPF example (.NET 10.0)
+dotnet run --project src/samples/WpfExample --framework net10.0-windows
+
 # Run WinForms example
 dotnet run --project src/samples/WinFormsExample
 
@@ -1090,7 +1096,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ### Development Setup
 
 1. Clone the repository
-2. Install .NET 8.0 & 9.0 SDK
+2. Install .NET 8.0, 9.0, & 10.0 SDK
 3. Run `dotnet restore`
 4. Run `dotnet test`
 
@@ -1105,6 +1111,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 -   Modern .NET patterns and practices from the .NET community
 
 ## History
+
+### V2.0.0 - 17 November 2025
+
+ -   **.NET 10.0 Support** - Added support for .NET 10.0 applications
 
 ### V1.0.0 (.Net 8.0+)
 

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Multi-target both .NET 8.0 and .NET 9.0 for maximum compatibility -->
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <!-- Multi-target .NET 8.0, .NET 9.0, and .NET 10.0 for maximum compatibility -->
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Blazing.Extensions.DependencyInjection</PackageId>
@@ -10,7 +10,7 @@
     <Authors>Graeme Grant</Authors>
     <Product>Blazing.Extensions.DependencyInjection</Product>
     <Description>Universal dependency injection for any .NET application - WPF, WinForms, Console apps and more. Built on Microsoft.Extensions.DependencyInjection with keyed services support, attribute-based auto-registration, and ConditionalWeakTable memory management.</Description>
-    <PackageTags>dependency-injection;di;ioc;microsoft-extensions;wpf;winforms;console;net8;net9;keyed-services;auto-registration;blazing</PackageTags>
+    <PackageTags>dependency-injection;di;ioc;microsoft-extensions;wpf;winforms;console;net8;net9;net10;keyed-services;auto-registration;blazing</PackageTags>
     <RepositoryUrl>https://github.com/gragra33/blazing.extensions.dependencyInjection</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
