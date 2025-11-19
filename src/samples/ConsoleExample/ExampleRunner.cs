@@ -1,10 +1,17 @@
 namespace ConsoleExample;
 
+/// <summary>
+/// Executes all discovered <see cref="IExample"/> implementations registered in the application host.
+/// Collects and prints results for each example.
+/// </summary>
 public class ExampleRunner
 {
     private readonly Dictionary<string, bool> _results = new();
     private readonly ApplicationHost _host;
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExampleRunner"/> class and configures the application host.
+    /// </summary>
     public ExampleRunner()
     {
         _host = new ApplicationHost();
@@ -16,6 +23,9 @@ public class ExampleRunner
         });
     }
     
+    /// <summary>
+    /// Runs all registered <see cref="IExample"/> implementations and prints results to the console.
+    /// </summary>
     public void RunAllExamples()
     {
         ConsoleHelper.WriteHeader();
@@ -52,6 +62,10 @@ public class ExampleRunner
         ConsoleHelper.WriteFooter(_results["All Examples"]);
     }
 
+    /// <summary>
+    /// Runs a single <see cref="IExample"/> and records its result.
+    /// </summary>
+    /// <param name="example">The example to run.</param>
     private void RunExample(IExample example)
     {
         Console.WriteLine();

@@ -12,10 +12,11 @@ public class NavigationService : INavigationService
 
     public void NavigateTo(int tabIndex)
     {
-        if (CurrentTabIndex != tabIndex)
+        if (CurrentTabIndex == tabIndex)
         {
-            CurrentTabIndex = tabIndex;
-            NavigationChanged?.Invoke(this, tabIndex);
+            return;
         }
+        CurrentTabIndex = tabIndex;
+        NavigationChanged?.Invoke(this, tabIndex);
     }
 }

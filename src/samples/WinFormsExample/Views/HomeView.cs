@@ -29,12 +29,12 @@ public partial class HomeView : UserControl, ITabView
         InitializeComponent();
         SetupEventHandlers();
         UpdateWelcomeMessage();
-        Console.WriteLine("HomeView: Constructor called - View resolved via dependency injection");
+        Console.WriteLine(@"HomeView: Constructor called - View resolved via dependency injection");
     }
 
     private void SetupEventHandlers()
     {
-        Console.WriteLine("HomeView: Setting up event handlers");
+        Console.WriteLine(@"HomeView: Setting up event handlers");
         if (refreshButton != null)
             refreshButton.Click += RefreshButton_Click;
             
@@ -44,14 +44,14 @@ public partial class HomeView : UserControl, ITabView
 
     private void RefreshButton_Click(object? sender, EventArgs e)
     {
-        Console.WriteLine("HomeView: RefreshButton_Click executed!");
+        Console.WriteLine(@"HomeView: RefreshButton_Click executed!");
         UpdateWelcomeMessage();
         _dialogService.ShowMessage("Welcome message refreshed!", "Refresh Complete");
     }
 
     private void ShowInfoButton_Click(object? sender, EventArgs e)
     {
-        Console.WriteLine("HomeView: ShowInfoButton_Click executed!");
+        Console.WriteLine(@"HomeView: ShowInfoButton_Click executed!");
         _dialogService.ShowMessage("This HomeView was resolved via Dependency Injection!\n\n" +
             "The IDialogService was automatically injected into the constructor.",
             "Dependency Injection Info");
@@ -59,15 +59,15 @@ public partial class HomeView : UserControl, ITabView
 
     private void UpdateWelcomeMessage()
     {
-        Console.WriteLine("HomeView: UpdateWelcomeMessage called");
+        Console.WriteLine(@"HomeView: UpdateWelcomeMessage called");
         if (welcomeLabel != null)
         {
-            welcomeLabel.Text = "Welcome to the Blazing.Extensions.DependencyInjection Demo!";
+            welcomeLabel.Text = @"Welcome to the Blazing.Extensions.DependencyInjection Demo!";
         }
         
         if (lastRefreshedLabel != null)
         {
-            lastRefreshedLabel.Text = $"Last refreshed: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+            lastRefreshedLabel.Text = $@"Last refreshed: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
         }
     }
 }

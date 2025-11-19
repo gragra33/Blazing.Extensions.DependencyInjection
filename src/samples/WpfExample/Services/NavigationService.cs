@@ -1,5 +1,6 @@
 namespace WpfExample.Services;
 
+[AutoRegister(ServiceLifetime.Singleton, typeof(INavigationService))]
 public class NavigationService : INavigationService
 {
     public void NavigateToSettings()

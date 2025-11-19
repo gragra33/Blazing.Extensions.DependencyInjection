@@ -5,6 +5,7 @@ namespace WpfExample.ViewModels;
 /// Demonstrates View-First pattern - this ViewModel is resolved by HomeView automatically via TabViewModel, not MainViewModel.
 /// This achieves complete decoupling where the MainViewModel has no knowledge of specific child ViewModels.
 /// </summary>
+[AutoRegister(ServiceLifetime.Transient)]
 public partial class HomeViewModel : ViewModelBase
 {
     private readonly IDialogService _dialogService;
@@ -38,8 +39,8 @@ public partial class HomeViewModel : ViewModelBase
     [RelayCommand]
     private void RefreshWelcome()
     {
-        Console.WriteLine("HomeViewModel: RefreshWelcome command executed!");
-        WelcomeMessage = $"Page refreshed! Each tab operates independently with its own ViewModel.";
+        Console.WriteLine(@"HomeViewModel: RefreshWelcome command executed!");
+        WelcomeMessage = "Page refreshed! Each tab operates independently with its own ViewModel.";
         LastRefreshed = $"Last refreshed: {DateTime.Now:HH:mm:ss}";
     }
 
@@ -50,7 +51,7 @@ public partial class HomeViewModel : ViewModelBase
     [RelayCommand]
     private void ShowInfo()
     {
-        Console.WriteLine("HomeViewModel: ShowInfo command executed!");
+        Console.WriteLine(@"HomeViewModel: ShowInfo command executed!");
         _dialogService.ShowMessage(
             "View-First Pattern",
             "This HomeView resolved its own HomeViewModel via:\n\n" +

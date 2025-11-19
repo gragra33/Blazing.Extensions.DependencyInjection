@@ -1,18 +1,28 @@
 namespace ConsoleExample.Examples;
 
+/// <summary>
+/// Example demonstrating registration and resolution of keyed services.
+/// </summary>
 [AutoRegister(ServiceLifetime.Transient, typeof(IExample))]
 public class KeyedServicesExample : IExample
 {
+    /// <summary>
+    /// Gets the human-readable name of this example.
+    /// </summary>
     public string Name => "Keyed Services";
     
+    /// <summary>
+    /// Executes the example. Configures keyed notification services on an
+    /// <see cref="ApplicationHost"/>, resolves them by key and sends test notifications.
+    /// </summary>
     public void Run()
     {
         var host = new ApplicationHost();
         host.ConfigureServices(services =>
         {
-            ServiceCollectionServiceExtensions.AddKeyedSingleton<INotificationService, EmailNotificationService>(services, "email");
-            ServiceCollectionServiceExtensions.AddKeyedSingleton<INotificationService, SmsNotificationService>(services, "sms");
-            ServiceCollectionServiceExtensions.AddKeyedSingleton<INotificationService, PushNotificationService>(services, "push");
+            services.AddKeyedSingleton<INotificationService, EmailNotificationService>("email");
+            services.AddKeyedSingleton<INotificationService, SmsNotificationService>("sms");
+            services.AddKeyedSingleton<INotificationService, PushNotificationService>("push");
         });
         
         var emailService = host.GetRequiredKeyedService<INotificationService>("email");

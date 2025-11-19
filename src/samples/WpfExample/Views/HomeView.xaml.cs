@@ -20,6 +20,6 @@ public partial class HomeView : UserControl, ITabView
     public HomeView()
     {
         InitializeComponent();
-        Console.WriteLine("HomeView: Constructor called - TabViewModel will set DataContext");
+        Console.WriteLine(@"HomeView: Constructor called - TabViewModel will set DataContext");
     }
 }

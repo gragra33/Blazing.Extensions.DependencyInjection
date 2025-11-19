@@ -1,8 +1,5 @@
-using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 
 namespace Blazing.ToggleSwitch.WinForms;
 
@@ -14,20 +11,20 @@ namespace Blazing.ToggleSwitch.WinForms;
 [DefaultProperty("Checked")]
 [ToolboxItem(true)]
 [Designer("System.Windows.Forms.Design.ControlDesigner, System.Design")]
-public partial class ToggleSwitch : Control, ISupportInitialize
+public sealed class ToggleSwitch : Control, ISupportInitialize
 {
-    private bool _checked = false;
+    private bool _checked;
     private string _checkedText = "ON";
     private string _uncheckedText = "OFF";
     private Color _checkedBackColor = Color.FromArgb(0, 120, 215); // Windows blue
     private Color _uncheckedBackColor = Color.FromArgb(200, 200, 200);
     private Color _switchColor = Color.White;
     private System.Windows.Forms.Timer? _animationTimer;
-    private float _switchPosition = 0; // 0 = left, 1 = right
-    private bool _isAnimating = false;
+    private float _switchPosition; // 0 = left, 1 = right
+    private bool _isAnimating;
     private const int AnimationSteps = 10;
-    private int _currentStep = 0;
-    private bool _initializing = false;
+    private int _currentStep;
+    private bool _initializing;
     private bool _autoSize = true;
     private Size _switchSize = new Size(44, 20); // Default switch size
     private bool _showText = true; // Show text labels next to switch
@@ -104,7 +101,7 @@ public partial class ToggleSwitch : Control, ISupportInitialize
     /// </summary>
     [DefaultValue("ON")]
     [Description("The text displayed when the toggle switch is checked.")]
-    public string CheckedText
+    public string? CheckedText
     {
         get => _checkedText;
         set
@@ -123,7 +120,7 @@ public partial class ToggleSwitch : Control, ISupportInitialize
     /// </summary>
     [DefaultValue("OFF")]
     [Description("The text displayed when the toggle switch is unchecked.")]
-    public string UncheckedText
+    public string? UncheckedText
     {
         get => _uncheckedText;
         set
@@ -263,7 +260,7 @@ public partial class ToggleSwitch : Control, ISupportInitialize
     /// Raises the <see cref="CheckedChanged"/> event.
     /// </summary>
     /// <param name="e">Event arguments.</param>
-    protected virtual void OnCheckedChanged(EventArgs e)
+    private void OnCheckedChanged(EventArgs e)
     {
         CheckedChanged?.Invoke(this, e);
     }
@@ -522,7 +519,7 @@ internal sealed class ToggleSwitchAccessibleObject : Control.ControlAccessibleOb
 
     public override string DefaultAction => "Toggle";
 
-    public override string? Name => _owner.AccessibilityText;
+    public override string Name => _owner.AccessibilityText;
 
     public override AccessibleRole Role => AccessibleRole.CheckButton;
 

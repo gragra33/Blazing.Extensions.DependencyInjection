@@ -1,10 +1,4 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using Blazing.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
-using WinFormsExample.Services;
 
 namespace WinFormsExample.Views;
 
@@ -37,13 +31,13 @@ public partial class DataView : UserControl, ITabView
         
         InitializeComponent();
         SetupEventHandlers();
-        LoadDataAsync();
-        Console.WriteLine("DataView: Constructor called - Services injected successfully");
+        _ = LoadDataAsync();
+        Console.WriteLine(@"DataView: Constructor called - Services injected successfully");
     }
 
     private void SetupEventHandlers()
     {
-        Console.WriteLine("DataView: Setting up event handlers");
+        Console.WriteLine(@"DataView: Setting up event handlers");
         if (dataListBox != null)
             dataListBox.SelectedIndexChanged += DataListBox_SelectedIndexChanged;
         
@@ -56,7 +50,7 @@ public partial class DataView : UserControl, ITabView
 
     private async Task LoadDataAsync()
     {
-        Console.WriteLine("DataView: LoadDataAsync called");
+        Console.WriteLine(@"DataView: LoadDataAsync called");
         try
         {
             var data = await _dataService.GetDataAsync();
@@ -65,25 +59,23 @@ public partial class DataView : UserControl, ITabView
             if (dataListBox != null)
             {
                 dataListBox.DataSource = dataItems;
-                Console.WriteLine($"DataView: Loaded {dataItems.Count} data items");
+                Console.WriteLine($@"DataView: Loaded {dataItems.Count} data items");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"DataView: Error loading data - {ex.Message}");
+            Console.WriteLine($@"DataView: Error loading data - {ex.Message}");
             _dialogService.ShowMessage("Error", $"Failed to load data: {ex.Message}");
         }
     }
 
     private void DataListBox_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        Console.WriteLine("DataView: DataListBox_SelectedIndexChanged executed!");
-        var selectedItem = dataListBox?.SelectedItem as DataItemDisplay;
-        var hasSelection = selectedItem != null;
+        Console.WriteLine(@"DataView: DataListBox_SelectedIndexChanged executed!");
 
-        if (selectedItem != null && nameTextBox != null && descriptionTextBox != null && isActiveCheckBox != null)
+        if (dataListBox?.SelectedItem is DataItemDisplay selectedItem && nameTextBox != null && descriptionTextBox != null && isActiveCheckBox != null)
         {
-            Console.WriteLine($"DataView: Selected item - {selectedItem.Data.Name}");
+            Console.WriteLine($@"DataView: Selected item - {selectedItem.Data.Name}");
             nameTextBox.Text = selectedItem.Data.Name;
             descriptionTextBox.Text = selectedItem.Data.Description;
             isActiveCheckBox.Checked = selectedItem.Data.IsActive;
@@ -96,7 +88,7 @@ public partial class DataView : UserControl, ITabView
 
     private void ClearForm()
     {
-        Console.WriteLine("DataView: ClearForm called");
+        Console.WriteLine(@"DataView: ClearForm called");
         if (nameTextBox != null) nameTextBox.Text = "";
         if (descriptionTextBox != null) descriptionTextBox.Text = "";
         if (isActiveCheckBox != null) isActiveCheckBox.Checked = false;
@@ -104,16 +96,16 @@ public partial class DataView : UserControl, ITabView
 
     private async void RefreshButton_Click(object? sender, EventArgs e)
     {
-        Console.WriteLine("DataView: RefreshButton_Click executed!");
+        Console.WriteLine(@"DataView: RefreshButton_Click executed!");
         await LoadDataAsync();
     }
 
     private async void AddButton_Click(object? sender, EventArgs e)
     {
-        Console.WriteLine("DataView: AddButton_Click executed!");
+        Console.WriteLine(@"DataView: AddButton_Click executed!");
         if (string.IsNullOrWhiteSpace(nameTextBox?.Text))
         {
-            Console.WriteLine("DataView: Validation failed - Name is required");
+            Console.WriteLine(@"DataView: Validation failed - Name is required");
             _dialogService.ShowMessage("Validation Error", "Name is required.");
             return;
         }
@@ -127,16 +119,16 @@ public partial class DataView : UserControl, ITabView
                 IsActive = isActiveCheckBox?.Checked ?? false
             };
 
-            Console.WriteLine($"DataView: Adding new item - {newItem.Name}");
+            Console.WriteLine($@"DataView: Adding new item - {newItem.Name}");
             await _dataService.SaveDataAsync(newItem);
             ClearForm();
             await LoadDataAsync();
             _dialogService.ShowMessage("Success", "Item added successfully!");
-            Console.WriteLine("DataView: Item added successfully");
+            Console.WriteLine(@"DataView: Item added successfully");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"DataView: Error adding item - {ex.Message}");
+            Console.WriteLine($@"DataView: Error adding item - {ex.Message}");
             _dialogService.ShowMessage("Error", $"Failed to add item: {ex.Message}");
         }
     }

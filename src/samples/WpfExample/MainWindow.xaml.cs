@@ -5,6 +5,7 @@
 /// Demonstrates TabViewHandler pattern with complete decoupling between MainViewModel and tab ViewModels.
 /// All ViewModels are injected via constructor by Blazing.Extensions.DependencyInjection.
 /// </summary>
+[AutoRegister(ServiceLifetime.Transient)]
 public partial class MainWindow : Window
 {
     /// <summary>

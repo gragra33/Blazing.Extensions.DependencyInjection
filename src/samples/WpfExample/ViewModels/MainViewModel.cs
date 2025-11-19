@@ -5,6 +5,7 @@ namespace WpfExample.ViewModels;
 /// Uses TabViewHandler service to discover available tabs without knowing specific View types.
 /// This is the ultimate loose coupling solution!
 /// </summary>
+[AutoRegister(ServiceLifetime.Transient)]
 public partial class MainViewModel : ViewModelBase
 {
     private readonly IDialogService _dialogService;
@@ -29,9 +30,9 @@ public partial class MainViewModel : ViewModelBase
         {
             if (_tabViewModels == null)
             {
-                Console.WriteLine("MainViewModel: Resolving TabViewModels...");
+                Console.WriteLine(@"MainViewModel: Resolving TabViewModels...");
                 _tabViewModels = _tabViewHandler.GetTabViewModels();
-                Console.WriteLine("MainViewModel: TabViewModels resolved successfully");
+                Console.WriteLine(@"MainViewModel: TabViewModels resolved successfully");
             }
             return _tabViewModels;
         }

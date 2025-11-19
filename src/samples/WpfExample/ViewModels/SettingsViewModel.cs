@@ -3,8 +3,9 @@ namespace WpfExample.ViewModels;
 /// <summary>
 /// SettingsViewModel demonstrates complex dependency injection with multiple services.
 /// Shows how tab ViewModels can depend on multiple services (IDataService, IDialogService)
-/// and manage application settings independently from other tabs.
+/// and manage application settings independently of other tabs.
 /// </summary>
+[AutoRegister(ServiceLifetime.Transient)]
 public partial class SettingsViewModel : ViewModelBase
 {
     private readonly IDataService _dataService;
@@ -68,7 +69,7 @@ public partial class SettingsViewModel : ViewModelBase
     [RelayCommand]
     private void SaveSettings()
     {
-        Console.WriteLine($"SettingsViewModel: SaveSettings command executed for user: {UserName}");
+        Console.WriteLine($@"SettingsViewModel: SaveSettings command executed for user: {UserName}");
         _dialogService.ShowMessage("Settings", $"Settings saved for {UserName}!");
     }
 
@@ -79,7 +80,7 @@ public partial class SettingsViewModel : ViewModelBase
     [RelayCommand]
     private void ShowServiceInfo()
     {
-        Console.WriteLine("SettingsViewModel: ShowServiceInfo command executed");
+        Console.WriteLine(@"SettingsViewModel: ShowServiceInfo command executed");
         var info = $"Data Service Items: {TotalDataItems}\nApp Version: {AppVersion}\nDI Status: ✅ Working";
         _dialogService.ShowMessage("Service Information", info);
     }

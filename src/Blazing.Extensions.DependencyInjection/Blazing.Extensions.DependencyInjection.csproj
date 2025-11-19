@@ -6,7 +6,7 @@
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Blazing.Extensions.DependencyInjection</PackageId>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
     <Authors>Graeme Grant</Authors>
     <Product>Blazing.Extensions.DependencyInjection</Product>
     <Description>Universal dependency injection for any .NET application - WPF, WinForms, Console apps and more. Built on Microsoft.Extensions.DependencyInjection with keyed services support, attribute-based auto-registration, and ConditionalWeakTable memory management.</Description>
@@ -18,6 +18,10 @@
     <Copyright>Copyright (c) 2025 Graeme Grant</Copyright>
     <PackageReleaseNotes>Version 1.0.0: Complete dependency injection framework with comprehensive examples and enhanced global usings support</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <!-- Generate XML documentation files for package consumers -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

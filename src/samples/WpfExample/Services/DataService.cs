@@ -5,17 +5,18 @@ namespace WpfExample.Services;
 /// Demonstrates service implementation with simple data operations.
 /// In a real application, this might connect to a database or external API.
 /// </summary>
+[AutoRegister(ServiceLifetime.Singleton, typeof(IDataService))]
 public class DataService : IDataService
 {
     /// <summary>
     /// Sample data collection initialized with default items for demonstration purposes.
     /// </summary>
-    private readonly List<string> _data = new()
-    {
+    private readonly List<string> _data =
+    [
         "Sample Item 1",
         "Sample Item 2",
         "Sample Item 3"
-    };
+    ];
 
     /// <inheritdoc/>
     public IEnumerable<string> GetAllData() => _data.ToList();

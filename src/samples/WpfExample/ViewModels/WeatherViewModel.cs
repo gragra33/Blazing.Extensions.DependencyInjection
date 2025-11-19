@@ -1,34 +1,37 @@
 namespace WpfExample.ViewModels;
 
 /// <summary>
-/// WeatherViewModel demonstrates dependency injection of IWeatherService.
+/// WeatherViewModel demonstrates dependency injection of IWeatherService with async operations.
 /// Shows how each tab ViewModel can have its own specific service dependencies
 /// without MainViewModel needing to know about them.
 /// </summary>
+[AutoRegister(ServiceLifetime.Transient)]
 public partial class WeatherViewModel : ViewModelBase
 {
     private readonly IWeatherService _weatherService;
-    private string _currentWeather = "Click button to get weather...";
-    private string _weatherForecast = "Click button to get forecast...";
-    private bool _useCelsius = true; // Default to Celsius
+    private WeatherData? _currentWeatherData;
+    private ObservableCollection<string> _availableLocations = [];
+    private string _selectedLocation = string.Empty;
+    private string _currentWeather = "Select a location and click Get Weather...";
+    private bool _isLoading;
+    private bool _useFahrenheit;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="WeatherViewModel"/> class.
+    /// Gets or sets the list of available weather locations.
     /// </summary>
-    /// <param name="weatherService">Service for retrieving weather information.</param>
-    /// <exception cref="ArgumentNullException">Thrown when weatherService is null.</exception>
-    public WeatherViewModel(IWeatherService weatherService)
+    public ObservableCollection<string> AvailableLocations
     {
-        _weatherService = weatherService ?? throw new ArgumentNullException(nameof(weatherService));
+        get => _availableLocations;
+        set => SetProperty(ref _availableLocations, value);
     }
 
     /// <summary>
-    /// Gets or sets whether to use Celsius (true) or Fahrenheit (false) for temperature display.
+    /// Gets or sets the currently selected weather location.
     /// </summary>
-    public bool UseCelsius
+    public string SelectedLocation
     {
-        get => _useCelsius;
-        set => SetProperty(ref _useCelsius, value);
+        get => _selectedLocation;
+        set => SetProperty(ref _selectedLocation, value);
     }
 
     /// <summary>
@@ -41,33 +44,119 @@ public partial class WeatherViewModel : ViewModelBase
     }
 
     /// <summary>
-    /// Gets or sets the weather forecast information displayed to the user.
+    /// Gets or sets whether weather data is currently being loaded.
     /// </summary>
-    public string WeatherForecast
+    public bool IsLoading
     {
-        get => _weatherForecast;
-        set => SetProperty(ref _weatherForecast, value);
+        get => _isLoading;
+        set => SetProperty(ref _isLoading, value);
     }
 
     /// <summary>
-    /// Gets the current weather information from the weather service.
-    /// Demonstrates service injection and usage within tab ViewModels.
+    /// Gets or sets whether to display temperature in Fahrenheit (true) or Celsius (false).
+    /// </summary>
+    public bool UseFahrenheit
+    {
+        get => _useFahrenheit;
+        set
+        {
+            if (SetProperty(ref _useFahrenheit, value))
+            {
+                // Refresh display when temperature unit changes
+                if (_currentWeatherData != null)
+                {
+                    DisplayWeatherData();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WeatherViewModel"/> class.
+    /// </summary>
+    /// <param name="weatherService">Service for retrieving weather information.</param>
+    /// <exception cref="ArgumentNullException">Thrown when weatherService is null.</exception>
+    public WeatherViewModel(IWeatherService weatherService)
+    {
+        _weatherService = weatherService ?? throw new ArgumentNullException(nameof(weatherService));
+        LoadAvailableLocations();
+    }
+
+    /// <summary>
+    /// Loads available weather locations from the service.
+    /// </summary>
+    private void LoadAvailableLocations()
+    {
+        Console.WriteLine("WeatherViewModel: LoadAvailableLocations called");
+        var locations = _weatherService.GetAvailableLocations().ToList();
+
+        foreach (var location in locations)
+        {
+            AvailableLocations.Add(location);
+        }
+
+        if (locations.Count > 0)
+        {
+            SelectedLocation = locations[0];
+            Console.WriteLine($"WeatherViewModel: Default location set to {locations[0]}");
+        }
+    }
+
+    /// <summary>
+    /// Gets weather data for the selected location asynchronously.
+    /// Demonstrates async service operations and data display with temperature unit conversion.
     /// </summary>
     [RelayCommand]
-    private void GetWeather()
+    private async Task GetWeather()
     {
         Console.WriteLine("WeatherViewModel: GetWeather command executed!");
-        CurrentWeather = _weatherService.GetCurrentWeather();
+
+        if (string.IsNullOrEmpty(SelectedLocation))
+        {
+            Console.WriteLine("WeatherViewModel: No location selected");
+            CurrentWeather = "Please select a location first.";
+            return;
+        }
+
+        IsLoading = true;
+        try
+        {
+            Console.WriteLine($"WeatherViewModel: Fetching weather for {SelectedLocation}");
+            _currentWeatherData = await _weatherService.GetWeatherAsync(SelectedLocation);
+            DisplayWeatherData();
+            Console.WriteLine("WeatherViewModel: Weather data fetched and displayed successfully");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"WeatherViewModel: Error fetching weather - {ex.Message}");
+            CurrentWeather = $"Error fetching weather: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     /// <summary>
-    /// Gets the weather forecast information from the weather service.
-    /// Demonstrates service injection and usage within tab ViewModels.
+    /// Displays weather data with temperature unit conversion.
     /// </summary>
-    [RelayCommand]
-    private void GetForecast()
+    private void DisplayWeatherData()
     {
-        Console.WriteLine("WeatherViewModel: GetForecast command executed!");
-        WeatherForecast = _weatherService.GetForecast();
+        if (_currentWeatherData == null) return;
+
+        Console.WriteLine("WeatherViewModel: DisplayWeatherData called");
+
+        // Convert temperature if needed
+        var temperature = UseFahrenheit
+            ? (_currentWeatherData.Temperature * 9.0 / 5.0) + 32
+            : _currentWeatherData.Temperature;
+        var unit = UseFahrenheit ? "°F" : "°C";
+
+        CurrentWeather = $"Location: {_currentWeatherData.Location}\n" +
+                        $"Temperature: {temperature:F1}{unit}\n" +
+                        $"Condition: {_currentWeatherData.Condition}\n" +
+                        $"Humidity: {_currentWeatherData.Humidity}%\n" +
+                        $"Wind Speed: {_currentWeatherData.WindSpeed:F1} km/h\n" +
+                        $"Last Updated: {_currentWeatherData.LastUpdated:yyyy-MM-dd HH:mm:ss}";
     }
 }

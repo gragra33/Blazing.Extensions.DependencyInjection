@@ -1,12 +1,15 @@
 namespace WpfExample.Views;
 
 /// <summary>
-/// WeatherView demonstrates View-First pattern where TabViewModel automatically sets the correct ViewModel as DataContext.
-/// Implements ITabView for automatic discovery by TabViewHandler.
+/// WeatherView demonstrates async service operations and data display.
+/// Uses View-First pattern with injected services for weather data retrieval.
 /// Shows complete decoupling - MainViewModel has no knowledge of this View.
 /// </summary>
 public partial class WeatherView : UserControl, ITabView
 {
+    private readonly IWeatherService _weatherService;
+    private readonly IDialogService _dialogService;
+
     /// <inheritdoc/>
     public string TabHeader => "🌤️ Weather";
     
@@ -15,11 +18,18 @@ public partial class WeatherView : UserControl, ITabView
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WeatherView"/> class.
-    /// TabViewModel will automatically resolve and assign the correct WeatherViewModel as DataContext.
+    /// Resolves WeatherViewModel via dependency injection and sets it as DataContext.
     /// </summary>
-    public WeatherView()
+    public WeatherView(IWeatherService weatherService, IDialogService dialogService)
     {
+        _weatherService = weatherService ?? throw new ArgumentNullException(nameof(weatherService));
+        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+        
         InitializeComponent();
-        Console.WriteLine("WeatherView: Constructor called - TabViewModel will set DataContext");
+        
+        // VIEW-FIRST PATTERN: Resolve WeatherViewModel via DI
+        DataContext = Application.Current.GetRequiredService<WeatherViewModel>();
+        
+        Console.WriteLine(@"WeatherView: Constructor called - WeatherViewModel resolved via DI");
     }
 }

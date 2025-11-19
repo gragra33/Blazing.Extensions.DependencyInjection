@@ -36,9 +36,9 @@ public partial class SettingsView : UserControl, ITabView
     {
         // VIEW-FIRST PATTERN: Each View resolves its own ViewModel via DI
         // SettingsViewModel is injected with all required services automatically!
-        if (DataContext == null)
-        {
-            DataContext = Application.Current.GetRequiredService<SettingsViewModel>();
-        }
+        //if (DataContext == null)
+        //{
+        //    DataContext = Application.Current.GetRequiredService<SettingsViewModel>();
+        //}
     }
 }

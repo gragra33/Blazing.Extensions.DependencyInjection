@@ -1,15 +1,14 @@
-using System.Collections.ObjectModel;
-
 namespace WpfExample.ViewModels;
 
 /// <summary>
 /// DataViewModel demonstrates data management operations with IDataService dependency injection.
 /// Shows how tab ViewModels can manage their own data collections independently.
 /// </summary>
+[AutoRegister(ServiceLifetime.Transient)]
 public partial class DataViewModel : ViewModelBase
 {
     private readonly IDataService _dataService;
-    private ObservableCollection<string> _dataItems = new();
+    private ObservableCollection<string> _dataItems = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DataViewModel"/> class.
@@ -40,7 +39,7 @@ public partial class DataViewModel : ViewModelBase
     [RelayCommand]
     private void LoadData()
     {
-        Console.WriteLine("DataViewModel: LoadData command executed!");
+        Console.WriteLine(@"DataViewModel: LoadData command executed!");
         var items = _dataService.GetAllData();
         DataItems = new ObservableCollection<string>(items);
     }
@@ -52,7 +51,7 @@ public partial class DataViewModel : ViewModelBase
     [RelayCommand]
     private void AddDataItem()
     {
-        Console.WriteLine("DataViewModel: AddDataItem command executed!");
+        Console.WriteLine(@"DataViewModel: AddDataItem command executed!");
         var itemName = $"Item {DateTime.Now:HH:mm:ss}";
         _dataService.AddData(itemName);
         LoadData();
@@ -65,7 +64,7 @@ public partial class DataViewModel : ViewModelBase
     [RelayCommand]
     private void ClearData()
     {
-        Console.WriteLine("DataViewModel: ClearData command executed!");
+        Console.WriteLine(@"DataViewModel: ClearData command executed!");
         _dataService.ClearData();
         LoadData();
     }

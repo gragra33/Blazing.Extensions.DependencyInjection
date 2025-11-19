@@ -30,7 +30,6 @@ public class TabViewModel
     /// <param name="viewType">The type of the view to resolve.</param>
     /// <param name="header">The tab header text.</param>
     /// <param name="order">The display order of the tab.</param>
-    /// <param name="isFirstTab">Whether this is the first tab (used for initial selection).</param>
     public TabViewModel(Type viewType, string header, int order)
     {
         ViewType = viewType;
@@ -58,7 +57,7 @@ public class TabViewModel
 
         try
         {
-            Console.WriteLine($"TabViewModel: Attempting to resolve view: {ViewType.Name}");
+            Console.WriteLine($@"TabViewModel: Attempting to resolve view: {ViewType.Name}");
             
             // Get the service provider from Application.Current
             var serviceProvider = Application.Current.GetServices();
@@ -66,33 +65,35 @@ public class TabViewModel
             {
                 // Use standard Microsoft DI GetRequiredService with the Type parameter
                 _viewInstance = serviceProvider.GetRequiredService(ViewType);
-                Console.WriteLine($"TabViewModel: Successfully resolved view: {ViewType.Name}");
-                
-                // CRITICAL FIX: Set the correct ViewModel as DataContext for the View
-                if (_viewInstance is FrameworkElement view)
+                Console.WriteLine($@"TabViewModel: Successfully resolved view: {ViewType.Name}");
+
+                // Automatically set the DataContext to the corresponding ViewModel
+                if (_viewInstance is not FrameworkElement view)
                 {
-                    // Determine the ViewModel type based on the View type
-                    var viewModelTypeName = ViewType.Name.Replace("View", "ViewModel");
-                    var viewModelType = ViewType.Assembly.GetTypes()
-                        .FirstOrDefault(t => t.Name == viewModelTypeName);
+                    return;
+                }
+
+                // Determine the ViewModel type based on the View type
+                var viewModelTypeName = ViewType.Name.Replace("View", "ViewModel");
+                var viewModelType = ViewType.Assembly.GetTypes()
+                    .FirstOrDefault(t => t.Name == viewModelTypeName);
                         
-                    if (viewModelType != null)
+                if (viewModelType != null)
+                {
+                    try
                     {
-                        try
-                        {
-                            var viewModel = serviceProvider.GetRequiredService(viewModelType);
-                            view.DataContext = viewModel;
-                            Console.WriteLine($"TabViewModel: Set {viewModelTypeName} as DataContext for {ViewType.Name}");
-                        }
-                        catch (Exception vmEx)
-                        {
-                            Console.WriteLine($"TabViewModel: Failed to resolve {viewModelTypeName}: {vmEx.Message}");
-                        }
+                        var viewModel = serviceProvider.GetRequiredService(viewModelType);
+                        view.DataContext = viewModel;
+                        Console.WriteLine($@"TabViewModel: Set {viewModelTypeName} as DataContext for {ViewType.Name}");
                     }
-                    else
+                    catch (Exception vmEx)
                     {
-                        Console.WriteLine($"TabViewModel: Could not find ViewModel type {viewModelTypeName}");
+                        Console.WriteLine($@"TabViewModel: Failed to resolve {viewModelTypeName}: {vmEx.Message}");
                     }
+                }
+                else
+                {
+                    Console.WriteLine($@"TabViewModel: Could not find ViewModel type {viewModelTypeName}");
                 }
             }
             else
@@ -102,12 +103,12 @@ public class TabViewModel
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"TabViewModel: Failed to resolve view {ViewType.Name}: {ex.Message}");
-            Console.WriteLine($"TabViewModel: Stack trace: {ex.StackTrace}");
-            
-            _viewInstance = new TextBlock 
-            { 
-                Text = $"Error loading {ViewType.Name}: {ex.Message}",
+            Console.WriteLine($@"TabViewModel: Failed to resolve view {ViewType.Name}: {ex.Message}");
+            Console.WriteLine($@"TabViewModel: Stack trace: {ex.StackTrace}");
+
+            _viewInstance = new TextBlock
+            {
+                Text = $@"Error loading {ViewType.Name}: {ex.Message}",
                 TextWrapping = TextWrapping.Wrap,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,

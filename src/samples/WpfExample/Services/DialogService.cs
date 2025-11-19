@@ -5,6 +5,7 @@ namespace WpfExample.Services;
 /// Demonstrates service implementation for UI operations.
 /// In testing scenarios, this could be replaced with a mock implementation.
 /// </summary>
+[AutoRegister(ServiceLifetime.Singleton, typeof(IDialogService))]
 public class DialogService : IDialogService
 {
     /// <inheritdoc/>

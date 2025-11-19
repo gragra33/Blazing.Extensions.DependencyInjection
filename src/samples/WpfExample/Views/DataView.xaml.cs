@@ -35,9 +35,9 @@ public partial class DataView : UserControl, ITabView
     {
         // VIEW-FIRST PATTERN: Each View resolves its own ViewModel via DI
         // DataViewModel is injected with IDataService automatically!
-        if (DataContext == null)
-        {
-            DataContext = Application.Current.GetRequiredService<DataViewModel>();
-        }
+        //if (DataContext == null)
+        //{
+        //    DataContext = Application.Current.GetRequiredService<DataViewModel>();
+        //}
     }
 }

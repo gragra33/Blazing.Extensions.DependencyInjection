@@ -9,7 +9,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         // Console window is now enabled via OutputType=Exe in csproj
-        Console.WriteLine("=== WPF Application Starting ===");
+        Console.WriteLine(@"=== WPF Application Starting ===");
         
         base.OnStartup(e);
 
@@ -18,6 +18,18 @@ public partial class App : Application
             // STEP 1: Configure services but don't build yet
             var services = this.GetServiceCollection(services =>
             {
+                // Auto-discover and register all classes decorated with AutoRegisterAttribute
+                services.Register();
+
+                // Auto-discover and register all ITabView implementations from current assembly
+                // This is an example of manual discovery registration. The AutoRegisterAttribute could
+                //   also be used on ITabView implementations
+                services.Register<ITabView>(ServiceLifetime.Transient);
+
+                // ============================================================================
+                // Example of manual service registrations
+
+                /*
                 // Register ViewModels - each will be injected with required services automatically
                 // NOTE: MainViewModel is simple and doesn't know about child ViewModels (decoupled design)
                 services.AddTransient<MainViewModel>();
@@ -46,6 +58,7 @@ public partial class App : Application
                 
                 // Register MainWindow
                 services.AddTransient<MainWindow>();
+                */
             });
 
             // STEP 2: BuildServiceProvider and assign services - this is the critical step!
@@ -53,13 +66,13 @@ public partial class App : Application
             var serviceProvider = this.BuildServiceProvider(services);
 
             // STEP 3: Test that service provider is working
-            Console.WriteLine("Service provider built successfully");
+            Console.WriteLine(@"Service provider built successfully");
             
             // STEP 4: Resolve MainWindow directly from the service provider to avoid extension method issues
             var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
             
-            Console.WriteLine("MainWindow created and shown successfully");
+            Console.WriteLine(@"MainWindow created and shown successfully");
         }
         catch (Exception ex)
         {

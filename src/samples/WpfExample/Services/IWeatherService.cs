@@ -7,14 +7,12 @@ namespace WpfExample.Services;
 public interface IWeatherService
 {
     /// <summary>
-    /// Gets the current weather conditions.
+    /// Gets weather data for the specified location asynchronously.
     /// </summary>
-    /// <returns>A string describing current weather conditions and temperature in Celsius.</returns>
-    string GetCurrentWeather();
+    Task<WeatherData> GetWeatherAsync(string location);
     
     /// <summary>
-    /// Gets a weather forecast for upcoming days.
+    /// Gets available locations for weather data.
     /// </summary>
-    /// <returns>A string containing forecast information in Celsius.</returns>
-    string GetForecast();
+    IEnumerable<string> GetAvailableLocations();
 }

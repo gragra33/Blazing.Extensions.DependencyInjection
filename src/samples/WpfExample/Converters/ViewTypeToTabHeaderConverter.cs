@@ -22,7 +22,7 @@ public class ViewTypeToTabHeaderConverter : IValueConverter
         {
             // Get the service provider and find the ITabView instance of the requested type
             var serviceProvider = Application.Current.GetServices();
-            var tabView = serviceProvider.GetServices<ITabView>()
+            var tabView = serviceProvider!.GetServices<ITabView>()
                 .FirstOrDefault(view => view.GetType() == viewType);
             
             return tabView?.TabHeader ?? viewType.Name;

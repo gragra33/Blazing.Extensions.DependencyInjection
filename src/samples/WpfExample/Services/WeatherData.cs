@@ -1,4 +1,4 @@
-namespace WinFormsExample.Services;
+namespace WpfExample.Services;
 
 /// <summary>
 /// Represents weather data for demonstration purposes.
