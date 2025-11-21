@@ -1,6 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.CompilerServices;
-
 namespace Blazing.Extensions.DependencyInjection;
 
 /// <summary>

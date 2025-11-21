@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazing.Extensions.DependencyInjection;
 
@@ -69,7 +68,7 @@ public static class ServiceExtensions
             }
             else
             {
-                var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+                var newContext = new InstanceContext(serviceProvider, []);
                 _instanceContexts.AddOrUpdate(instance, newContext);
             }
         }
@@ -117,7 +116,7 @@ public static class ServiceExtensions
         }
         else
         {
-            var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+            var newContext = new InstanceContext(serviceProvider, []);
             _instanceContexts.AddOrUpdate(instance, newContext);
         }
         
@@ -156,7 +155,7 @@ public static class ServiceExtensions
         }
         else
         {
-            var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+            var newContext = new InstanceContext(serviceProvider, []);
             _instanceContexts.AddOrUpdate(instance, newContext);
         }
         
@@ -188,7 +187,7 @@ public static class ServiceExtensions
         }
         else
         {
-            var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+            var newContext = new InstanceContext(serviceProvider, []);
             _instanceContexts.AddOrUpdate(instance, newContext);
         }
         
@@ -240,7 +239,7 @@ public static class ServiceExtensions
         }
         else
         {
-            var newContext = new InstanceContext(serviceProvider, new HashSet<Assembly>());
+            var newContext = new InstanceContext(serviceProvider, []);
             _instanceContexts.AddOrUpdate(instance, newContext);
         }
 

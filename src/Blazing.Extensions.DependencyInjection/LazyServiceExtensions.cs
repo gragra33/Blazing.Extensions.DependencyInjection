@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Blazing.Extensions.DependencyInjection;
 
 /// <summary>
@@ -62,7 +60,7 @@ public static class LazyServiceExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddKeyedSingleton(serviceKey, (provider, key) =>
+        services.AddKeyedSingleton(serviceKey, (provider, _) =>
             new Lazy<TInterface>(() => ActivatorUtilities.CreateInstance<TImplementation>(provider)));
 
         return services;
@@ -110,7 +108,7 @@ public static class LazyServiceExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddKeyedTransient(serviceKey, (provider, key) =>
+        services.AddKeyedTransient(serviceKey, (provider, _) =>
             new Lazy<TInterface>(() => ActivatorUtilities.CreateInstance<TImplementation>(provider)));
 
         return services;
@@ -158,7 +156,7 @@ public static class LazyServiceExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddKeyedScoped(serviceKey, (provider, key) =>
+        services.AddKeyedScoped(serviceKey, (provider, _) =>
             new Lazy<TInterface>(() => ActivatorUtilities.CreateInstance<TImplementation>(provider)));
 
         return services;

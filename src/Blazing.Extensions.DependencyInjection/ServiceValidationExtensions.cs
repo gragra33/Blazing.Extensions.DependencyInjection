@@ -1,6 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 namespace Blazing.Extensions.DependencyInjection;
 
@@ -83,7 +81,7 @@ public static class ServiceValidationExtensions
 
         foreach (var serviceType in dependencyGraph.Keys)
         {
-            var cycle = FindCycle(serviceType, dependencyGraph, new HashSet<Type>(), new List<Type>());
+            var cycle = FindCycle(serviceType, dependencyGraph, [], []);
             if (cycle != null)
             {
                 var cycleDep = new ServiceCircularDependencyInfo
@@ -359,7 +357,7 @@ public static class ServiceValidationExtensions
 
             if (!graph.ContainsKey(implementationType))
             {
-                graph[implementationType] = new List<Type>();
+                graph[implementationType] = [];
             }
 
             var constructors = implementationType.GetConstructors();
@@ -410,7 +408,7 @@ public static class ServiceValidationExtensions
         {
             foreach (var dependency in dependencies)
             {
-                var cycle = FindCycle(dependency, graph, new HashSet<Type>(visited), new List<Type>(path));
+                var cycle = FindCycle(dependency, graph, [..visited], [..path]);
                 if (cycle != null)
                 {
                     return cycle;

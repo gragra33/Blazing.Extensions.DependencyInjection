@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Blazing.Extensions.DependencyInjection;
 
 /// <summary>
@@ -91,12 +89,12 @@ public static class ServiceEnumerationExtensions
         var serviceProvider = instance.GetServices();
         if (serviceProvider == null)
         {
-            return Enumerable.Empty<TService>();
+            return [];
         }
 
         // Use Microsoft's GetService explicitly to avoid our extension method
         var services = ServiceProviderServiceExtensions.GetService<IEnumerable<TService>>(serviceProvider);
-        return services ?? Enumerable.Empty<TService>();
+        return services ?? [];
     }
 
     /// <summary>

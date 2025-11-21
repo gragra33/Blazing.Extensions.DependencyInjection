@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace Blazing.Extensions.DependencyInjection;
@@ -162,7 +161,7 @@ internal sealed class CachingDecorator<T> : DispatchProxy where T : class
         return proxy;
     }
 
-    protected override object? Invoke(System.Reflection.MethodInfo? targetMethod, object?[]? args)
+    protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
     {
         if (targetMethod == null)
             return null;
@@ -202,7 +201,7 @@ internal sealed class LoggingDecorator<T> : DispatchProxy where T : class
         return proxy;
     }
 
-    protected override object? Invoke(System.Reflection.MethodInfo? targetMethod, object?[]? args)
+    protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
     {
         if (targetMethod == null)
             return null;
