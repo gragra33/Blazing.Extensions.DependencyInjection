@@ -18,7 +18,21 @@
     <!-- Treat all warnings as errors -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-    <!-- SourceLink settings -->
+	  <!-- Default versioning (can be overridden in individual projects) -->
+	  <ApplicationDisplayVersion>2.1.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>2.1</ApplicationVersion>
+	  <AssemblyVersion>2.1.0.0</AssemblyVersion>
+	  <FileVersion>2.1.0.0</FileVersion>
+	  <Version>2.1.0</Version>
+
+	  <!-- Repository information -->
+	  <RepositoryUrl>https://github.com/gragra33/Blazing.Extensions.DependencyInjection</RepositoryUrl>
+	  <RepositoryType>git</RepositoryType>
+	  <Copyright>Copyright (c) 2025 Graeme Grant</Copyright>
+	  <Authors>Graeme Grant (@gragra33)</Authors>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+	  <!-- SourceLink settings -->
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

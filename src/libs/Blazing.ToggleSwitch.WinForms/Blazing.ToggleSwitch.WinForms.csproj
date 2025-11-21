@@ -4,7 +4,6 @@
     <!-- Multi-target .NET 8.0, .NET 9.0, and .NET 10.0 -->
     <TargetFrameworks>net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
-    <Nullable>enable</Nullable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>Blazing.ToggleSwitch.WinForms</PackageId>
     <Description>A modern toggle switch control for WinForms applications</Description>
