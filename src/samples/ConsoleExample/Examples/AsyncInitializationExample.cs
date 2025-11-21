@@ -40,7 +40,7 @@ public class AsyncInitializationExample : IExample
             services.AddSingleton<IAsyncInitializable, CacheInitializer>();
             services.AddSingleton<IAsyncInitializable, IndexInitializer>();
 
-            services.AddStartupAction(async provider =>
+            services.AddStartupAction(async _ =>
             {
                 Console.WriteLine("      ? Startup action: Application ready");
                 await Task.CompletedTask;
@@ -58,7 +58,7 @@ public class AsyncInitializationExample : IExample
         Task.Run(async () =>
         {
             await _host.GetServices()!.InitializeAllAsync();
-            Console.WriteLine($"    + All services initialized successfully");
+            Console.WriteLine("    + All services initialized successfully");
         }).Wait();
     }
 
@@ -88,7 +88,7 @@ public class AsyncInitializationExample : IExample
         var newHost = new ApplicationHost();
         newHost.ConfigureServices(services =>
         {
-            services.AddStartupAction(async provider =>
+            services.AddStartupAction(async _ =>
             {
                 Console.WriteLine("      -> Custom startup action executed");
                 await Task.Delay(10);
@@ -100,7 +100,7 @@ public class AsyncInitializationExample : IExample
             await newHost.GetServices()!.InitializeAllAsync();
         }).Wait();
 
-        Console.WriteLine($"    + Startup actions completed");
+        Console.WriteLine("    + Startup actions completed");
     }
 }
 

@@ -53,17 +53,18 @@ public class ServiceValidationExample : IExample
 
         var violations = services.ValidateLifetimeCompatibility();
 
-        if (violations.Any())
+        IEnumerable<ServiceLifetimeValidationError> serviceLifetimeValidationErrors = violations.ToList();
+        if (serviceLifetimeValidationErrors.Any())
         {
-            Console.WriteLine($"    + Found {violations.Count()} lifetime violations");
-            foreach (var violation in violations.Take(2))
+            Console.WriteLine($"    + Found {serviceLifetimeValidationErrors.Count()} lifetime violations");
+            foreach (var violation in serviceLifetimeValidationErrors.Take(2))
             {
                 Console.WriteLine($"      -> {violation.ServiceType.Name}: {violation.ErrorMessage[..60]}...");
             }
         }
         else
         {
-            Console.WriteLine($"    + No lifetime violations detected");
+            Console.WriteLine("    + No lifetime violations detected");
         }
     }
 
@@ -81,8 +82,9 @@ public class ServiceValidationExample : IExample
 
         var duplicates = services.ValidateDuplicateRegistrations();
 
-        Console.WriteLine($"    + Found {duplicates.Count()} duplicate service types");
-        foreach (var dup in duplicates)
+        IEnumerable<ServiceDuplicateInfo> serviceDuplicateInfos = duplicates.ToList();
+        Console.WriteLine($"    + Found {serviceDuplicateInfos.Count()} duplicate service types");
+        foreach (var dup in serviceDuplicateInfos)
         {
             Console.WriteLine($"      -> {dup.Registrations.First().ServiceType.Name}: {dup.Count} registrations");
         }
@@ -90,25 +92,25 @@ public class ServiceValidationExample : IExample
 }
 
 /// <summary>Validation test service interface.</summary>
-public interface IValidationTestService { }
+public interface IValidationTestService;
 
 /// <summary>Validation test service.</summary>
-public class ValidationTestService : IValidationTestService { }
+public class ValidationTestService : IValidationTestService;
 
 /// <summary>Scoped test service interface.</summary>
-public interface IScopedTestService { }
+public interface IScopedTestService;
 
 /// <summary>Scoped test service.</summary>
-public class ScopedTestService : IScopedTestService { }
+public class ScopedTestService : IScopedTestService;
 
 /// <summary>Transient test service interface.</summary>
-public interface ITransientTestService { }
+public interface ITransientTestService;
 
 /// <summary>Transient test service.</summary>
-public class TransientTestService : ITransientTestService { }
+public class TransientTestService : ITransientTestService;
 
 /// <summary>Violating service interface.</summary>
-public interface IViolatingService { }
+public interface IViolatingService;
 
 /// <summary>Service with lifetime violation (singleton depending on scoped).</summary>
 public class ViolatingService : IViolatingService
@@ -118,19 +120,19 @@ public class ViolatingService : IViolatingService
 }
 
 /// <summary>Scoped dependency interface.</summary>
-public interface IScopedDependency { }
+public interface IScopedDependency;
 
 /// <summary>Scoped dependency.</summary>
-public class ScopedDependency : IScopedDependency { }
+public class ScopedDependency : IScopedDependency;
 
 /// <summary>Duplicate service interface.</summary>
-public interface IDuplicateService { }
+public interface IDuplicateService;
 
 /// <summary>Duplicate service A.</summary>
-public class DuplicateServiceA : IDuplicateService { }
+public class DuplicateServiceA : IDuplicateService;
 
 /// <summary>Duplicate service B.</summary>
-public class DuplicateServiceB : IDuplicateService { }
+public class DuplicateServiceB : IDuplicateService;
 
 /// <summary>Duplicate service C.</summary>
-public class DuplicateServiceC : IDuplicateService { }
+public class DuplicateServiceC : IDuplicateService;

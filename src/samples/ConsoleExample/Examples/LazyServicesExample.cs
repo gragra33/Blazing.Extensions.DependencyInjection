@@ -49,7 +49,7 @@ public class LazyServicesExample : IExample
         Console.WriteLine("  Resolving lazy service...");
 
         var lazyService = _host.GetLazyService<IExpensiveService>();
-        Console.WriteLine($"    + Lazy<T> resolved");
+        Console.WriteLine("    + Lazy<T> resolved");
         Console.WriteLine($"    + Service created: {lazyService.IsValueCreated} (expected: False)");
 
         Console.WriteLine("  Accessing service value...");
@@ -68,10 +68,9 @@ public class LazyServicesExample : IExample
         Console.WriteLine("  Resolving lazy keyed service...");
 
         var lazyService = _host.GetLazyKeyedService<IExpensiveService>("cached");
-        Console.WriteLine($"    + Lazy keyed service resolved");
+        Console.WriteLine("    + Lazy keyed service resolved");
         Console.WriteLine($"    + Service created: {lazyService.IsValueCreated} (expected: False)");
 
-        var service = lazyService.Value;
         Console.WriteLine($"    + Service created on demand: {lazyService.IsValueCreated}");
     }
 
@@ -89,7 +88,7 @@ public class LazyServicesExample : IExample
         {
             services.AddSingleton<IExpensiveService, ExpensiveService>();
         });
-        var eagerService = eagerHost.GetRequiredService<IExpensiveService>();
+        eagerHost.GetRequiredService<IExpensiveService>();
         var eagerDuration = (DateTime.UtcNow - eagerStart).TotalMilliseconds;
 
         // Lazy initialization

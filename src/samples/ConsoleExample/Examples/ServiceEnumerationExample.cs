@@ -110,8 +110,9 @@ public class ServiceEnumerationExample : IExample
 
         var results = _host.MapServices<IPluginHandler, string>(h => h.GetStatus());
 
-        Console.WriteLine($"    + Mapped {results.Count()} handlers to status strings");
-        foreach (var result in results)
+        IEnumerable<string> enumerable = results.ToList();
+        Console.WriteLine($"    + Mapped {enumerable.Count()} handlers to status strings");
+        foreach (var result in enumerable)
         {
             Console.WriteLine($"      - {result}");
         }

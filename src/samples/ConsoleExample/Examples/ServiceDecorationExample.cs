@@ -37,21 +37,21 @@ public class ServiceDecorationExample : IExample
         _host.ConfigureServices(services =>
         {
             // Caching decorator
-            services.AddSingleton<IDataRepository>(provider =>
+            services.AddSingleton<IDataRepository>(_ =>
             {
                 var inner = new DataRepository();
                 return new CachedDataRepository(inner);
             });
 
             // Logging decorator
-            services.AddSingleton<IOrderService>(provider =>
+            services.AddSingleton<IOrderService>(_ =>
             {
                 var inner = new OrderService();
                 return new LoggingOrderService(inner);
             });
 
             // Multiple decorators (logging + caching)
-            services.AddSingleton<IProductService>(provider =>
+            services.AddSingleton<IProductService>(_ =>
             {
                 var baseService = new ProductService();
                 var logged = new LoggingProductService(baseService);
@@ -74,7 +74,7 @@ public class ServiceDecorationExample : IExample
 
         Console.WriteLine($"    + First call: {data1}");
         Console.WriteLine($"    + Second call (cached): {data2}");
-        Console.WriteLine($"    + Caching decorator applied successfully");
+        Console.WriteLine("    + Caching decorator applied successfully");
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public class ServiceDecorationExample : IExample
         var service = _host.GetRequiredService<IOrderService>();
         service.ProcessOrder("Order123");
 
-        Console.WriteLine($"    + Logging decorator captured method call");
+        Console.WriteLine("    + Logging decorator captured method call");
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public class ServiceDecorationExample : IExample
         service.GetProduct("P001");
         service.GetProduct("P001"); // Cached
 
-        Console.WriteLine($"    + Multiple decorators applied (logging -> caching)");
+        Console.WriteLine("    + Multiple decorators applied (logging -> caching)");
     }
 }
 

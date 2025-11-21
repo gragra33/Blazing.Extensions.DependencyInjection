@@ -61,7 +61,7 @@ public class OpenGenericsExample : IExample
 
         Console.WriteLine($"    + Customer repository: {customerRepo.GetTypeName()}");
         Console.WriteLine($"    + Product repository: {productRepo.GetTypeName()}");
-        Console.WriteLine($"    + Single registration, multiple closed types");
+        Console.WriteLine("    + Single registration, multiple closed types");
     }
 
     /// <summary>
@@ -93,7 +93,7 @@ public class OpenGenericsExample : IExample
 
         Console.WriteLine($"    + Command handler: {commandHandler.GetType().Name}");
         Console.WriteLine($"    + Query handler: {queryHandler.GetType().Name}");
-        Console.WriteLine($"    + Multiple patterns registered with single call");
+        Console.WriteLine("    + Multiple patterns registered with single call");
     }
 }
 
@@ -141,14 +141,14 @@ public interface IGenericValidator<T> where T : class
 public class GenericValidator<T> : IGenericValidator<T> where T : class
 {
     /// <inheritdoc/>
-    public bool Validate(T instance) => instance != null;
+    public bool Validate(T? instance) => instance != null;
 }
 
 /// <summary>
 /// Generic command handler interface.
 /// </summary>
 /// <typeparam name="TCommand">The command type.</typeparam>
-public interface ICommandHandler<TCommand> where TCommand : class
+public interface ICommandHandler<in TCommand> where TCommand : class
 {
     /// <summary>
     /// Handles the command.
@@ -171,7 +171,7 @@ public class CommandHandler<TCommand> : ICommandHandler<TCommand> where TCommand
 /// Generic query handler interface.
 /// </summary>
 /// <typeparam name="TQuery">The query type.</typeparam>
-public interface IQueryHandler<TQuery> where TQuery : class
+public interface IQueryHandler<in TQuery> where TQuery : class
 {
     /// <summary>
     /// Handles the query.

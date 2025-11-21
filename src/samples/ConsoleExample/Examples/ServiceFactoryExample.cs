@@ -37,21 +37,21 @@ public class ServiceFactoryExample : IExample
         _host.ConfigureServices(services =>
         {
             // Conditional factory based on environment
-            services.RegisterConditionalFactory<ICacheFactory>(provider =>
+            services.RegisterConditionalFactory<ICacheFactory>(_ =>
             {
                 var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
                 return isDevelopment
                     ? new MemoryCacheFactory()
-                    : (ICacheFactory)new RedisCacheFactory();
+                    : new RedisCacheFactory();
             });
 
             // Keyed factories
-            services.RegisterKeyedFactory<IMessageSender>("email", (provider, key) => new EmailSender());
-            services.RegisterKeyedFactory<IMessageSender>("sms", (provider, key) => new SmsSender());
+            services.RegisterKeyedFactory<IMessageSender>("email", (_, _) => new EmailSender());
+            services.RegisterKeyedFactory<IMessageSender>("sms", (_, _) => new SmsSender());
 
             // Lifetime-specific factories
-            services.RegisterTransientFactory<ITransientFactory>(provider => new TransientFactory());
-            services.RegisterScopedFactory<IScopedFactory>(provider => new ScopedFactory());
+            services.RegisterTransientFactory<ITransientFactory>(_ => new TransientFactory());
+            services.RegisterScopedFactory<IScopedFactory>(_ => new ScopedFactory());
         });
     }
 
@@ -64,7 +64,7 @@ public class ServiceFactoryExample : IExample
 
         var cacheFactory = _host.GetRequiredService<ICacheFactory>();
         Console.WriteLine($"    + Cache factory type: {cacheFactory.GetType().Name}");
-        Console.WriteLine($"    + Factory selected based on environment");
+        Console.WriteLine("    + Factory selected based on environment");
     }
 
     /// <summary>

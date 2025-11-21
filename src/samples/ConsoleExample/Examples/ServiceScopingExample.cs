@@ -55,7 +55,7 @@ public class ServiceScopingExample : IExample
         var scopeId = service.GetScopeId();
 
         Console.WriteLine($"    + Scoped service created with ID: {scopeId}");
-        Console.WriteLine($"    + Scope automatically disposed");
+        Console.WriteLine("    + Scope automatically disposed");
     }
 
     /// <summary>
@@ -72,7 +72,7 @@ public class ServiceScopingExample : IExample
             var scopeId = service.GetScopeId();
 
             Console.WriteLine($"    + Async scoped service created with ID: {scopeId}");
-            Console.WriteLine($"    + Async scope automatically disposed");
+            Console.WriteLine("    + Async scope automatically disposed");
         }).Wait();
     }
 
@@ -87,7 +87,7 @@ public class ServiceScopingExample : IExample
         {
             var scopeId = service.GetScopeId();
             Console.WriteLine($"    + Scoped service executed with ID: {scopeId}");
-            Console.WriteLine($"    + Scope created and disposed automatically");
+            Console.WriteLine("    + Scope created and disposed automatically");
         });
     }
 
@@ -102,7 +102,7 @@ public class ServiceScopingExample : IExample
         {
             var scopeId = service.GetScopeId();
             Console.WriteLine($"    + Keyed scoped service executed with ID: {scopeId}");
-            Console.WriteLine($"    + Keyed scope created and disposed automatically");
+            Console.WriteLine("    + Keyed scope created and disposed automatically");
         });
     }
 }

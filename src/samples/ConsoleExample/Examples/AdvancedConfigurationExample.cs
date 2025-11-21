@@ -42,8 +42,8 @@ public class AdvancedConfigurationExample : IExample
     private static void ValidateServices(IServiceProvider provider)
     {
         ConsoleHelper.LogTiming("Post-build validation starting");
-        var repo = provider.GetRequiredService<IRepository>();
-        var userSvc = provider.GetRequiredService<IUserService>();
+        provider.GetRequiredService<IRepository>();
+        provider.GetRequiredService<IUserService>();
         Console.WriteLine("Post-build validation: All required services are available");
         ConsoleHelper.LogTiming("Post-build validation completed");
     }
