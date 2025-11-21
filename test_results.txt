@@ -1,0 +1,528 @@
+Test run for C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\bin\Release\net10.0\UnitTests.dll (.NETCoreApp,Version=v10.0)
+Test run for C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\bin\Release\net9.0\UnitTests.dll (.NETCoreApp,Version=v9.0)
+VSTest version 18.0.1 (x64)
+
+Test run for C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\bin\Release\net8.0\UnitTests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 18.0.1 (x64)
+
+VSTest version 18.0.1 (x64)
+
+Starting test execution, please wait...
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+[xUnit.net 00:00:00.21]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic [FAIL]
+[xUnit.net 00:00:00.21]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic [FAIL]
+[xUnit.net 00:00:00.23]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance [FAIL]
+[xUnit.net 00:00:00.23]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching [FAIL]
+[xUnit.net 00:00:00.23]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope [FAIL]
+[xUnit.net 00:00:00.24]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances [FAIL]
+[xUnit.net 00:00:00.23]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance [FAIL]
+[xUnit.net 00:00:00.24]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching [FAIL]
+[xUnit.net 00:00:00.24]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope [FAIL]
+[xUnit.net 00:00:00.25]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic [5 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericSingleton(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 48
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1344
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericSingleton(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 48
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1358
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching [1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 213
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetFirstService[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 235
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1616
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1140
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericTransient(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 75
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1374
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.27]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter [FAIL]
+[xUnit.net 00:00:00.27]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found [FAIL]
+[xUnit.net 00:00:00.27]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope [FAIL]
+[xUnit.net 00:00:00.27]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 213
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1559
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 213
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetFirstServiceOrDefault[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 257
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1634
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1463
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 428
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 95
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1540
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.29]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value [FAIL]
+[xUnit.net 00:00:00.29]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count [FAIL]
+[xUnit.net 00:00:00.29]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services [FAIL]
+[xUnit.net 00:00:00.30]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value [3 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateAsyncScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 76
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateAsyncScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 76
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedServiceAsync[TService,TResult](Object instance, Func`2 func) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 199
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1177
+--- End of stack trace from previous location ---
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServiceCount[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 275
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1652
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedKeyedService[TService](Object instance, Object serviceKey, Action`1 action) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 297
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1199
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.ForEachService[TService](Object instance, Action`1 action) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 112
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1578
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.30]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedService[TService,TResult](Object instance, Func`2 func) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 125
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1159
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services [FAIL]
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.MapServices[TService,TResult](Object instance, Func`2 selector) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 163
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1596
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericServices(IServiceCollection services, ServiceLifetime lifetime, ValueTuple`2[] genericServicePairs) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 134
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1392
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic [5 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericSingleton(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 48
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1344
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericSingleton(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 48
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1358
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching [1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 42
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 216
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetFirstService[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 238
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1616
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1140
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericTransient(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 75
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1374
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.28]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter [FAIL]
+[xUnit.net 00:00:00.28]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found [FAIL]
+[xUnit.net 00:00:00.28]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope [FAIL]
+[xUnit.net 00:00:00.28]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 42
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 216
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1559
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 42
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 216
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetFirstServiceOrDefault[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 260
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1634
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1463
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 428
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 95
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1540
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value [FAIL]
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count [FAIL]
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services [FAIL]
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value [2 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateAsyncScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 76
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateAsyncScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 76
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedServiceAsync[TService,TResult](Object instance, Func`2 func) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 199
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1177
+--- End of stack trace from previous location ---
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 42
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServiceCount[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 277
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1652
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedKeyedService[TService](Object instance, Object serviceKey, Action`1 action) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 297
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1199
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 42
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.ForEachService[TService](Object instance, Action`1 action) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 115
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1578
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedService[TService,TResult](Object instance, Func`2 func) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 125
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1159
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.32]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services [FAIL]
+[xUnit.net 00:00:00.32]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services [1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 42
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.MapServices[TService,TResult](Object instance, Func`2 selector) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 166
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1596
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericServices(IServiceCollection services, ServiceLifetime lifetime, ValueTuple`2[] genericServicePairs) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 134
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1392
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.21]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic [FAIL]
+[xUnit.net 00:00:00.23]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance [FAIL]
+[xUnit.net 00:00:00.23]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching [FAIL]
+[xUnit.net 00:00:00.23]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope [FAIL]
+[xUnit.net 00:00:00.24]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic [5 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericSingleton(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 48
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Register_Open_Generic() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1344
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericSingleton(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 48
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericSingleton_Should_Return_Same_Instance() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1358
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching [1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 213
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetFirstService[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 235
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstService_Should_Return_First_Matching() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1616
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope [1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.CreateScope_Should_Create_New_ServiceScope() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1140
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericTransient(IServiceCollection services, Type genericInterfaceType, Type genericImplementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 75
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericTransient_Should_Create_New_Instances() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1374
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.27]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter [FAIL]
+[xUnit.net 00:00:00.28]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found [FAIL]
+[xUnit.net 00:00:00.28]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope [FAIL]
+[xUnit.net 00:00:00.28]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 213
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_WithPredicate_Should_Filter() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1559
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 213
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetFirstServiceOrDefault[TService](Object instance, Func`2 predicate) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 257
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1634
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.RegisterScopedFactory_Should_Create_Per_Scope() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1463
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 428
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 95
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServices_Should_Return_All_Or_Empty() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1540
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+[xUnit.net 00:00:00.30]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value [FAIL]
+[xUnit.net 00:00:00.30]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count [FAIL]
+[xUnit.net 00:00:00.30]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services [FAIL]
+[xUnit.net 00:00:00.30]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value [2 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateAsyncScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 76
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateAsyncScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 76
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedServiceAsync[TService,TResult](Object instance, Func`2 func) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 199
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedServiceAsync_WithResult_Should_Return_Value() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1177
+--- End of stack trace from previous location ---
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetServiceCount[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 275
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetServiceCount_Should_Return_Count() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1652
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedKeyedService[TService](Object instance, Object serviceKey, Action`1 action) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 297
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedKeyedService_Should_Work_With_Keyed_Services() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1199
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.ForEachService[TService](Object instance, Action`1 action) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 112
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.ForEachService_Should_Execute_For_Each() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1578
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+[xUnit.net 00:00:00.30]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value [< 1 ms]
+  Error Message:
+   System.InvalidOperationException : Service provider is not configured. Call ConfigureServices() first.
+  Stack Trace:
+Failed!  - Failed:    16, Passed:    61, Skipped:     0, Total:    77, Duration: 176 ms     at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.CreateScope(Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 47
+   at Blazing.Extensions.DependencyInjection.ServiceScopeExtensions.GetScopedService[TService,TResult](Object instance, Func`2 func) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceScopeExtensions.cs:line 125
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.GetScopedService_WithResult_Should_Return_Value() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1159
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+ - UnitTests.dll (net9.0)
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services [FAIL]
+[xUnit.net 00:00:00.31]     Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics [FAIL]
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services [7 ms]
+  Error Message:
+   System.InvalidOperationException : GetRequiredService extension method should not be called on IServiceProvider instances. Use the standard Microsoft.Extensions.DependencyInjection methods instead.
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.ServiceExtensions.GetRequiredService[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceExtensions.cs:line 391
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.GetRequiredServices[TService](Object instance) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 37
+   at Blazing.Extensions.DependencyInjection.ServiceEnumerationExtensions.MapServices[TService,TResult](Object instance, Func`2 selector) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\ServiceEnumerationExtensions.cs:line 163
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.MapServices_Should_Transform_Services() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1596
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+  Failed Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics [< 1 ms]
+  Error Message:
+   System.ArgumentException : Implementation type 'Repository`1' does not implement interface 'IRepository`1'
+  Stack Trace:
+     at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.ValidateGenericTypes(Type interfaceType, Type implementationType) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 247
+   at Blazing.Extensions.DependencyInjection.GenericServiceExtensions.AddGenericServices(IServiceCollection services, ServiceLifetime lifetime, ValueTuple`2[] genericServicePairs) in C:\wip\NET10\Blazing.Extensions.DependencyInjection\src\Blazing.Extensions.DependencyInjection\GenericServiceExtensions.cs:line 134
+   at Blazing.Extensions.DependencyInjection.Tests.ServiceExtensionsTests.AddGenericServices_Should_Register_Multiple_Generics() in C:\wip\NET10\Blazing.Extensions.DependencyInjection\tests\UnitTests\ServiceExtensionsTests.cs:line 1392
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Failed!  - Failed:    16, Passed:    61, Skipped:     0, Total:    77, Duration: 187 ms - UnitTests.dll (net10.0)
+
+Failed!  - Failed:    16, Passed:    61, Skipped:     0, Total:    77, Duration: 177 ms - UnitTests.dll (net8.0)

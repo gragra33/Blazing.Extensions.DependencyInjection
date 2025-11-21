@@ -1,0 +1,163 @@
+.c-toggle {
+    --disabled-opacity: 0.3;
+    box-sizing: border-box;
+    display: block;
+    flex-shrink: 1;
+    text-overflow: ellipsis;
+}
+
+.c-toggle__label {
+    box-sizing: border-box;
+    display: block;
+    margin: 0;
+    padding: 0.313em 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-shadow: none;
+    color: var(--neutral-foreground, #2B2B2B);
+}
+
+.c-toggle__container {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25em 0;
+}
+
+.c-toggle__pill {
+    height: 0;
+    width: 0;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+}
+
+.c-toggle__thumb {
+    box-sizing: border-box;
+    display: block;
+    width: 2.5em;
+    height: 1.25em;
+    outline: transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    background: var(--neutral-background1, #FFFFFF);
+    border: 1px solid var(--neutral-outline, #BEBEBE);
+    border-radius: 0.625em;
+}
+
+label.c-toggle__thumb {
+    margin-bottom: 0;
+}
+
+.c-toggle__state-text {
+    box-sizing: border-box;
+    padding: 0.313em 0;
+    margin: 0 0.5em;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: var(--neutral-foreground, #2B2B2B);
+    display: inline-block;
+    overflow-wrap: break-word;
+}
+
+.c-toggle--inline-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .c-toggle--inline-label.c-toggle--on-off-missing .c-toggle__label {
+        margin-right: initial;
+        margin-left: 1em;
+        order: 1;
+    }
+
+    .c-toggle--inline-label .c-toggle__label {
+        margin-right: 1em;
+    }
+
+.c-toggle__thumb:after {
+    content: "";
+    display: block;
+    margin: 0.19em 0.25em;
+    width: 0.75em;
+    height: 0.75em;
+    border-radius: 50%;
+    background-color: var(--neutral-outline, #BEBEBE);
+    transition: all 150ms ease;
+}
+
+.c-toggle__pill:checked + .c-toggle__thumb {
+    background: var(--primary-fill, #0078D4);
+    border-color: transparent;
+}
+
+    .c-toggle__pill:checked + .c-toggle__thumb:after {
+        transform: translateX(1.1em);
+        background-color: var(--primary-foreground, #FFFFFF);
+    }
+
+.c-toggle:not(.c-toggle--disabled) .c-toggle__thumb:focus {
+    box-shadow: var(--neutral-focus-visual, 0 0 0 0.25rem rgba(13, 110, 253, 0.25));
+}
+
+.c-toggle:not(.c-toggle--disabled) .c-toggle__pill + .c-toggle__thumb:hover {
+    border-color: var(--neutral-outline-hover, #3B3B3B);
+}
+
+    .c-toggle:not(.c-toggle--disabled) .c-toggle__pill + .c-toggle__thumb:hover::after {
+        background-color: var(--neutral-outline-hover, #3B3B3B);
+    }
+
+.c-toggle:not(.c-toggle--disabled) .c-toggle__pill:checked + .c-toggle__thumb:hover {
+    background-color: var( --primary-fill-hover, #006CBE);
+    border-color: transparent;
+}
+
+    .c-toggle:not(.c-toggle--disabled) .c-toggle__pill:checked + .c-toggle__thumb:hover::after {
+        background-color: var(--primary-foreground, #FFFFFF);
+    }
+
+.c-toggle--disabled .c-toggle__thumb {
+    cursor: unset;
+    opacity: var(--disabled-opacity);
+}
+
+.c-toggle--disabled .c-toggle__pill:checked + .c-toggle__thumb {
+    background-color: var(--neutral-outline, #646464);
+    border-color: transparent;
+    opacity: var(--disabled-opacity);
+}
+
+    .c-toggle--disabled .c-toggle__thumb::after,
+    .c-toggle--disabled .c-toggle__pill:checked + .c-toggle__thumb::after,
+    .c-toggle--disabled .c-toggle__label,
+    .c-toggle--disabled .c-toggle__state-text {
+        opacity: var(--disabled-opacity);
+    }
+
+.c-toggle__primary-indigo {
+    --primary-fill: #6610f2;
+    --primary-fill-hover: #580ED1;
+}
+
+.c-toggle__primary-purple {
+    --primary-fill: #6f42c1;
+    --primary-fill-hover: #633BAD;
+}
+
+.c-toggle__primary-red {
+    --primary-fill: #dc3545;
+    --primary-fill-hover: #C72F3E;
+}
+
+.c-toggle__primary-orange {
+    --primary-fill: #fd7e14;
+    --primary-fill-hover: #EB7512;
+}
+
+.c-toggle__primary-green {
+    --primary-fill: #198754;
+    --primary-fill-hover: #177A4C;
+}

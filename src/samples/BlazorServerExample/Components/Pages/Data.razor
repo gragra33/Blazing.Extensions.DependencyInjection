@@ -1,0 +1,86 @@
+@page "/data"
+@rendermode InteractiveServer
+@layout MainLayout
+@inject IDataService DataService
+
+<PageTitle>Data Management</PageTitle>
+
+<div class="data-container">
+    <h2>Data Management</h2>
+
+    <div class="data-controls">
+        <div class="form-group">
+            <label for="newItem">New Item:</label>
+            <input id="newItem" type="text" class="form-control" @bind="NewItem" 
+                   @onkeyup="HandleKeyUp" />
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-primary" @onclick="AddItem">Add Item</button>
+            <button class="btn btn-danger" @onclick="ClearData">Clear All</button>
+        </div>
+    </div>
+
+    <div class="data-info">
+        <p>Total Items: <strong>@DataCount</strong></p>
+    </div>
+
+    @if (DataItems.Any())
+    {
+        <div class="data-list">
+            <h3>Data Items:</h3>
+            <ul>
+                @foreach (var item in DataItems)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        <p class="no-data">No data items. Add some items to get started!</p>
+    }
+</div>
+
+@code {
+    private string NewItem = string.Empty;
+    private List<string> DataItems = new();
+    private int DataCount;
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("Data component initialized");
+        RefreshData();
+    }
+
+    private void HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            AddItem();
+        }
+    }
+
+    private void AddItem()
+    {
+        if (string.IsNullOrWhiteSpace(NewItem))
+            return;
+
+        DataService.AddData(NewItem);
+        NewItem = string.Empty;
+        RefreshData();
+    }
+
+    private void ClearData()
+    {
+        DataService.ClearData();
+        RefreshData();
+    }
+
+    private void RefreshData()
+    {
+        DataItems = DataService.GetAllData().ToList();
+        DataCount = DataService.GetDataCount();
+    }
+}

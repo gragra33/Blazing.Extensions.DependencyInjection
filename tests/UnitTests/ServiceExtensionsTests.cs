@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Shouldly;
 using Microsoft.Extensions.DependencyInjection;
 using MicrosoftServiceProvider = Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions;
@@ -1108,6 +1109,550 @@ public class ServiceExtensionsTests : IDisposable
         // Assert
         var service = MicrosoftServiceProvider.GetService<AutoSingletonService>(serviceProvider);
         service.ShouldNotBeNull();
+    }
+
+    #endregion
+
+    #region Service Scope Tests
+
+    public interface IScopedService
+    {
+        string GetScopedId();
+    }
+
+    public class ScopedService : IScopedService
+    {
+        private readonly string _id = Guid.NewGuid().ToString();
+        public string GetScopedId() => _id;
+    }
+
+    [Fact]
+    public void CreateScope_Should_Create_New_ServiceScope()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddScoped<IScopedService, ScopedService>();
+        });
+
+        // Act
+        using var scope = host.CreateScope();
+        var scopedService = scope.ServiceProvider.GetRequiredService<IScopedService>();
+
+        // Assert
+        scope.ShouldNotBeNull();
+        scopedService.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void GetScopedService_WithResult_Should_Return_Value()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddScoped<IScopedService, ScopedService>();
+        });
+
+        // Act
+        var scopedId = host.GetScopedService<IScopedService, string>(service =>
+            service.GetScopedId());
+
+        // Assert
+        scopedId.ShouldNotBeNullOrEmpty();
+    }
+
+    [Fact]
+    public async Task GetScopedServiceAsync_WithResult_Should_Return_Value()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddScoped<IScopedService, ScopedService>();
+        });
+
+        // Act
+        var scopedId = await host.GetScopedServiceAsync<IScopedService, string>(async service =>
+        {
+            await Task.CompletedTask;
+            return service.GetScopedId();
+        });
+
+        // Assert
+        scopedId.ShouldNotBeNullOrEmpty();
+    }
+
+    [Fact]
+    public void GetScopedKeyedService_Should_Work_With_Keyed_Services()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddKeyedScoped<IScopedService, ScopedService>("scoped");
+        });
+
+        // Act
+        var result = string.Empty;
+        host.GetScopedKeyedService<IScopedService>("scoped", service =>
+        {
+            result = service.GetScopedId();
+        });
+
+        // Assert
+        result.ShouldNotBeNullOrEmpty();
+    }
+
+    #endregion
+
+    #region Lazy Service Tests
+
+    public interface IExpensiveService
+    {
+        string GetData();
+    }
+
+    public class ExpensiveService : IExpensiveService
+    {
+        public ExpensiveService()
+        {
+            // Simulate expensive operation
+            System.Threading.Thread.Sleep(10);
+        }
+
+        public string GetData() => "Expensive Data";
+    }
+
+    [Fact]
+    public void AddLazySingleton_Should_Defer_Service_Creation()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        var creationTime = DateTime.UtcNow;
+        services.AddLazySingleton<IExpensiveService, ExpensiveService>();
+
+        // Act
+        var provider = services.BuildServiceProvider();
+        var lazyService = ServiceProviderServiceExtensions.GetRequiredService<Lazy<IExpensiveService>>(provider);
+
+        // Assert
+        lazyService.ShouldNotBeNull();
+        lazyService.IsValueCreated.ShouldBeFalse();
+
+        // Act - Access the value
+        var service = lazyService.Value;
+
+        // Assert
+        service.ShouldNotBeNull();
+        lazyService.IsValueCreated.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void AddLazySingleton_Should_Return_Same_Instance()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddLazySingleton<IExpensiveService, ExpensiveService>();
+        var provider = services.BuildServiceProvider();
+
+        // Act
+        var lazy1 = ServiceProviderServiceExtensions.GetRequiredService<Lazy<IExpensiveService>>(provider);
+        var lazy2 = ServiceProviderServiceExtensions.GetRequiredService<Lazy<IExpensiveService>>(provider);
+
+        // Assert
+        lazy1.Value.ShouldBeSameAs(lazy2.Value);
+    }
+
+    [Fact]
+    public void AddLazyTransient_Should_Create_New_Instances()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddLazyTransient<IExpensiveService, ExpensiveService>();
+        var provider = services.BuildServiceProvider();
+
+        // Act
+        var lazy1 = ServiceProviderServiceExtensions.GetRequiredService<Lazy<IExpensiveService>>(provider);
+        var lazy2 = ServiceProviderServiceExtensions.GetRequiredService<Lazy<IExpensiveService>>(provider);
+
+        // Assert
+        lazy1.Value.ShouldNotBeSameAs(lazy2.Value);
+    }
+
+    [Fact]
+    public void GetLazyService_Should_Return_Lazy_Wrapper()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddLazySingleton<IExpensiveService, ExpensiveService>();
+        });
+
+        // Act
+        var lazyService = host.GetLazyService<IExpensiveService>();
+
+        // Assert
+        lazyService.ShouldNotBeNull();
+        lazyService.IsValueCreated.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void GetLazyKeyedService_Should_Return_Lazy_Keyed_Service()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddLazyKeyedSingleton<IExpensiveService, ExpensiveService>("expensive");
+        });
+
+        // Act
+        var lazyService = host.GetLazyKeyedService<IExpensiveService>("expensive");
+
+        // Assert
+        lazyService.ShouldNotBeNull();
+        lazyService.IsValueCreated.ShouldBeFalse();
+    }
+
+    #endregion
+
+    #region Generic Service Tests
+
+    public interface IRepository<T>
+    {
+        string GetTypeName();
+    }
+
+    public class Repository<T> : IRepository<T>
+    {
+        public string GetTypeName() => typeof(T).Name;
+    }
+
+    public class User { }
+    public class Product { }
+
+    [Fact]
+    public void AddGenericSingleton_Should_Register_Open_Generic()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+
+        // Act
+        services.AddGenericSingleton(typeof(IRepository<>), typeof(Repository<>));
+        var provider = services.BuildServiceProvider();
+
+        // Assert
+        var userRepo = ServiceProviderServiceExtensions.GetRequiredService<IRepository<User>>(provider);
+        userRepo.ShouldNotBeNull();
+        userRepo.GetTypeName().ShouldBe("User");
+    }
+
+    [Fact]
+    public void AddGenericSingleton_Should_Return_Same_Instance()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddGenericSingleton(typeof(IRepository<>), typeof(Repository<>));
+        var provider = services.BuildServiceProvider();
+
+        // Act
+        var repo1 = ServiceProviderServiceExtensions.GetRequiredService<IRepository<User>>(provider);
+        var repo2 = ServiceProviderServiceExtensions.GetRequiredService<IRepository<User>>(provider);
+
+        // Assert
+        repo1.ShouldBeSameAs(repo2);
+    }
+
+    [Fact]
+    public void AddGenericTransient_Should_Create_New_Instances()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddGenericTransient(typeof(IRepository<>), typeof(Repository<>));
+        var provider = services.BuildServiceProvider();
+
+        // Act
+        var repo1 = ServiceProviderServiceExtensions.GetRequiredService<IRepository<User>>(provider);
+        var repo2 = ServiceProviderServiceExtensions.GetRequiredService<IRepository<User>>(provider);
+
+        // Assert
+        repo1.ShouldNotBeSameAs(repo2);
+    }
+
+    [Fact]
+    public void AddGenericServices_Should_Register_Multiple_Generics()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+
+        // Act
+        services.AddGenericServices(ServiceLifetime.Singleton,
+            (typeof(IRepository<>), typeof(Repository<>)));
+        var provider = services.BuildServiceProvider();
+
+        // Assert
+        var userRepo = ServiceProviderServiceExtensions.GetRequiredService<IRepository<User>>(provider);
+        var productRepo = ServiceProviderServiceExtensions.GetRequiredService<IRepository<Product>>(provider);
+        userRepo.ShouldNotBeNull();
+        productRepo.ShouldNotBeNull();
+    }
+
+    #endregion
+
+    #region Service Factory Tests
+
+    public interface IConfigurableService
+    {
+        string GetConfig();
+    }
+
+    public class ConfigurableService : IConfigurableService
+    {
+        private readonly string _config;
+        public ConfigurableService(string config) => _config = config;
+        public string GetConfig() => _config;
+    }
+
+    [Fact]
+    public void RegisterFactory_Should_Register_With_Factory()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.RegisterFactory<IConfigurableService>(provider =>
+            new ConfigurableService("test-config"));
+
+        // Act
+        var provider = services.BuildServiceProvider();
+        var service = ServiceProviderServiceExtensions.GetRequiredService<IConfigurableService>(provider);
+
+        // Assert
+        service.ShouldNotBeNull();
+        service.GetConfig().ShouldBe("test-config");
+    }
+
+    [Fact]
+    public void RegisterTransientFactory_Should_Create_New_Instances()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.RegisterTransientFactory<IConfigurableService>(provider =>
+            new ConfigurableService("test"));
+
+        // Act
+        var provider = services.BuildServiceProvider();
+        var service1 = ServiceProviderServiceExtensions.GetRequiredService<IConfigurableService>(provider);
+        var service2 = ServiceProviderServiceExtensions.GetRequiredService<IConfigurableService>(provider);
+
+        // Assert
+        service1.ShouldNotBeSameAs(service2);
+    }
+
+    [Fact]
+    public void RegisterScopedFactory_Should_Create_Per_Scope()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.RegisterScopedFactory<IConfigurableService>(provider =>
+            new ConfigurableService("test"));
+
+        // Act
+        var provider = services.BuildServiceProvider();
+        using var scope1 = provider.CreateScope();
+        var service1a = ServiceProviderServiceExtensions.GetRequiredService<IConfigurableService>(scope1.ServiceProvider);
+        var service1b = ServiceProviderServiceExtensions.GetRequiredService<IConfigurableService>(scope1.ServiceProvider);
+
+        using var scope2 = provider.CreateScope();
+        var service2 = ServiceProviderServiceExtensions.GetRequiredService<IConfigurableService>(scope2.ServiceProvider);
+
+        // Assert
+        service1a.ShouldBeSameAs(service1b);
+        service1a.ShouldNotBeSameAs(service2);
+    }
+
+    [Fact]
+    public void RegisterConditionalFactory_Should_Return_Based_On_Condition()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        var useAlt = false;
+        services.RegisterConditionalFactory<IConfigurableService>(provider =>
+            useAlt ? new ConfigurableService("alt") : new ConfigurableService("primary"));
+
+        // Act
+        var provider = services.BuildServiceProvider();
+        var service = ServiceProviderServiceExtensions.GetRequiredService<IConfigurableService>(provider);
+
+        // Assert
+        service.GetConfig().ShouldBe("primary");
+    }
+
+    [Fact]
+    public void RegisterKeyedFactory_Should_Register_Keyed_Service()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.RegisterKeyedFactory<IConfigurableService>("primary", (provider, key) =>
+            new ConfigurableService("primary-config"));
+
+        // Act
+        var provider = services.BuildServiceProvider();
+        var service = ServiceProviderKeyedServiceExtensions.GetRequiredKeyedService<IConfigurableService>(
+            provider, "primary");
+
+        // Assert
+        service.ShouldNotBeNull();
+        service.GetConfig().ShouldBe("primary-config");
+    }
+
+    #endregion
+
+    #region Service Enumeration Tests
+
+    public interface IHandler
+    {
+        string Handle(string input);
+    }
+
+    public class PrimaryHandler : IHandler
+    {
+        public string Handle(string input) => $"Primary: {input}";
+    }
+
+    public class SecondaryHandler : IHandler
+    {
+        public string Handle(string input) => $"Secondary: {input}";
+    }
+
+    [Fact]
+    public void GetServices_Should_Return_All_Or_Empty()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddTransient<IHandler, PrimaryHandler>();
+        });
+
+        // Act
+        var handlers = host.GetServices<IHandler>();
+
+        // Assert
+        handlers.ShouldNotBeNull();
+        handlers.Count().ShouldBeGreaterThanOrEqualTo(1);
+    }
+
+    [Fact]
+    public void GetServices_WithPredicate_Should_Filter()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddTransient<IHandler, PrimaryHandler>();
+            services.AddTransient<IHandler, SecondaryHandler>();
+        });
+
+        // Act
+        var filtered = host.GetServices<IHandler>(h => h is PrimaryHandler);
+
+        // Assert
+        filtered.Count().ShouldBe(1);
+    }
+
+    [Fact]
+    public void ForEachService_Should_Execute_For_Each()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        var count = 0;
+        host.ConfigureServices(services =>
+        {
+            services.AddTransient<IHandler, PrimaryHandler>();
+            services.AddTransient<IHandler, SecondaryHandler>();
+        });
+
+        // Act
+        host.ForEachService<IHandler>(h => count++);
+
+        // Assert
+        count.ShouldBe(2);
+    }
+
+    [Fact]
+    public void MapServices_Should_Transform_Services()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddTransient<IHandler, PrimaryHandler>();
+            services.AddTransient<IHandler, SecondaryHandler>();
+        });
+
+        // Act
+        var results = host.MapServices<IHandler, string>(h => h.Handle("test"));
+
+        // Assert
+        results.Count().ShouldBe(2);
+        results.ShouldContain(r => r.Contains("Primary"));
+        results.ShouldContain(r => r.Contains("Secondary"));
+    }
+
+    [Fact]
+    public void GetFirstService_Should_Return_First_Matching()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddTransient<IHandler, PrimaryHandler>();
+            services.AddTransient<IHandler, SecondaryHandler>();
+        });
+
+        // Act
+        var handler = host.GetFirstService<IHandler>(h => h is PrimaryHandler);
+
+        // Assert
+        handler.ShouldNotBeNull();
+        handler.ShouldBeOfType<PrimaryHandler>();
+    }
+
+    [Fact]
+    public void GetFirstServiceOrDefault_Should_Return_Null_If_Not_Found()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddTransient<IHandler, PrimaryHandler>();
+        });
+
+        // Act
+        var handler = host.GetFirstServiceOrDefault<IHandler>(h => h is SecondaryHandler);
+
+        // Assert
+        handler.ShouldBeNull();
+    }
+
+    [Fact]
+    public void GetServiceCount_Should_Return_Count()
+    {
+        // Arrange
+        var host = CreateTestInstance<TestHost>();
+        host.ConfigureServices(services =>
+        {
+            services.AddTransient<IHandler, PrimaryHandler>();
+            services.AddTransient<IHandler, SecondaryHandler>();
+        });
+
+        // Act
+        var count = host.GetServiceCount<IHandler>();
+
+        // Assert
+        count.ShouldBe(2);
     }
 
     #endregion

@@ -345,6 +345,17 @@ public static class ServiceExtensions
     {
         ArgumentNullException.ThrowIfNull(instance);
         
+        // Don't intercept direct IServiceProvider or IServiceScope calls - let Microsoft's methods handle those
+        if (instance is IServiceProvider directProvider)
+        {
+            return ServiceProviderKeyedServiceExtensions.GetRequiredKeyedService<TService>(directProvider, serviceKey);
+        }
+
+        if (instance is IServiceScope scope)
+        {
+            return ServiceProviderKeyedServiceExtensions.GetRequiredKeyedService<TService>(scope.ServiceProvider, serviceKey);
+        }
+
         if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
         {
             // Use Microsoft's extension method directly - this is safe since keyed services are newer and less likely to conflict
@@ -365,6 +376,17 @@ public static class ServiceExtensions
     {
         ArgumentNullException.ThrowIfNull(instance);
         
+        // Don't intercept direct IServiceProvider or IServiceScope calls - let Microsoft's methods handle those
+        if (instance is IServiceProvider directProvider)
+        {
+            return ServiceProviderKeyedServiceExtensions.GetKeyedService<TService>(directProvider, serviceKey);
+        }
+
+        if (instance is IServiceScope scope)
+        {
+            return ServiceProviderKeyedServiceExtensions.GetKeyedService<TService>(scope.ServiceProvider, serviceKey);
+        }
+
         if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
         {
             // Use Microsoft's extension method directly - this is safe since keyed services are newer and less likely to conflict
@@ -384,13 +406,15 @@ public static class ServiceExtensions
     {
         ArgumentNullException.ThrowIfNull(instance);
 
-        // Only handle objects that have explicitly configured service providers via our extension methods
-        // This prevents interference with Microsoft's ServiceProvider.GetService<T>() methods
-        if (instance is IServiceProvider)
+        // Don't intercept direct IServiceProvider or IServiceScope calls - let Microsoft's methods handle those
+        if (instance is IServiceProvider directProvider)
         {
-            throw new InvalidOperationException(
-                "GetRequiredService extension method should not be called on IServiceProvider instances. " +
-                "Use the standard Microsoft.Extensions.DependencyInjection methods instead.");
+            return ServiceProviderServiceExtensions.GetRequiredService<TService>(directProvider);
+        }
+
+        if (instance is IServiceScope scope)
+        {
+            return ServiceProviderServiceExtensions.GetRequiredService<TService>(scope.ServiceProvider);
         }
 
         if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
@@ -421,20 +445,20 @@ public static class ServiceExtensions
     {
         ArgumentNullException.ThrowIfNull(instance);
 
-        // Only handle objects that have explicitly configured service providers via our extension methods
-        // This prevents interference with Microsoft's ServiceProvider.GetService<T>() methods
-        if (instance is IServiceProvider)
+        // Don't intercept direct IServiceProvider or IServiceScope calls - let Microsoft's methods handle those
+        if (instance is IServiceProvider directProvider)
         {
-            throw new InvalidOperationException(
-                "GetService extension method should not be called on IServiceProvider instances. " +
-                "Use the standard Microsoft.Extensions.DependencyInjection methods instead.");
+            return ServiceProviderServiceExtensions.GetService<TService>(directProvider);
+        }
+
+        if (instance is IServiceScope scope)
+        {
+            return ServiceProviderServiceExtensions.GetService<TService>(scope.ServiceProvider);
         }
 
         if (_instanceContexts.TryGetValue(instance, out var context) && context.ServiceProvider != null)
         {
-            // Use the non-generic GetService(Type) method to avoid recursive calls to our extension methods
-            // This follows the same pattern as CommunityToolkit.Mvvm.Ioc
-            return (TService?)context.ServiceProvider.GetService(typeof(TService));
+            return context.ServiceProvider.GetService(typeof(TService)) as TService;
         }
 
         return null;

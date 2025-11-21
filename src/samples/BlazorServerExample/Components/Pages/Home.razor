@@ -1,0 +1,28 @@
+@page "/"
+@layout MainLayout
+
+<PageTitle>Blazor Server Demo</PageTitle>
+
+<div class="welcome-container">
+    <h1>Welcome to Blazor Server Demo!</h1>
+    <p>This app demonstrates Blazing.Extensions.DependencyInjection with AutoRegister Attribute Registration.</p>
+    
+    <div class="info-box">
+        <h3>Features:</h3>
+        <ul>
+            <li><strong>Home Tab:</strong> Welcome and status information</li>
+            <li><strong>Weather Tab:</strong> Weather data retrieval with temperature conversion</li>
+            <li><strong>Data Tab:</strong> Data management with add/clear operations</li>
+            <li><strong>Settings Tab:</strong> Application settings and preferences</li>
+        </ul>
+    </div>
+
+    <p class="timestamp">This page demonstrates View-First component pattern with Blazor Server.</p>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("Home component initialized");
+    }
+}

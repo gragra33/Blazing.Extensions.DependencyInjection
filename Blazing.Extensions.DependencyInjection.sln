@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11018.127 d18.0
+VisualStudioVersion = 18.0.11018.127
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
 EndProject
@@ -36,6 +36,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazing.ToggleSwitch.WinForms", "src\libs\Blazing.ToggleSwitch.WinForms\Blazing.ToggleSwitch.WinForms.csproj", "{377DCBB7-D827-BEBE-041A-F3B1E03DF757}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsExample", "src\samples\WinFormsExample\WinFormsExample.csproj", "{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorServerExample", "src\samples\BlazorServerExample\BlazorServerExample.csproj", "{E8A726C1-F940-22E5-F8BA-1E543C06C378}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazing.ToggleSwitch.Blazor", "src\libs\Blazing.ToggleSwitch.Blazor\Blazing.ToggleSwitch.Blazor.csproj", "{A907FB81-DECA-DE54-C226-D9FFA6A78E00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +135,30 @@ Global
 		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|x64.Build.0 = Release|Any CPU
 		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F}.Release|x86.Build.0 = Release|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Debug|x64.Build.0 = Debug|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Debug|x86.Build.0 = Debug|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Release|x64.ActiveCfg = Release|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Release|x64.Build.0 = Release|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Release|x86.ActiveCfg = Release|Any CPU
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378}.Release|x86.Build.0 = Release|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Debug|x64.Build.0 = Debug|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Debug|x86.Build.0 = Debug|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Release|x64.ActiveCfg = Release|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Release|x64.Build.0 = Release|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Release|x86.ActiveCfg = Release|Any CPU
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +172,8 @@ Global
 		{E6B2D06A-7407-C555-16CB-80FF205DA0D8} = {D1B4CF99-7947-DD6C-81D0-5B5B3989814C}
 		{377DCBB7-D827-BEBE-041A-F3B1E03DF757} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{2B59F9E3-0551-745E-EC01-829DC3CF1B8F} = {D1B4CF99-7947-DD6C-81D0-5B5B3989814C}
+		{E8A726C1-F940-22E5-F8BA-1E543C06C378} = {D1B4CF99-7947-DD6C-81D0-5B5B3989814C}
+		{A907FB81-DECA-DE54-C226-D9FFA6A78E00} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D79F5621-11D8-45CC-BB22-2190C1F03E91}

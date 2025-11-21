@@ -16,7 +16,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/gragra33/blazing.extensions.dependencyInjection</PackageProjectUrl>
     <Copyright>Copyright (c) 2025 Graeme Grant</Copyright>
-    <PackageReleaseNotes>Version 1.0.0: Complete dependency injection framework with comprehensive examples and enhanced global usings support</PackageReleaseNotes>
+    <PackageReleaseNotes>Version 2.0.0: Complete dependency injection framework with comprehensive examples and enhanced global usings support</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!-- Generate XML documentation files for package consumers -->
