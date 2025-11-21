@@ -100,6 +100,9 @@ public static class ServiceDiscoveryExtensions
         // Register each implementation with the specified scope
         foreach (var implementationType in implementations)
         {
+            // Validate lifetime compatibility before registering
+            ValidateAutoRegisterLifetime(services, implementationType, lifetime);
+
             // Register the concrete type
             RegisterWithLifetime(services, implementationType, implementationType, lifetime);
             
@@ -277,5 +280,58 @@ public static class ServiceDiscoveryExtensions
             default:
                 throw new ArgumentOutOfRangeException(nameof(lifetime), lifetime, "Invalid service lifetime");
         }
+    }
+
+    /// <summary>
+    /// Validates that a type's constructor dependencies are compatible with the requested service lifetime.
+    /// Throws InvalidOperationException if validation fails.
+    /// </summary>
+    private static void ValidateAutoRegisterLifetime(
+        IServiceCollection services,
+        Type implementationType,
+        ServiceLifetime requestedLifetime)
+    {
+        var constructors = implementationType.GetConstructors();
+        if (constructors.Length == 0)
+            return;
+
+        // Use constructor with most parameters (greedy approach)
+        var constructor = constructors
+            .OrderByDescending(c => c.GetParameters().Length)
+            .First();
+
+        foreach (var param in constructor.GetParameters())
+        {
+            var paramType = param.ParameterType;
+            var dependency = services.FirstOrDefault(sd => sd.ServiceType == paramType);
+            
+            if (dependency == null)
+                continue;
+
+            if (!IsLifetimeCompatible(requestedLifetime, dependency.Lifetime))
+            {
+                throw new InvalidOperationException(
+                    $"Service {implementationType.Name} cannot be registered as {requestedLifetime} " +
+                    $"because it depends on {paramType.Name} which is registered as {dependency.Lifetime}. " +
+                    $"Singletons cannot depend on Scoped services. " +
+                    $"Consider making {implementationType.Name} {dependency.Lifetime} or {paramType.Name} Transient.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Determines if one service lifetime can depend on another.
+    /// Singleton cannot depend on Scoped or Transient (best practice).
+    /// </summary>
+    private static bool IsLifetimeCompatible(
+        ServiceLifetime consumer,
+        ServiceLifetime dependency)
+    {
+        // Singleton cannot depend on Scoped
+        if (consumer == ServiceLifetime.Singleton && dependency == ServiceLifetime.Scoped)
+            return false;
+
+        // All other combinations are compatible
+        return true;
     }
 }

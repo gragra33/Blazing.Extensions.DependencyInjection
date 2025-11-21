@@ -1,0 +1,94 @@
+﻿@* 
+    Toggle.razor
+    
+    A two-state toggle switch component that allows users to select between on/off, yes/no, or custom state values.
+    
+    Features:
+    - Customizable label and state text (On/Off labels)
+    - Two position options (Left or Right toggle position)
+    - Full keyboard accessibility (Space/Enter to toggle)
+    - ARIA-compliant for screen readers
+    - Disabled and read-only states
+    - Two-way value binding with ValueChanged event
+    
+    Usage:
+    <Toggle Value="isEnabled" ValueChanged="@((bool v) => isEnabled = v)" Label="Enable Feature" />
+    
+    Component Parameters (see Toggle.razor.cs for details):
+    - Value: The current toggle state (bool)
+    - ValueChanged: EventCallback when value changes
+    - Label: Display text for the toggle label
+    - LabelContent: RenderFragment for custom label content
+    - OnText: Text displayed when toggle is on
+    - OffText: Text displayed when toggle is off
+    - Position: TogglePosition.Left or TogglePosition.Right
+    - DefaultValue: Initial value when component loads
+    - Disabled: Disable user interaction
+    - ReadOnly: Prevent value changes but allow focus
+    - CssClass: Additional CSS classes
+    - Style: Inline styles
+*@
+@inherits ComponentControlBase
+@using CSS = Blazing.ToggleSwitch.Blazor.Css.CssClass.Toggle
+
+<div class="@Classname" style="@Style">
+    @if (HasLabel())
+    {
+        <div id="@LabelId" class="@CSS.Label">
+            @if (LabelContent is not null)
+            {
+                @LabelContent
+            }
+            else
+            {
+                @Label
+            }
+        </div>
+    }
+    <div class="@CSS.Container">
+        @if (Position == TogglePosition.Left)
+        {
+            <input type="checkbox" role="switch"
+                   id="@PillId" class="@CSS.Pill"
+                   aria-labelledby="@StateLabelId" aria-checked="@Value.ToString().ToLower()" aria-readonly="@Disabled.ToString().ToLower()"
+                   checked="@Value" disabled="@Disabled"
+                   onchange="@OnChange" @onclick:preventDefault="@ReadOnly"/>
+
+            <label class="@CSS.Thumb" for="@PillId" aria-labelledby="@LabelId"
+                   data-label="@StateLabel" data-label-on="@OnText" data-label-off="@OffText"
+                   tabindex="0"
+                   @onkeydown="@(OnKeyDownAsync)"
+                   @onkeydown:preventDefault="true"
+                   @onkeydown:stopPropagation="true">
+                <span class="@CSS.ThumbInner"></span>
+            </label>
+
+            @if (HasOnOffLabel())
+            {
+                <span id="@StateLabelId" class="@CSS.State">@StateLabel</span>
+            }
+        }
+        else
+        {
+            @if (HasOnOffLabel())
+            {
+                <span id="@StateLabelId" class="@CSS.State">@StateLabel</span>
+            }
+
+            <input type="checkbox" role="switch"
+                   id="@PillId" class="@CSS.Pill"
+                   aria-labelledby="@StateLabelId" aria-checked="@Value.ToString().ToLower()" aria-readonly="@Disabled.ToString().ToLower()"
+                   checked="@Value" disabled="@Disabled"
+                   onchange="@OnChange" @onclick:preventDefault="@ReadOnly"/>
+
+            <label class="@CSS.Thumb" for="@PillId" aria-labelledby="@LabelId"
+                   data-label="@StateLabel" data-label-on="@OnText" data-label-off="@OffText"
+                   tabindex="0"
+                   @onkeydown="@(OnKeyDownAsync)"
+                   @onkeydown:preventDefault="true"
+                   @onkeydown:stopPropagation="true">
+                <span class="@CSS.ThumbInner"></span>
+            </label>
+        }
+    </div>
+</div> 

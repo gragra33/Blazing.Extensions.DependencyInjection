@@ -1,0 +1,35 @@
+﻿@namespace BlazorServerExample.Components
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <nav class="nav-menu">
+            <div class="nav-logo">
+                <h3>Blazor Server</h3>
+            </div>
+            <ul class="nav-list">
+                <li><NavLink href="" class="nav-link" Match="NavLinkMatch.All"><i class="bx bx-home"></i> Home</NavLink></li>
+                <li><NavLink href="weather" class="nav-link"><i class="bx bx-cloud"></i> Weather</NavLink></li>
+                <li><NavLink href="data" class="nav-link"><i class="bx bx-table"></i> Data</NavLink></li>
+                <li><NavLink href="settings" class="nav-link"><i class="bx bx-cog"></i> Settings</NavLink></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="top-row px-4">
+            <h1>🔥 Blazing.Extensions.DependencyInjection</h1>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("MainLayout initialized");
+    }
+}

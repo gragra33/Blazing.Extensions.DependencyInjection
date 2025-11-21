@@ -1,0 +1,105 @@
+@page "/settings"
+@rendermode InteractiveServer
+@layout MainLayout
+
+<PageTitle>Settings</PageTitle>
+
+<div class="settings-container">
+    <h2>Application Settings</h2>
+
+    <div class="settings-section">
+        <h3>Preferences</h3>
+        
+        <div class="form-group">
+            <Toggle Value="DarkMode"
+                    ValueChanged="@((bool value) => DarkMode = value)"
+                    Label="Enable Dark Mode"
+                    OnText="Yes" OffText="No"/>
+        </div>
+
+        <div class="form-group">
+            <Toggle Value="EnableNotifications"
+                    ValueChanged="@((bool value) => EnableNotifications = value)"
+                    Label="Enable Notifications: "
+                    OnText="Yes" OffText="No" />
+        </div>
+
+        <div class="form-group">
+            <label for="refreshInterval">Refresh Interval (seconds):</label>
+            <input id="refreshInterval" type="number" min="1" max="300" class="form-control" @bind="RefreshInterval" />
+        </div>
+    </div>
+
+    <div class="settings-section">
+        <h3>About</h3>
+        <ul>
+            <li><strong>Application:</strong> Blazor Server Demo</li>
+            <li><strong>Framework:</strong> ASP.NET Core Blazor Server</li>
+            <li><strong>DI Framework:</strong> Blazing.Extensions.DependencyInjection</li>
+            <li><strong>Version:</strong> 2.0.0</li>
+            <li><strong>License:</strong> MIT</li>
+        </ul>
+    </div>
+
+    <div class="settings-section">
+        <h3>Features Demonstrated</h3>
+        <ul>
+            <li>Attribute-based auto-registration with AutoRegister</li>
+            <li>Keyed services support</li>
+            <li>Transient, Scoped, and Singleton lifetimes</li>
+            <li>Tab-based component navigation</li>
+            <li>Dependency injection in components</li>
+            <li>Async service operations</li>
+        </ul>
+    </div>
+
+    <div class="settings-actions">
+        <button class="btn btn-success" @onclick="SaveSettings">Save Settings</button>
+        <button class="btn btn-secondary" @onclick="ResetSettings">Reset to Defaults</button>
+    </div>
+
+    @if (ShowMessage)
+    {
+        <div class="alert alert-info">
+            @Message
+        </div>
+    }
+</div>
+
+@code {
+    private bool DarkMode;
+    private bool EnableNotifications = true;
+    private int RefreshInterval = 30;
+    private bool ShowMessage;
+    private string Message = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("Settings component initialized");
+    }
+
+    private void SaveSettings()
+    {
+        Message = "Settings saved successfully!";
+        ShowMessage = true;
+        _ = Task.Delay(3000).ContinueWith(_ => 
+        {
+            ShowMessage = false;
+            StateHasChanged();
+        });
+    }
+
+    private void ResetSettings()
+    {
+        DarkMode = false;
+        EnableNotifications = true;
+        RefreshInterval = 30;
+        Message = "Settings reset to defaults.";
+        ShowMessage = true;
+        _ = Task.Delay(3000).ContinueWith(_ => 
+        {
+            ShowMessage = false;
+            StateHasChanged();
+        });
+    }
+}

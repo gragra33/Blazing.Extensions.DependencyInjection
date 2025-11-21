@@ -1,0 +1,114 @@
+@page "/weather"
+@rendermode InteractiveServer
+@layout MainLayout
+@inject IWeatherService WeatherService
+
+<PageTitle>Weather</PageTitle>
+
+<div class="weather-container">
+    <h2>Weather Information</h2>
+
+    <div class="weather-controls">
+        <div class="form-group">
+            <label for="locationSelect">Select Location:</label>
+            <select id="locationSelect" class="form-control" @bind="SelectedLocation">
+                @foreach (var location in AvailableLocations)
+                {
+                    <option value="@location">@location</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <Toggle Value="UseFahrenheit"
+                    ValueChanged="@((bool value) => UseFahrenheit = value)"
+                    Label="Temperature Unit: "
+                    OnText="F" OffText="C" />
+        </div>
+
+        <button class="btn btn-primary" @onclick="GetWeather" disabled="@IsLoading">
+            @if (IsLoading)
+            {
+                <span>Loading...</span>
+            }
+            else
+            {
+                <span>Get Weather</span>
+            }
+        </button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(CurrentWeather))
+    {
+        <div class="weather-display">
+            <pre>@CurrentWeather</pre>
+        </div>
+    }
+</div>
+
+@code {
+    private List<string> AvailableLocations = new();
+    private string SelectedLocation = string.Empty;
+    private string CurrentWeather = string.Empty;
+    private bool IsLoading;
+    private bool UseFahrenheit;
+    private WeatherData? CurrentWeatherData;
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("Weather component initialized");
+        LoadAvailableLocations();
+    }
+
+    private void LoadAvailableLocations()
+    {
+        var locations = WeatherService.GetAvailableLocations().ToList();
+        AvailableLocations = locations;
+
+        if (locations.Count > 0)
+        {
+            SelectedLocation = locations[0];
+        }
+    }
+
+    private async Task GetWeather()
+    {
+        if (string.IsNullOrEmpty(SelectedLocation))
+        {
+            CurrentWeather = "Please select a location first.";
+            return;
+        }
+
+        IsLoading = true;
+        try
+        {
+            CurrentWeatherData = await WeatherService.GetWeatherAsync(SelectedLocation);
+            DisplayWeatherData();
+        }
+        catch (Exception ex)
+        {
+            CurrentWeather = $"Error fetching weather: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void DisplayWeatherData()
+    {
+        if (CurrentWeatherData == null) return;
+
+        var temperature = UseFahrenheit
+            ? (CurrentWeatherData.Temperature * 9.0 / 5.0) + 32
+            : CurrentWeatherData.Temperature;
+        var unit = UseFahrenheit ? "°F" : "°C";
+
+        CurrentWeather = $@"Location: {CurrentWeatherData.Location}
+Temperature: {temperature:F1}{unit}
+Condition: {CurrentWeatherData.Condition}
+Humidity: {CurrentWeatherData.Humidity}%
+Wind Speed: {CurrentWeatherData.WindSpeed:F1} km/h
+Last Updated: {CurrentWeatherData.LastUpdated:yyyy-MM-dd HH:mm:ss}";
+    }
+}
