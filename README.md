@@ -27,6 +27,7 @@ A comprehensive dependency injection library that **brings and enhances Microsof
   - [WinForms Applications](#winforms-applications)
   - [Blazor Server Applications](#blazor-server-applications)
   - [Console Applications](#console-applications)
+- [Give a ⭐](#give-a-)
 - [Core Features](#core-features)
   - [Service Configuration](#service-configuration)
   - [Service Resolution](#service-resolution)
@@ -48,7 +49,6 @@ A comprehensive dependency injection library that **brings and enhances Microsof
 - [Building](#building)
 - [Contributing](#contributing)
 - [License](#license)
-- [Give a ⭐](#give-a-)
 - [Acknowledgments](#acknowledgments)
 - [History](#history)
 
@@ -261,6 +261,12 @@ class Program
 
 class ApplicationHost { }
 ```
+
+## Give a ⭐
+
+If you like or are using this project to learn or start your solution, please give it a star. Thanks!
+
+Also, if you find this library useful and you're feeling really generous, please consider [buying me a coffee ☕](https://bmc.link/gragra33).
 
 ## Core Features
 
@@ -1213,12 +1219,6 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Give a ⭐
-
-If you like or are using this project to learn or start your solution, please give it a star. Thanks!
-
-Also, if you find this library useful and you're feeling really generous, please consider [buying me a coffee ☕](https://bmc.link/gragra33).
 
 ## Acknowledgments
 
