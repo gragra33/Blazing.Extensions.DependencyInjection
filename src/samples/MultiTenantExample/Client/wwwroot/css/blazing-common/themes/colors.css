@@ -1,0 +1,132 @@
+/* =====================================================================
+    Blazing Component Common - Color Theme Variants
+    =====================================================================
+    Various color theme variants (red, rose, orange, green, blue, yellow, violet)
+    Can be combined with .dark for dark mode variants
+    ===================================================================== */
+
+/* Red Theme */
+.theme-red {
+    --primary: var(--red-500);
+    --primary-foreground: var(--white);
+    --accent: var(--red-100);
+    --accent-foreground: var(--red-900);
+    --ring: var(--red-200);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+.dark.theme-red {
+    --primary: var(--red-400);
+    --primary-foreground: var(--gray-900);
+    --accent: var(--red-900);
+    --accent-foreground: var(--red-100);
+    --ring: var(--red-800);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+
+/* Rose Theme */
+.theme-rose {
+    --primary: var(--rose-500);
+    --primary-foreground: var(--white);
+    --accent: var(--rose-100);
+    --accent-foreground: var(--rose-900);
+    --ring: var(--rose-200);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+.dark.theme-rose {
+    --primary: var(--rose-400);
+    --primary-foreground: var(--gray-900);
+    --accent: var(--rose-900);
+    --accent-foreground: var(--rose-100);
+    --ring: var(--rose-800);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+
+/* Orange Theme */
+.theme-orange {
+    --primary: var(--orange-500);
+    --primary-foreground: var(--white);
+    --accent: var(--orange-100);
+    --accent-foreground: var(--orange-900);
+    --ring: var(--orange-200);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+.dark.theme-orange {
+    --primary: var(--orange-400);
+    --primary-foreground: var(--gray-900);
+    --accent: var(--orange-900);
+    --accent-foreground: var(--orange-100);
+    --ring: var(--orange-800);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+
+/* Green Theme */
+.theme-green {
+    --primary: var(--green-500);
+    --primary-foreground: var(--white);
+    --accent: var(--green-100);
+    --accent-foreground: var(--green-900);
+    --ring: var(--green-200);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+.dark.theme-green {
+    --primary: var(--green-400);
+    --primary-foreground: var(--gray-900);
+    --accent: var(--green-900);
+    --accent-foreground: var(--green-100);
+    --ring: var(--green-800);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+
+/* Blue Theme (default theme, optional explicit class) */
+.theme-blue {
+    --primary: var(--blue-500);
+    --primary-foreground: var(--white);
+    --accent: var(--blue-100);
+    --accent-foreground: var(--blue-900);
+    --ring: var(--blue-200);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+.dark.theme-blue {
+    --primary: var(--blue-400);
+    --primary-foreground: var(--gray-900);
+    --accent: var(--blue-900);
+    --accent-foreground: var(--blue-100);
+    --ring: var(--blue-800);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+
+/* Yellow Theme */
+.theme-yellow {
+    --primary: var(--yellow-400);
+    --primary-foreground: var(--gray-900);
+    --accent: var(--yellow-100);
+    --accent-foreground: var(--yellow-900);
+    --ring: var(--yellow-200);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+.dark.theme-yellow {
+    --primary: var(--yellow-300);
+    --primary-foreground: var(--gray-900);
+    --accent: var(--yellow-900);
+    --accent-foreground: var(--yellow-100);
+    --ring: var(--yellow-800);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+
+/* Violet Theme */
+.theme-violet {
+    --primary: var(--violet-500);
+    --primary-foreground: var(--white);
+    --accent: var(--violet-100);
+    --accent-foreground: var(--violet-900);
+    --ring: var(--violet-200);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}
+.dark.theme-violet {
+    --primary: var(--violet-400);
+    --primary-foreground: var(--gray-900);
+    --accent: var(--violet-900);
+    --accent-foreground: var(--violet-100);
+    --ring: var(--violet-800);
+    --primary-alpha: oklch(from var(--primary) l c h / 0.1);
+}

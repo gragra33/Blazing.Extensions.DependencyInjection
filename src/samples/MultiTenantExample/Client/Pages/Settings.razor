@@ -1,0 +1,236 @@
+@page "/settings"
+@using MultiTenantExample.Client.Components
+@inject TenantApiService TenantApi
+@inject TenantStateService TenantState
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<PageTitle>Tenant Settings - @(TenantState.CurrentTenant?.Name ?? "Multi-Tenant Example")</PageTitle>
+
+<div class="container">
+    @if (TenantState.CurrentTenant == null)
+    {
+        <NoTenantWarning>
+            Please <a href="/" class="link">select a tenant</a> to view the configuration settings.
+        </NoTenantWarning>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card__header">
+                <h1>
+                    <i data-lucide="settings"></i>
+                    Tenant Configuration
+                </h1>
+                <p class="text-muted">
+                    <strong>Tenant:</strong> @TenantState.CurrentTenant.Name | <strong>ID:</strong> @TenantState.CurrentTenantId
+                </p>
+            </div>
+
+            @if (isLoading)
+            {
+                <LoadingSpinner Message="Loading configuration..." />
+            }
+            else if (configuration != null)
+            {
+                <div class="card__body">
+                    <div class="config-sections">
+                        <!-- Service Limits Section -->
+                        <div class="config-section">
+                            <h3>
+                                <i data-lucide="bar-chart"></i>
+                                Service Limits
+                            </h3>
+                            <div class="config-grid">
+                                <div class="config-item">
+                                    <span class="config-item__label">Max Orders</span>
+                                    <span class="config-item__value">@GetConfigValue("maxOrders")</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-item__label">Max Products</span>
+                                    <span class="config-item__value">@GetConfigValue("maxProducts")</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-item__label">Rate Limit</span>
+                                    <span class="config-item__value">@GetConfigValue("rateLimitPerMinute") req/min</span>
+                                </div>
+                                <div class="config-item">
+                                    <span class="config-item__label">Plan Type</span>
+                                    <span class="config-item__value">
+                                        @if (Convert.ToBoolean(GetConfigValue("isPremium")))
+                                        {
+                                            <span class="badge badge--success">
+                                                <i data-lucide="star"></i> Premium
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge--secondary">Standard</span>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Custom Features Section -->
+                        @if (customSettings != null && customSettings.Any())
+                        {
+                            <div class="config-section">
+                                <h3>
+                                    <i data-lucide="sliders"></i>
+                                    Custom Features
+                                </h3>
+                                <div class="features-list">
+                                    @foreach (var setting in customSettings.OrderBy(s => s.Key))
+                                    {
+                                        <div class="feature-item">
+                                            <span class="feature-item__name">@setting.Key</span>
+                                            <span class="badge badge--primary">@setting.Value</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Lazy Loading Info Section -->
+                        <div class="config-section config-section--info">
+                            <h3>
+                                <i data-lucide="zap"></i>
+                                Lazy Loading Info
+                            </h3>
+                            <div class="info-box">
+                                <p>
+                                    <strong>Was Value Created:</strong> 
+                                    <span class="@(WasValueCreated ? "text-success" : "text-muted")">
+                                        @(WasValueCreated ? "Yes - Configuration was loaded" : "No - Using cached value")
+                                    </span>
+                                </p>
+                                <p class="text-muted">
+                                    This configuration demonstrates <strong>Lazy Initialization</strong>. 
+                                    The settings are loaded from the server only on the first access. 
+                                    Subsequent requests use the cached configuration, improving performance.
+                                </p>
+                                <button class="btn btn--secondary" @onclick="LoadConfigurationAsync">
+                                    <i data-lucide="refresh-cw"></i> Refresh Configuration
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <ErrorAlert Message="@errorMessage" OnRetry="LoadConfigurationAsync" />
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private Dictionary<string, object>? configuration;
+    private Dictionary<string, string>? customSettings;
+    private bool isLoading = false;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        TenantState.TenantChanged += OnTenantChanged;
+        
+        if (TenantState.CurrentTenant != null)
+        {
+            await LoadConfigurationAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+        }
+    }
+
+    private async void OnTenantChanged(object? sender, EventArgs e)
+    {
+        configuration = null;
+        customSettings = null;
+        errorMessage = null;
+        
+        if (TenantState.CurrentTenant != null)
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadConfigurationAsync();
+                StateHasChanged();
+            });
+        }
+        else
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoadConfigurationAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var response = await TenantApi.GetTenantConfigurationAsync();
+
+            if (response?.Success == true && response.Data != null)
+            {
+                configuration = response.Data;
+                
+                // Extract custom settings if present
+                if (configuration.TryGetValue("customSettings", out var settingsObj))
+                {
+                    var jsonElement = (System.Text.Json.JsonElement)settingsObj;
+                    customSettings = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(jsonElement.GetRawText());
+                }
+            }
+            else
+            {
+                errorMessage = response?.ErrorMessage ?? "Failed to load configuration";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading configuration: {ex.Message}";
+            Console.WriteLine($"Error in LoadConfigurationAsync: {ex}");
+        }
+        finally
+        {
+            isLoading = false;
+            await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+        }
+    }
+
+    private string GetConfigValue(string key)
+    {
+        if (configuration == null || !configuration.TryGetValue(key, out var value))
+            return "N/A";
+
+        return value?.ToString() ?? "N/A";
+    }
+
+    private bool WasValueCreated
+    {
+        get
+        {
+            if (configuration == null || !configuration.TryGetValue("wasValueCreated", out var value))
+                return false;
+
+            if (value is System.Text.Json.JsonElement jsonElement)
+            {
+                return jsonElement.GetBoolean();
+            }
+
+            return Convert.ToBoolean(value);
+        }
+    }
+
+    public void Dispose()
+    {
+        TenantState.TenantChanged -= OnTenantChanged;
+    }
+}

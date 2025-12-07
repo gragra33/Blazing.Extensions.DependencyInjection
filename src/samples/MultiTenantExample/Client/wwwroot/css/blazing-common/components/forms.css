@@ -1,0 +1,428 @@
+/* =====================================================================
+    Blazing Component Common - Form Components
+    =====================================================================
+    Form elements, inputs, buttons, and related styling
+    ===================================================================== */
+
+/* ========================================
+   Form Components
+   ======================================== */
+
+.form-group {
+    margin-bottom: var(--space-3);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-weight: var(--font-weight-medium);
+    color: var(--foreground);
+    font-size: var(--font-size-sm);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    display: block;
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-base);
+    font-family: var(--font-family-base);
+    line-height: var(--line-height-base);
+    color: var(--foreground);
+    background-color: var(--input);
+    background-clip: padding-box;
+    border: var(--border-width) var(--border-style) var(--border-color);
+    border-radius: var(--radius-lg);
+    transition: border-color var(--duration-form-transition) ease-in-out, box-shadow var(--duration-form-transition) ease-in-out;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: 0;
+    border-color: var(--primary);
+    box-shadow: var(--shadow-form-focus);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--muted-foreground);
+    opacity: 1;
+}
+
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right var(--space-2) center;
+    background-size: var(--size-select-icon);
+    padding-right: calc(var(--space-6) + var(--space-1));
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: calc(var(--space-6) + var(--space-3));
+    font-family: var(--font-family-base);
+}
+
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    background-color: var(--background);
+    opacity: var(--opacity-disabled);
+    cursor: not-allowed;
+}
+
+/* ========================================
+   Button Components
+   ======================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--duration-btn-transition) ease-in-out;
+    border: var(--border-width) solid transparent;
+    padding: var(--space-2) var(--space-4);
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    pointer-events: none;
+    opacity: var(--opacity-disabled);
+}
+
+.btn:hover {
+    transform: translateY(var(--transform-translateY-button-hover));
+}
+
+/* Button Variants */
+.btn--primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.btn--primary:hover {
+    background-color: var(--primary);
+    opacity: 0.9;
+}
+
+.btn--secondary {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+}
+
+.btn--secondary:hover {
+    background-color: var(--secondary);
+    opacity: 0.8;
+}
+
+.btn--destructive {
+    background-color: var(--destructive);
+    color: var(--destructive-foreground);
+}
+
+.btn--destructive:hover {
+    background-color: var(--destructive);
+    opacity: 0.9;
+}
+
+.btn--outline {
+    border-color: var(--border);
+    background-color: var(--background);
+    color: var(--foreground);
+}
+
+.btn--outline:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.btn--ghost {
+    color: var(--foreground);
+}
+
+.btn--ghost:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.btn--link {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.btn--link:hover {
+    text-decoration: none;
+}
+
+/* Button Sizes */
+.btn--sm {
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--font-size-xs);
+}
+
+.btn--lg {
+    padding: var(--space-3) var(--space-8);
+    font-size: var(--font-size-base);
+}
+
+/* ========================================
+   Checkbox and Radio Components
+   ======================================== */
+
+.checkbox,
+.radio {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox__input,
+.radio__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkbox__box,
+.radio__box {
+    width: var(--space-4);
+    height: var(--space-4);
+    border: var(--border-width) solid var(--border);
+    background-color: var(--background);
+    margin-right: var(--space-2);
+    transition: var(--transition-all);
+}
+
+.checkbox__box {
+    border-radius: var(--radius-sm);
+}
+
+.radio__box {
+    border-radius: var(--radius-full);
+}
+
+.checkbox__input:checked + .checkbox__box,
+.radio__input:checked + .radio__box {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.checkbox__input:checked + .checkbox__box::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 3px;
+    width: 5px;
+    height: 8px;
+    border: solid var(--primary-foreground);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.radio__input:checked + .radio__box::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background-color: var(--primary-foreground);
+    transform: translate(-50%, -50%);
+}
+
+.checkbox__input:focus + .checkbox__box,
+.radio__input:focus + .radio__box {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.checkbox__input:disabled + .checkbox__box,
+.radio__input:disabled + .radio__box {
+    opacity: var(--opacity-disabled);
+    cursor: not-allowed;
+}
+
+.checkbox__label,
+.radio__label {
+    margin-left: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--foreground);
+    cursor: pointer;
+}
+
+/* ========================================
+   Toggle Switch Component
+   ======================================== */
+
+.toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.toggle__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle__switch {
+    position: relative;
+    width: calc(var(--size-md) + var(--space-2));
+    height: var(--size-md);
+    background-color: var(--muted);
+    border-radius: var(--radius-full);
+    transition: var(--transition-all);
+}
+
+.toggle__slider {
+    position: absolute;
+    top: var(--space-toggle-margin);
+    left: var(--space-toggle-margin);
+    width: var(--size-sm);
+    height: var(--size-sm);
+    background-color: var(--background);
+    border-radius: var(--radius-full);
+    transition: var(--transition-all);
+}
+
+.toggle__input:checked + .toggle__switch {
+    background-color: var(--primary);
+}
+
+.toggle__input:checked + .toggle__switch .toggle__slider {
+    transform: translateX(var(--space-4));
+}
+
+.toggle__input:focus + .toggle__switch {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+.toggle__input:disabled + .toggle__switch {
+    opacity: var(--opacity-disabled);
+    cursor: not-allowed;
+}
+
+.toggle__label {
+    margin-left: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--foreground);
+    cursor: pointer;
+}
+
+/* ========================================
+   Form Validation States
+   ======================================== */
+
+.form-input--error,
+.form-select--error,
+.form-textarea--error {
+    border-color: var(--destructive);
+}
+
+.form-input--error:focus,
+.form-select--error:focus,
+.form-textarea--error:focus {
+    border-color: var(--destructive);
+    box-shadow: 0 0 0 0.25rem var(--destructive);
+}
+
+.form-input--success,
+.form-select--success,
+.form-textarea--success {
+    border-color: var(--success);
+}
+
+.form-input--success:focus,
+.form-select--success:focus,
+.form-textarea--success:focus {
+    border-color: var(--success);
+    box-shadow: 0 0 0 0.25rem var(--success);
+}
+
+.form-error {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--font-size-xs);
+    color: var(--destructive);
+}
+
+.form-help {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--font-size-xs);
+    color: var(--muted-foreground);
+}
+
+/* ========================================
+   Input Groups
+   ======================================== */
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group .form-input {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+}
+
+.input-group-text {
+    display: flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    margin-bottom: 0;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-base);
+    color: var(--muted-foreground);
+    text-align: center;
+    white-space: nowrap;
+    background-color: var(--muted);
+    border: var(--border-width) solid var(--border);
+}
+
+.input-group-text:first-child {
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+.input-group-text:last-child {
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+.input-group .form-input:not(:first-child) {
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+.input-group .form-input:not(:last-child) {
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}

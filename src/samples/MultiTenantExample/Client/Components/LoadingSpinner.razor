@@ -1,0 +1,17 @@
+@* 
+    Reusable loading spinner component
+    Usage: <LoadingSpinner Message="Loading data..." />
+*@
+
+<div class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>@Message</p>
+</div>
+
+@code {
+    /// <summary>
+    /// The message to display below the spinner
+    /// </summary>
+    [Parameter]
+    public string Message { get; set; } = "Loading...";
+}

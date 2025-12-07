@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Multi-Tenant Blazor WebAssembly Example - Demonstrating Blazing.Extensions.DependencyInjection" />
+    <title>Multi-Tenant Example</title>
+    <base href="/" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    
+    <!-- Import Blazing Component Common styles (copied locally) -->
+    <link href="css/blazing-common/base.css" rel="stylesheet" />
+    <link href="css/blazing-common/themes/colors.css" rel="stylesheet" />
+    <link href="css/blazing-common/themes/light.css" rel="stylesheet" />
+    <link href="css/blazing-common/themes/dark.css" rel="stylesheet" />
+    <link href="css/blazing-common/layout.css" rel="stylesheet" />
+    <link href="css/blazing-common/components/forms.css" rel="stylesheet" />
+    <link href="css/blazing-common/components/utilities.css" rel="stylesheet" />
+    
+    <!-- Application-specific styles -->
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="MultiTenantExample.Client.styles.css" rel="stylesheet" />
+    
+    <!-- Lucide icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <!-- Early theme initialization -->
+    <script>
+        (function () {
+            const storageKey = "blazor-template-theme";
+            let theme = localStorage.getItem(storageKey);
+
+            if (!theme) {
+                // Use system preference if no saved preference
+                theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+
+            if (theme === "dark") {
+                document.documentElement.classList.add("dark");
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div id="app">
+        <div class="loading-screen">
+            <div class="loading-screen__content">
+                <div class="loading-spinner"></div>
+                <div class="loading-screen__text">
+                    <h5 class="loading-screen__title">Loading Multi-Tenant Example...</h5>
+                    <p class="loading-screen__message">Please wait while the application initializes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        <div class="notification notification--error" role="alert">
+            <i data-lucide="alert-triangle" class="notification__icon"></i>
+            <span class="notification__message">An unhandled error has occurred.</span>
+            <a href="" class="notification__reload">Reload</a>
+            <button class="notification__dismiss" title="Dismiss error" onclick="document.getElementById('blazor-error-ui').style.display='none'">
+                <i data-lucide="x" class="notification__dismiss-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+@page "/about"
+@inject IJSRuntime JSRuntime
+
+<PageTitle>About - Multi-Tenant Example</PageTitle>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero hero--primary">
+        <div class="hero__content">
+            <div class="hero__main">
+                <h1 class="hero__title">
+                    <i data-lucide="info" class="hero__title-icon"></i>
+                    Multi-Tenant Blazor Example
+                </h1>
+                <p class="hero__description">
+                    Demonstrates enterprise-grade features of <strong>Blazing.Extensions.DependencyInjection</strong> 
+                    in a production-ready multi-tenant architecture.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="card">
+        <h2>
+            <i data-lucide="star"></i>
+            Features Demonstrated
+        </h2>
+        <ul class="feature-list">
+            <li class="feature-list__item">
+                <i data-lucide="key" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">Keyed Services</div>
+                    <div class="feature-list__description">Per-tenant database contexts and configurations with service key resolution</div>
+                </div>
+            </li>
+            <li class="feature-list__item">
+                <i data-lucide="layers" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">Service Scoping</div>
+                    <div class="feature-list__description">Per-request tenant isolation with proper scope management</div>
+                </div>
+            </li>
+            <li class="feature-list__item">
+                <i data-lucide="zap" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">Lazy Initialization</div>
+                    <div class="feature-list__description">Deferred tenant configuration loading for optimal performance</div>
+                </div>
+            </li>
+            <li class="feature-list__item">
+                <i data-lucide="settings" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">Service Factories</div>
+                    <div class="feature-list__description">Conditional tenant-based service creation with factory patterns</div>
+                </div>
+            </li>
+            <li class="feature-list__item">
+                <i data-lucide="shield-check" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">Service Validation</div>
+                    <div class="feature-list__description">Tenant configuration validation at application startup</div>
+                </div>
+            </li>
+            <li class="feature-list__item">
+                <i data-lucide="rocket" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">Async Initialization</div>
+                    <div class="feature-list__description">Priority-based database migration and cache warmup</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Architecture Section -->
+    <div class="card">
+        <h2>
+            <i data-lucide="boxes"></i>
+            Architecture
+        </h2>
+        <p>This sample demonstrates a real-world multi-tenant SaaS architecture using:</p>
+        <ul class="feature-list">
+            <li class="feature-list__item">
+                <i data-lucide="server" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">ASP.NET Core Web API</div>
+                    <div class="feature-list__description">RESTful backend with tenant-aware middleware and controllers</div>
+                </div>
+            </li>
+            <li class="feature-list__item">
+                <i data-lucide="monitor" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">Blazor WebAssembly</div>
+                    <div class="feature-list__description">Client-side SPA with reactive tenant switching</div>
+                </div>
+            </li>
+            <li class="feature-list__item">
+                <i data-lucide="database" class="feature-list__icon"></i>
+                <div class="feature-list__content">
+                    <div class="feature-list__title">Per-Tenant Data Isolation</div>
+                    <div class="feature-list__description">Each tenant has isolated orders, products, and configurations</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="card">
+        <h2>
+            <i data-lucide="cpu"></i>
+            Technology Stack
+        </h2>
+        <div class="tech-grid">
+            <div class="tech-item">
+                <i data-lucide="code" class="tech-item__icon"></i>
+                <div class="tech-item__content">
+                    <div class="tech-item__title">.NET 8/9/10</div>
+                    <div class="tech-item__description">Multi-targeting support</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <i data-lucide="zap" class="tech-item__icon"></i>
+                <div class="tech-item__content">
+                    <div class="tech-item__title">Blazor WebAssembly</div>
+                    <div class="tech-item__description">Client-side web app</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <i data-lucide="package" class="tech-item__icon"></i>
+                <div class="tech-item__content">
+                    <div class="tech-item__title">Dependency Injection</div>
+                    <div class="tech-item__description">Enterprise DI patterns</div>
+                </div>
+            </div>
+            <div class="tech-item">
+                <i data-lucide="palette" class="tech-item__icon"></i>
+                <div class="tech-item__content">
+                    <div class="tech-item__title">Pure CSS</div>
+                    <div class="tech-item__description">No framework dependencies</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Links -->
+    <div class="card">
+        <h2>
+            <i data-lucide="link"></i>
+            Learn More
+        </h2>
+        <div class="link-grid">
+            <a href="https://github.com/gragra33/Blazing.Extensions.DependencyInjection" target="_blank" class="link-card">
+                <i data-lucide="github" class="link-card__icon"></i>
+                <div class="link-card__content">
+                    <div class="link-card__title">GitHub Repository</div>
+                    <div class="link-card__description">View source code and documentation</div>
+                </div>
+                <i data-lucide="external-link" class="link-card__arrow"></i>
+            </a>
+            <a href="/" class="link-card">
+                <i data-lucide="home" class="link-card__icon"></i>
+                <div class="link-card__content">
+                    <div class="link-card__title">Get Started</div>
+                    <div class="link-card__description">Select a tenant and explore</div>
+                </div>
+                <i data-lucide="arrow-right" class="link-card__arrow"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Always reinitialize icons to handle dynamic content
+        await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+    }
+}

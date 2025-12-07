@@ -86,15 +86,25 @@ public static class ServiceEnumerationExtensions
     {
         ArgumentNullException.ThrowIfNull(instance);
 
+        // CRITICAL FIX: Don't intercept IServiceProvider or IServiceScope - let Microsoft's extension methods handle those
+        if (instance is IServiceProvider provider)
+        {
+            return ServiceProviderServiceExtensions.GetServices<TService>(provider);
+        }
+
+        if (instance is IServiceScope scope)
+        {
+            return ServiceProviderServiceExtensions.GetServices<TService>(scope.ServiceProvider);
+        }
+
         var serviceProvider = instance.GetServices();
         if (serviceProvider == null)
         {
             return [];
         }
 
-        // Use Microsoft's GetService explicitly to avoid our extension method
-        var services = ServiceProviderServiceExtensions.GetService<IEnumerable<TService>>(serviceProvider);
-        return services ?? [];
+        // Use Microsoft's GetServices explicitly to avoid our extension method
+        return ServiceProviderServiceExtensions.GetServices<TService>(serviceProvider);
     }
 
     /// <summary>

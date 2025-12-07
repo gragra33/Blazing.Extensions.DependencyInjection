@@ -1,0 +1,27 @@
+@inherits LayoutComponentBase
+
+<div class="page-container">
+    <NavBar />
+
+    <main class="main-content">
+        @Body
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div>
+                    <small class="text-muted">
+                        <i data-lucide="code" class="icon icon--sm mr-1"></i>
+                        Multi-Tenant Blazor Example
+                    </small>
+                </div>
+                <div>
+                    <small class="text-muted">
+                        Built with <strong>Blazing.Extensions.DependencyInjection</strong> &amp; <strong>Pure CSS</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

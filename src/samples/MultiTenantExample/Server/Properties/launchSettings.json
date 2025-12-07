@@ -1,0 +1,21 @@
+{
+  "profiles": {
+    "MultiTenantExample.Server": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:52409;http://localhost:52410"
+    },
+    "Swagger API": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:52409;http://localhost:52410"
+    }
+  }
+}

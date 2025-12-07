@@ -116,7 +116,11 @@ public static class ServiceValidationExtensions
         ArgumentNullException.ThrowIfNull(services);
 
         var errors = new List<ServiceLifetimeValidationError>();
-        var descriptorMap = services.ToDictionary(sd => sd.ServiceType, sd => sd);
+        
+        // Group services by type and use the first registration for each type
+        var descriptorMap = services
+            .GroupBy(sd => sd.ServiceType)
+            .ToDictionary(g => g.Key, g => g.First());
 
         foreach (var descriptor in services)
         {

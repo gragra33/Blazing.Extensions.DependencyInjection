@@ -1,0 +1,26 @@
+@* 
+    Reusable component to display when no tenant is selected
+    Usage: 
+    <NoTenantWarning>
+        Please <a href="/" class="link">select a tenant</a> to view products.
+    </NoTenantWarning>
+*@
+
+<div class="card card--warning">
+    <div class="alert alert--warning">
+        <i data-lucide="alert-triangle" class="alert__icon"></i>
+        <div>
+            <h3>No Tenant Selected</h3>
+            <p>@ChildContent</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// The message content to display in the warning.
+    /// Supports HTML elements like links.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

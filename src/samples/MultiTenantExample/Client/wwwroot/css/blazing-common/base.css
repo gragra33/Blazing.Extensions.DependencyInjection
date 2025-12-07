@@ -1,0 +1,750 @@
+/* =====================================================================
+    Blazing Component Common - Base CSS Foundation
+    =====================================================================
+    - Tailwind color scale in :root (OKLCH values)
+    - Typography system variables
+    - Spacing scale variables
+    - Border radius variables
+    - Layout variables
+    - CSS Reset and base element styling
+    ===================================================================== */
+
+/* CSS Custom Properties (Design System) */
+:root {
+    /* Tailwind CSS 4.0+ Color Scale - OKLCH Values */
+    /* https://tailwindcss.com/docs/customizing-colors */
+
+    /* Slate Scale */
+    --slate-50: oklch(0.984 0.003 247.858);
+    --slate-100: oklch(0.96 0.013 252.037);
+    --slate-200: oklch(0.913 0.013 253.094);
+    --slate-300: oklch(0.827 0.015 252.096);
+    --slate-400: oklch(0.679 0.015 256.848);
+    --slate-500: oklch(0.534 0.015 257.28);
+    --slate-600: oklch(0.424 0.016 257.793);
+    --slate-700: oklch(0.345 0.015 260.136);
+    --slate-800: oklch(0.258 0.015 264.722);
+    --slate-900: oklch(0.156 0.014 260.473);
+    --slate-950: oklch(0.078 0.01 256.011);
+
+    /* Gray Scale (Neutral) */
+    --gray-50: oklch(0.985 0.002 247.839);
+    --gray-100: oklch(0.961 0.008 247.878);
+    --gray-200: oklch(0.916 0.013 253.164);
+    --gray-300: oklch(0.834 0.017 253.887);
+    --gray-400: oklch(0.693 0.022 253.557);
+    --gray-500: oklch(0.549 0.026 252.583);
+    --gray-600: oklch(0.431 0.025 256.901);
+    --gray-700: oklch(0.353 0.022 258.338);
+    --gray-800: oklch(0.269 0.015 261.692);
+    --gray-900: oklch(0.156 0.014 260.473);
+    --gray-950: oklch(0.078 0.01 256.011);
+
+    /* Zinc Scale */
+    --zinc-50: oklch(0.985 0.001 286.384);
+    --zinc-100: oklch(0.961 0.001 286.38);
+    --zinc-200: oklch(0.914 0.006 286.373);
+    --zinc-300: oklch(0.831 0.013 286.361);
+    --zinc-400: oklch(0.688 0.018 286.33);
+    --zinc-500: oklch(0.546 0.022 286.281);
+    --zinc-600: oklch(0.428 0.021 286.218);
+    --zinc-700: oklch(0.351 0.018 286.15);
+    --zinc-800: oklch(0.268 0.013 286.067);
+    --zinc-900: oklch(0.155 0.009 285.945);
+    --zinc-950: oklch(0.078 0.005 285.823);
+
+    /* Neutral Scale */
+    --neutral-50: oklch(0.985 0);
+    --neutral-100: oklch(0.961 0);
+    --neutral-200: oklch(0.914 0);
+    --neutral-300: oklch(0.832 0);
+    --neutral-400: oklch(0.688 0);
+    --neutral-500: oklch(0.546 0);
+    --neutral-600: oklch(0.428 0);
+    --neutral-700: oklch(0.352 0);
+    --neutral-800: oklch(0.269 0);
+    --neutral-900: oklch(0.156 0);
+    --neutral-950: oklch(0.078 0);
+
+    /* Stone Scale */
+    --stone-50: oklch(0.985 0.001 106.423);
+    --stone-100: oklch(0.961 0.002 60);
+    --stone-200: oklch(0.914 0.005 69.23);
+    --stone-300: oklch(0.832 0.009 81.34);
+    --stone-400: oklch(0.689 0.014 85.29);
+    --stone-500: oklch(0.546 0.016 92.72);
+    --stone-600: oklch(0.428 0.015 93.38);
+    --stone-700: oklch(0.352 0.012 96.72);
+    --stone-800: oklch(0.269 0.009 106.423);
+    --stone-900: oklch(0.156 0.006 106.423);
+    --stone-950: oklch(0.078 0.004 106.423);
+
+    /* Red Scale */
+    --red-50: oklch(0.971 0.013 17.38);
+    --red-100: oklch(0.936 0.032 17.717);
+    --red-200: oklch(0.885 0.058 19.109);
+    --red-300: oklch(0.808 0.087 21.555);
+    --red-400: oklch(0.704 0.113 22.216);
+    --red-500: oklch(0.628 0.128 25.331);
+    --red-600: oklch(0.549 0.129 27.33);
+    --red-700: oklch(0.465 0.114 27.652);
+    --red-800: oklch(0.388 0.096 27.966);
+    --red-900: oklch(0.349 0.081 28.346);
+    --red-950: oklch(0.192 0.048 27.86);
+
+    /* Orange Scale */
+    --orange-50: oklch(0.977 0.013 70.67);
+    --orange-100: oklch(0.942 0.032 65.69);
+    --orange-200: oklch(0.871 0.068 56.29);
+    --orange-300: oklch(0.785 0.108 47.44);
+    --orange-400: oklch(0.701 0.148 42.46);
+    --orange-500: oklch(0.635 0.156 37.68);
+    --orange-600: oklch(0.576 0.148 36.4);
+    --orange-700: oklch(0.472 0.124 35.96);
+    --orange-800: oklch(0.387 0.101 35.75);
+    --orange-900: oklch(0.332 0.087 35.87);
+    --orange-950: oklch(0.176 0.046 34.76);
+
+    /* Amber Scale */
+    --amber-50: oklch(0.984 0.017 102.212);
+    --amber-100: oklch(0.956 0.046 96.481);
+    --amber-200: oklch(0.896 0.09 92.18);
+    --amber-300: oklch(0.829 0.132 87.52);
+    --amber-400: oklch(0.774 0.17 84.38);
+    --amber-500: oklch(0.695 0.16 78.66);
+    --amber-600: oklch(0.593 0.135 69.75);
+    --amber-700: oklch(0.472 0.111 61.83);
+    --amber-800: oklch(0.393 0.092 58.7);
+    --amber-900: oklch(0.348 0.078 53.61);
+    --amber-950: oklch(0.181 0.042 45.77);
+
+    /* Yellow Scale */
+    --yellow-50: oklch(0.985 0.024 109.769);
+    --yellow-100: oklch(0.955 0.058 108.543);
+    --yellow-200: oklch(0.916 0.108 106.856);
+    --yellow-300: oklch(0.862 0.158 104.646);
+    --yellow-400: oklch(0.808 0.184 99.57);
+    --yellow-500: oklch(0.737 0.172 92.72);
+    --yellow-600: oklch(0.622 0.138 81.34);
+    --yellow-700: oklch(0.497 0.113 69.23);
+    --yellow-800: oklch(0.418 0.094 64.82);
+    --yellow-900: oklch(0.358 0.081 60);
+    --yellow-950: oklch(0.201 0.047 62.29);
+
+    /* Lime Scale */
+    --lime-50: oklch(0.984 0.021 120.557);
+    --lime-100: oklch(0.962 0.046 120.684);
+    --lime-200: oklch(0.928 0.084 121.275);
+    --lime-300: oklch(0.876 0.133 122.417);
+    --lime-400: oklch(0.808 0.171 124.26);
+    --lime-500: oklch(0.701 0.181 125.72);
+    --lime-600: oklch(0.573 0.15 127.43);
+    --lime-700: oklch(0.451 0.12 129.25);
+    --lime-800: oklch(0.365 0.096 131.16);
+    --lime-900: oklch(0.314 0.081 133.18);
+    --lime-950: oklch(0.168 0.049 136.01);
+
+    /* Green Scale */
+    --green-50: oklch(0.984 0.016 142.425);
+    --green-100: oklch(0.961 0.032 142.686);
+    --green-200: oklch(0.925 0.06 143.267);
+    --green-300: oklch(0.873 0.099 144.206);
+    --green-400: oklch(0.801 0.136 145.477);
+    --green-500: oklch(0.705 0.151 147.16);
+    --green-600: oklch(0.588 0.148 149.579);
+    --green-700: oklch(0.481 0.129 152.844);
+    --green-800: oklch(0.389 0.105 157.57);
+    --green-900: oklch(0.327 0.09 163.23);
+    --green-950: oklch(0.18 0.052 166.11);
+
+    /* Emerald Scale */
+    --emerald-50: oklch(0.985 0.016 160.641);
+    --emerald-100: oklch(0.961 0.031 162.148);
+    --emerald-200: oklch(0.925 0.058 164.704);
+    --emerald-300: oklch(0.873 0.092 168.35);
+    --emerald-400: oklch(0.801 0.119 172.23);
+    --emerald-500: oklch(0.705 0.129 174.735);
+    --emerald-600: oklch(0.588 0.124 175.806);
+    --emerald-700: oklch(0.481 0.106 177.015);
+    --emerald-800: oklch(0.389 0.086 178.464);
+    --emerald-900: oklch(0.327 0.073 180.109);
+    --emerald-950: oklch(0.18 0.043 181.725);
+
+    /* Teal Scale */
+    --teal-50: oklch(0.985 0.012 180.695);
+    --teal-100: oklch(0.961 0.025 181.03);
+    --teal-200: oklch(0.925 0.049 182.484);
+    --teal-300: oklch(0.873 0.077 184.704);
+    --teal-400: oklch(0.801 0.098 187.417);
+    --teal-500: oklch(0.705 0.11 189.904);
+    --teal-600: oklch(0.588 0.115 192.174);
+    --teal-700: oklch(0.481 0.104 194.737);
+    --teal-800: oklch(0.389 0.086 197.137);
+    --teal-900: oklch(0.327 0.074 199.101);
+    --teal-950: oklch(0.18 0.044 200.719);
+
+    /* Cyan Scale */
+    --cyan-50: oklch(0.985 0.01 197.137);
+    --cyan-100: oklch(0.961 0.019 207.089);
+    --cyan-200: oklch(0.925 0.038 212.592);
+    --cyan-300: oklch(0.873 0.062 216.362);
+    --cyan-400: oklch(0.801 0.085 218.837);
+    --cyan-500: oklch(0.705 0.099 220.442);
+    --cyan-600: oklch(0.588 0.108 221.507);
+    --cyan-700: oklch(0.481 0.096 222.883);
+    --cyan-800: oklch(0.389 0.078 224.887);
+    --cyan-900: oklch(0.327 0.067 227.169);
+    --cyan-950: oklch(0.18 0.038 229.257);
+
+    /* Sky Scale */
+    --sky-50: oklch(0.985 0.013 220.442);
+    --sky-100: oklch(0.961 0.027 221.845);
+    --sky-200: oklch(0.925 0.054 223.61);
+    --sky-300: oklch(0.873 0.087 225.314);
+    --sky-400: oklch(0.801 0.125 226.286);
+    --sky-500: oklch(0.705 0.153 226.918);
+    --sky-600: oklch(0.588 0.164 227.359);
+    --sky-700: oklch(0.481 0.148 227.766);
+    --sky-800: oklch(0.389 0.119 228.298);
+    --sky-900: oklch(0.327 0.096 229.257);
+    --sky-950: oklch(0.18 0.057 230.605);
+
+    /* Blue Scale */
+    --blue-50: oklch(0.985 0.016 252.035);
+    --blue-100: oklch(0.961 0.034 252.365);
+    --blue-200: oklch(0.925 0.068 253.391);
+    --blue-300: oklch(0.873 0.109 254.624);
+    --blue-400: oklch(0.801 0.153 255.574);
+    --blue-500: oklch(0.705 0.186 256.052);
+    --blue-600: oklch(0.588 0.193 256.345);
+    --blue-700: oklch(0.481 0.176 256.619);
+    --blue-800: oklch(0.389 0.142 256.848);
+    --blue-900: oklch(0.327 0.115 257.28);
+    --blue-950: oklch(0.18 0.07 258.338);
+
+    /* Indigo Scale */
+    --indigo-50: oklch(0.985 0.017 272.314);
+    --indigo-100: oklch(0.961 0.035 272.96);
+    --indigo-200: oklch(0.925 0.07 274.26);
+    --indigo-300: oklch(0.873 0.112 275.75);
+    --indigo-400: oklch(0.801 0.155 277.05);
+    --indigo-500: oklch(0.705 0.184 278.14);
+    --indigo-600: oklch(0.588 0.193 278.89);
+    --indigo-700: oklch(0.481 0.176 279.52);
+    --indigo-800: oklch(0.389 0.142 280.72);
+    --indigo-900: oklch(0.327 0.115 282.48);
+    --indigo-950: oklch(0.18 0.07 283.75);
+
+    /* Violet Scale */
+    --violet-50: oklch(0.985 0.015 293.334);
+    --violet-100: oklch(0.961 0.031 292.53);
+    --violet-200: oklch(0.925 0.062 291.7);
+    --violet-300: oklch(0.873 0.1 290.75);
+    --violet-400: oklch(0.801 0.138 289.75);
+    --violet-500: oklch(0.705 0.169 288.89);
+    --violet-600: oklch(0.588 0.18 288.33);
+    --violet-700: oklch(0.481 0.165 287.98);
+    --violet-800: oklch(0.389 0.134 287.75);
+    --violet-900: oklch(0.327 0.109 287.68);
+    --violet-950: oklch(0.18 0.067 287.4);
+
+    /* Purple Scale */
+    --purple-50: oklch(0.977 0.013 308.665);
+    --purple-100: oklch(0.949 0.03 308.24);
+    --purple-200: oklch(0.898 0.058 307.22);
+    --purple-300: oklch(0.83 0.092 305.845);
+    --purple-400: oklch(0.729 0.132 303.9);
+    --purple-500: oklch(0.627 0.165 302.71);
+    --purple-600: oklch(0.533 0.175 302.325);
+    --purple-700: oklch(0.449 0.158 302.5);
+    --purple-800: oklch(0.376 0.128 302.71);
+    --purple-900: oklch(0.318 0.107 303.9);
+    --purple-950: oklch(0.176 0.069 305.845);
+
+    /* Fuchsia Scale */
+    --fuchsia-50: oklch(0.977 0.017 320.207);
+    --fuchsia-100: oklch(0.949 0.034 318.66);
+    --fuchsia-200: oklch(0.898 0.067 316.85);
+    --fuchsia-300: oklch(0.83 0.106 314.29);
+    --fuchsia-400: oklch(0.729 0.149 311.29);
+    --fuchsia-500: oklch(0.627 0.182 308.335);
+    --fuchsia-600: oklch(0.533 0.194 305.845);
+    --fuchsia-700: oklch(0.449 0.177 304.04);
+    --fuchsia-800: oklch(0.376 0.143 302.71);
+    --fuchsia-900: oklch(0.318 0.119 301.89);
+    --fuchsia-950: oklch(0.176 0.078 300.59);
+
+    /* Pink Scale */
+    --pink-50: oklch(0.977 0.014 343.677);
+    --pink-100: oklch(0.949 0.028 342.55);
+    --pink-200: oklch(0.898 0.056 341.44);
+    --pink-300: oklch(0.83 0.087 340.26);
+    --pink-400: oklch(0.729 0.124 338.7);
+    --pink-500: oklch(0.627 0.155 336.8);
+    --pink-600: oklch(0.533 0.175 334.23);
+    --pink-700: oklch(0.449 0.16 330.75);
+    --pink-800: oklch(0.376 0.128 327.43);
+    --pink-900: oklch(0.318 0.107 322.85);
+    --pink-950: oklch(0.176 0.069 318.66);
+
+    /* Rose Scale */
+    --rose-50: oklch(0.977 0.013 3.322);
+    --rose-100: oklch(0.949 0.028 12.499);
+    --rose-200: oklch(0.898 0.055 16.433);
+    --rose-300: oklch(0.83 0.085 18.995);
+    --rose-400: oklch(0.729 0.121 20.63);
+    --rose-500: oklch(0.627 0.15 22.216);
+    --rose-600: oklch(0.533 0.16 23.717);
+    --rose-700: oklch(0.449 0.145 24.492);
+    --rose-800: oklch(0.376 0.12 25.331);
+    --rose-900: oklch(0.318 0.103 25.994);
+    --rose-950: oklch(0.176 0.058 26.5);
+
+    /* White and Black */
+    --white: oklch(1 0 0);
+    --black: oklch(0 0 0);
+
+    /* Typography */
+    --font-family-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-family-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+    /* Font Sizes */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    --font-size-5xl: 3rem;
+
+    /* Additional specific font sizes */
+    --font-size-feature-title: 1.25rem;
+    --font-size-feature-description: 0.875rem;
+
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Line Heights */
+    --line-height-tight: 1.25;
+    --line-height-base: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* Spacing Scale */
+    --space-0: 0;
+    --space-1: 0.25rem; /* 4px */
+    --space-2: 0.5rem; /* 8px */
+    --space-3: 0.75rem; /* 12px */
+    --space-4: 1rem; /* 16px */
+    --space-5: 1.25rem; /* 20px */
+    --space-6: 1.5rem; /* 24px */
+    --space-8: 2rem; /* 32px */
+    --space-10: 2.5rem; /* 40px */
+    --space-12: 3rem; /* 48px */
+    --space-16: 4rem; /* 64px */
+    --space-20: 5rem; /* 80px */
+
+    /* Additional specific spacing */
+    --space-toggle-margin: 3px;
+    --space-max-height-menu: 600px;
+
+    /* Border Radius */
+    --radius-none: 0;
+    --radius-sm: 0.125rem;
+    --radius-base: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-full: 9999px;
+
+    /* Borders */
+    --border-width: 1px;
+    --border-width-2: 2px;
+    --border-width-4: 4px;
+    --border-style: solid;
+    --border-color: var(--border);
+
+    /* Shadows (theme/dark aware using shadcn variables) */
+    --shadow-color: var(--shadow, oklch(0 0 0 / 0.15));
+    --shadow-xs: 0 1px 2px 0 var(--shadow-color);
+    --shadow-sm: 0 1px 3px 0 var(--shadow-color), 0 1px 2px 0 var(--shadow-color);
+    --shadow-base: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -1px var(--shadow-color);
+    --shadow-md: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -2px var(--shadow-color);
+    --shadow-lg: 0 20px 25px -5px var(--shadow-color), 0 10px 10px -5px var(--shadow-color);
+    --shadow-xl: 0 25px 50px -12px var(--shadow-color);
+
+    /* Additional specific shadows (theme/dark aware) */
+    --shadow-blazor-error: 0 -1px 2px var(--shadow-color);
+    --shadow-card-hover: 0 0.5rem 1rem var(--shadow-color);
+    --shadow-form-focus: 0 0 0 0.25rem var(--ring, oklch(0 0 0 / 0.25));
+
+    /*
+     * New shadcn variable for shadow color (default, can be overridden in .dark/.theme-*)
+     * Expected format: a valid CSS color (e.g., oklch, rgba, hex)
+     * Light mode: subtle shadow (e.g., oklch(0 0 0 / 0.15))
+     * Dark mode: more visible shadow (e.g., oklch(0 0 0 / 0.6))
+     */
+    --shadow: oklch(0 0 0 / 0.15);
+
+    /* Layout */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1280px;
+    --container-2xl: 1320px;
+    --container-max-width: var(--container-xl);
+
+    /* Navigation */
+    --navbar-height: 4rem;
+    --navbar-padding-x: var(--space-4);
+    --navbar-padding-y: var(--space-2);
+
+    /* Transitions */
+    --transition-none: none;
+    --transition-all: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-colors: color 150ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-opacity: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-shadow: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-transform: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Generic Duration Scale - 50ms increments up to 1000ms */
+    --duration-50ms: 50ms;
+    --duration-100ms: 100ms;
+    --duration-150ms: 150ms;
+    --duration-200ms: 200ms;
+    --duration-250ms: 250ms;
+    --duration-300ms: 300ms;
+    --duration-350ms: 350ms;
+    --duration-400ms: 400ms;
+    --duration-450ms: 450ms;
+    --duration-500ms: 500ms;
+    --duration-550ms: 550ms;
+    --duration-600ms: 600ms;
+    --duration-650ms: 650ms;
+    --duration-700ms: 700ms;
+    --duration-750ms: 750ms;
+    --duration-800ms: 800ms;
+    --duration-850ms: 850ms;
+    --duration-900ms: 900ms;
+    --duration-950ms: 950ms;
+    --duration-1000ms: 1000ms;
+
+    /* Legacy component duration aliases (will be moved to respective projects) */
+    --duration-loading-spin: var(--duration-750ms);
+    --duration-btn-transition: var(--duration-200ms);
+    --duration-card-transition: var(--duration-150ms);
+    --duration-form-transition: var(--duration-150ms);
+
+    /* Transform values */
+    --transform-translateY-hover: -2px;
+    --transform-translateY-button-hover: -1px;
+    --transform-toggle-translate: 3px;
+
+    /* Z-Index Scale */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+
+    /* Icon Sizes */
+    --icon-size-xs: 0.75rem;
+    --icon-size-sm: 1rem;
+    --icon-size-base: 1.25rem;
+    --icon-size-lg: 1.5rem;
+    --icon-size-xl: 2rem;
+    --icon-size-2xl: 2.5rem;
+    --icon-size-hero: 6rem;
+
+    /* Additional sizes for specific components */
+    --size-sm: 1.25rem; /* 20px - toggle icon */
+    --size-md: 2.25rem; /* 36px - toggle button */
+    --size-lg: 3rem; /* 48px - loading spinner */
+    --size-xl: 4rem; /* 64px - feature icon */
+    --size-2xl: 6rem; /* 96px - hero icon */
+
+    /* Form component sizes */
+    --size-select-icon: 16px 12px;
+
+    /* Opacity values */
+    --opacity-disabled: 0.65;
+    --opacity-hero-description: 0.95;
+    --opacity-hero-visual: 0.8;
+
+    /* Border widths */
+    --border-width-toggle-icon: 2px;
+    --border-width-spinner: 0.25em;
+
+    /* Accessibility & Touch Targets */
+    --touch-target-size: 44px; /* WCAG AA minimum touch target size */
+    --focus-ring-width: 2px;
+    --focus-ring-width-high-contrast: 3px;
+    --focus-ring-offset: 2px;
+}
+
+/* ========================================
+   CSS Reset and Base Styles
+   ======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: var(--font-family-base);
+    line-height: var(--line-height-base);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -moz-tab-size: 4;
+    tab-size: 4;
+}
+
+body {
+    margin: 0;
+    font-family: inherit;
+    line-height: inherit;
+    /* Update hard-coded CSS properties with shadcn variable names */
+    background-color: var(--background);
+    color: var(--foreground);
+    border-color: var(--border);
+    box-shadow: var(--shadow);
+}
+
+/* Prevent scroll when mobile menu is open */
+body.navbar-open {
+    overflow: hidden;
+}
+
+body.loading {
+    overflow: hidden;
+}
+
+/* ========================================
+   Typography Base Styles
+   ======================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    color: var(--foreground);
+}
+
+h1 {
+    font-size: var(--font-size-3xl);
+}
+
+    h1:focus {
+        outline: none;
+    }
+
+h2 {
+    font-size: var(--font-size-2xl);
+}
+
+h3 {
+    font-size: var(--font-size-xl);
+}
+
+h4 {
+    font-size: var(--font-size-lg);
+}
+
+h5 {
+    font-size: var(--font-size-base);
+}
+
+h6 {
+    font-size: var(--font-size-sm);
+}
+
+p {
+    margin: 0;
+    color: var(--foreground);
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: var(--transition-colors);
+}
+
+a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+code {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-sm);
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+}
+
+pre {
+    font-family: var(--font-family-mono);
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+}
+
+blockquote {
+    margin: 0;
+    padding-left: var(--space-4);
+    border-left: var(--border-width-4) solid var(--border);
+    color: var(--muted-foreground);
+}
+
+hr {
+    border: none;
+    height: var(--border-width);
+    background-color: var(--border);
+    margin: var(--space-8) 0;
+}
+
+/* List Styles */
+ul,
+ol {
+    margin: 0;
+    padding-left: var(--space-6);
+}
+
+li {
+    margin-bottom: var(--space-1);
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th,
+td {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    border-bottom: var(--border-width) solid var(--border);
+}
+
+th {
+    font-weight: var(--font-weight-semibold);
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+}
+
+/* Form Base Styles */
+input,
+select,
+textarea,
+button {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* Focus Styles */
+:focus {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+}
+
+/* Selection Styles */
+::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--muted-foreground);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--foreground);
+}
+
+/* =============================================================================
+   Accessibility: Reduced Motion Support
+   =============================================================================
+   For users who prefer reduced motion, all animations and transitions
+   should be set to minimal duration or disabled entirely.
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        /* Override all transition variables to use minimal duration */
+        --transition-all: all 1ms;
+        --transition-colors: color 1ms, background-color 1ms, border-color 1ms;
+        --transition-opacity: opacity 1ms;
+        --transition-shadow: box-shadow 1ms;
+        --transition-transform: transform 1ms;
+
+        /* Override all generic duration variables */
+        --duration-50ms: 1ms;
+        --duration-100ms: 1ms;
+        --duration-150ms: 1ms;
+        --duration-200ms: 1ms;
+        --duration-250ms: 1ms;
+        --duration-300ms: 1ms;
+        --duration-350ms: 1ms;
+        --duration-400ms: 1ms;
+        --duration-450ms: 1ms;
+        --duration-500ms: 1ms;
+        --duration-550ms: 1ms;
+        --duration-600ms: 1ms;
+        --duration-650ms: 1ms;
+        --duration-700ms: 1ms;
+        --duration-750ms: 1ms;
+        --duration-800ms: 1ms;
+        --duration-850ms: 1ms;
+        --duration-900ms: 1ms;
+        --duration-950ms: 1ms;
+        --duration-1000ms: 1ms;
+    }
+
+    /* Disable animations and transitions globally */
+    *,
+    *::before,
+    *::after {
+        animation-duration: 1ms !important;
+        animation-delay: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        transition-delay: 1ms !important;
+        scroll-behavior: auto !important;
+    }
+}

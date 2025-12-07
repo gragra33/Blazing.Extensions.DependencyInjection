@@ -19,11 +19,11 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
 	  <!-- Default versioning (can be overridden in individual projects) -->
-	  <ApplicationDisplayVersion>2.1.0</ApplicationDisplayVersion>
-	  <ApplicationVersion>2.1</ApplicationVersion>
-	  <AssemblyVersion>2.1.0.0</AssemblyVersion>
-	  <FileVersion>2.1.0.0</FileVersion>
-	  <Version>2.1.0</Version>
+	  <ApplicationDisplayVersion>2.2.0</ApplicationDisplayVersion>
+	  <ApplicationVersion>2.2</ApplicationVersion>
+	  <AssemblyVersion>2.2.0.0</AssemblyVersion>
+	  <FileVersion>2.2.0.0</FileVersion>
+	  <Version>2.2.0</Version>
 
 	  <!-- Repository information -->
 	  <RepositoryUrl>https://github.com/gragra33/Blazing.Extensions.DependencyInjection</RepositoryUrl>

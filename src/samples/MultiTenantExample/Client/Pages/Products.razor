@@ -1,0 +1,169 @@
+@page "/products"
+@using MultiTenantExample.Client.Components
+@inject TenantStateService TenantState
+@inject TenantApiService TenantApi
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<PageTitle>Products - @(TenantState.CurrentTenant?.Name ?? "Multi-Tenant Example")</PageTitle>
+
+<div class="container">
+    @if (TenantState.CurrentTenant == null)
+    {
+        <NoTenantWarning>
+            Please <a href="/" class="link">select a tenant</a> to view products.
+        </NoTenantWarning>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card__header">
+                <h1>
+                    <i data-lucide="package"></i>
+                    Products for @TenantState.CurrentTenant.Name
+                </h1>
+                <p class="text-muted">
+                    <strong>Tenant ID:</strong> @TenantState.CurrentTenantId
+                </p>
+            </div>
+            
+            @if (isLoading)
+            {
+                <LoadingSpinner Message="Loading products..." />
+            }
+            else if (products == null || products.Length == 0)
+            {
+                <div class="empty-state">
+                    <i data-lucide="inbox" class="empty-state__icon"></i>
+                    <h3>No Products Found</h3>
+                    <p>There are no products for this tenant yet.</p>
+                </div>
+            }
+            else
+            {
+                <div class="products-grid">
+                    @foreach (var product in products)
+                    {
+                        <div class="product-card">
+                            <div class="product-card__header">
+                                <h3 class="product-card__title">@product.Name</h3>
+                                <span class="product-card__sku">
+                                    <i data-lucide="hash" class="icon icon--xs"></i>
+                                    @product.Sku
+                                </span>
+                            </div>
+                            
+                            @if (!string.IsNullOrEmpty(product.Description))
+                            {
+                                <p class="product-card__description">@product.Description</p>
+                            }
+                            
+                            <div class="product-card__details">
+                                <div class="product-card__price">
+                                    <i data-lucide="dollar-sign" class="icon icon--sm"></i>
+                                    $@product.Price.ToString("#,##0.00")
+                                </div>
+                                <div class="product-card__category">
+                                    <i data-lucide="tag" class="icon icon--xs"></i>
+                                    @product.Category
+                                </div>
+                            </div>
+                            
+                            <div class="product-card__footer">
+                                <span class="product-card__stock">
+                                    <i data-lucide="box" class="icon icon--xs"></i>
+                                    <strong>Stock:</strong> @product.StockQuantity units
+                                </span>
+                                <span class="badge badge--@(product.IsActive ? "success" : "secondary")">
+                                    @(product.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <ErrorAlert Message="@errorMessage" OnRetry="LoadProductsAsync" />
+        </div>
+    }
+</div>
+
+@code {
+    private Product[]? products;
+    private bool isLoading = false;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Subscribe to tenant changes
+        TenantState.TenantChanged += OnTenantChanged;
+        
+        if (TenantState.CurrentTenant != null)
+        {
+            await LoadProductsAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+        }
+    }
+
+    private async void OnTenantChanged(object? sender, EventArgs e)
+    {
+        // Reset products when tenant changes
+        products = null;
+        errorMessage = null;
+        
+        if (TenantState.CurrentTenant != null)
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadProductsAsync();
+                StateHasChanged();
+            });
+        }
+        else
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoadProductsAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var response = await TenantApi.GetProductsAsync();
+            if (response?.Success == true && response.Data != null)
+            {
+                products = response.Data.ToArray();
+            }
+            else
+            {
+                errorMessage = response?.ErrorMessage ?? "Failed to load products";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading products: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+        finally
+        {
+            isLoading = false;
+            await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+        }
+    }
+
+    public void Dispose()
+    {
+        TenantState.TenantChanged -= OnTenantChanged;
+    }
+}

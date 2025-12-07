@@ -1,0 +1,95 @@
+@inject TenantStateService TenantState
+@inject TenantApiService TenantApi
+@implements IDisposable
+
+<div class="tenant-selector @(isDropdownOpen ? "tenant-selector--open" : "")">
+    @if (TenantState.CurrentTenant != null)
+    {
+        <button class="tenant-selector__trigger" 
+                type="button" 
+                aria-label="Change tenant"
+                title="Current Tenant: @TenantState.CurrentTenant.Name"
+                @onclick="ToggleDropdown">
+            <i data-lucide="building-2" class="tenant-selector__icon"></i>
+            <span class="tenant-selector__name">@TenantState.CurrentTenant.Name</span>
+            <i data-lucide="chevron-down" class="tenant-selector__chevron"></i>
+        </button>
+
+        @if (isDropdownOpen && tenants != null)
+        {
+            <div class="tenant-selector__dropdown">
+                @foreach (var tenant in tenants)
+                {
+                    <button class="tenant-selector__item @(TenantState.CurrentTenantId == tenant.Id ? "tenant-selector__item--active" : "")"
+                            type="button"
+                            @onclick="() => SelectTenant(tenant)">
+                        <i data-lucide="building-2" class="tenant-selector__item-icon"></i>
+                        <div class="tenant-selector__item-content">
+                            <div class="tenant-selector__item-name">@tenant.Name</div>
+                            <div class="tenant-selector__item-id">@tenant.Id</div>
+                        </div>
+                        @if (TenantState.CurrentTenantId == tenant.Id)
+                        {
+                            <i data-lucide="check" class="tenant-selector__item-check"></i>
+                        }
+                    </button>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <span class="tenant-selector__empty">
+            <i data-lucide="alert-circle" class="icon icon--sm mr-1"></i>
+            No Tenant Selected
+        </span>
+    }
+</div>
+
+@code {
+    private bool isDropdownOpen = false;
+    private Tenant[]? tenants;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTenantsAsync();
+        TenantState.TenantChanged += HandleTenantChanged;
+    }
+
+    private async Task LoadTenantsAsync()
+    {
+        try
+        {
+            var response = await TenantApi.GetAllTenantsAsync();
+            if (response?.Success == true && response.Data != null)
+            {
+                tenants = response.Data.ToArray();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading tenants: {ex.Message}");
+        }
+    }
+
+    private void ToggleDropdown()
+    {
+        isDropdownOpen = !isDropdownOpen;
+    }
+
+    private void SelectTenant(Tenant tenant)
+    {
+        TenantState.SetCurrentTenant(tenant);
+        isDropdownOpen = false;
+    }
+
+    private void HandleTenantChanged(object? sender, EventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        TenantState.TenantChanged -= HandleTenantChanged;
+    }
+}

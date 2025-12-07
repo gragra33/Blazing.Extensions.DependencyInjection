@@ -1,0 +1,457 @@
+/* =====================================================================
+    Blazing Component Common - Layout Utilities
+    =====================================================================
+    Container system, grid system, flexbox utilities, and responsive layouts
+    ===================================================================== */
+
+/* ========================================
+   Container System
+   ======================================== */
+
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+}
+
+@media (min-width: 640px) {
+    .container {
+        max-width: var(--container-sm);
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: var(--container-md);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: var(--container-lg);
+    }
+}
+
+@media (min-width: 1280px) {
+    .container {
+        max-width: var(--container-xl);
+    }
+}
+
+@media (min-width: 1440px) {
+    .container {
+        max-width: var(--container-2xl);
+    }
+}
+
+.container-fluid {
+    width: 100%;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+}
+
+/* ========================================
+   Page Layout Structure
+   ======================================== */
+
+.page-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: var(--space-4) 0;
+}
+
+/* ========================================
+   Footer Component
+   ======================================== */
+
+.footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    background-color: var(--muted);
+}
+
+.footer__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-2);
+}
+
+@media (min-width: 768px) {
+    .footer__content {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+}
+
+/* ========================================
+   Grid System
+   ======================================== */
+
+.grid {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.grid--gap-sm {
+    gap: var(--space-2);
+}
+.grid--gap-md {
+    gap: var(--space-4);
+}
+.grid--gap-lg {
+    gap: var(--space-6);
+}
+
+.grid--one-column {
+    grid-template-columns: 1fr;
+}
+.grid--two-columns {
+    grid-template-columns: repeat(2, 1fr);
+}
+.grid--three-columns {
+    grid-template-columns: repeat(3, 1fr);
+}
+.grid--four-columns {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.grid--two-one-columns {
+    grid-template-columns: 2fr 1fr;
+}
+
+/* Responsive grid */
+@media (max-width: 767px) {
+    .grid--two-one-columns,
+    .grid--three-columns,
+    .grid--four-columns {
+        grid-template-columns: 1fr;
+    }
+    .grid--two-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+.grid__item {
+    min-width: 0; /* Prevent grid item overflow */
+}
+
+/* ========================================
+   Flexbox Utilities
+   ======================================== */
+
+.flex {
+    display: flex;
+}
+
+.flex--column {
+    flex-direction: column;
+}
+
+.flex--row {
+    flex-direction: row;
+}
+
+.flex--wrap {
+    flex-wrap: wrap;
+}
+
+.flex--nowrap {
+    flex-wrap: nowrap;
+}
+
+.flex--center {
+    align-items: center;
+    justify-content: center;
+}
+
+.flex--between {
+    justify-content: space-between;
+}
+
+.flex--around {
+    justify-content: space-around;
+}
+
+.flex--evenly {
+    justify-content: space-evenly;
+}
+
+.flex--start {
+    justify-content: flex-start;
+}
+
+.flex--end {
+    justify-content: flex-end;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
+.items-stretch {
+    align-items: stretch;
+}
+
+.items-baseline {
+    align-items: baseline;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-around {
+    justify-content: space-around;
+}
+
+.justify-evenly {
+    justify-content: space-evenly;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+/* Flex item utilities */
+.flex-1 {
+    flex: 1 1 0%;
+}
+
+.flex-auto {
+    flex: 1 1 auto;
+}
+
+.flex-initial {
+    flex: 0 1 auto;
+}
+
+.flex-none {
+    flex: none;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.flex-grow-0 {
+    flex-grow: 0;
+}
+
+.flex-shrink {
+    flex-shrink: 1;
+}
+
+.flex-shrink-0 {
+    flex-shrink: 0;
+}
+
+/* ========================================
+   Display Utilities
+   ======================================== */
+
+.block {
+    display: block;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.inline {
+    display: inline;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ========================================
+   Position Utilities
+   ======================================== */
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.sticky {
+    position: sticky;
+}
+
+.static {
+    position: static;
+}
+
+/* ========================================
+   Responsive Display Utilities
+   ======================================== */
+
+/* Hide on mobile */
+@media (max-width: 767px) {
+    .hidden-mobile {
+        display: none;
+    }
+}
+
+/* Hide on tablet and desktop */
+@media (min-width: 768px) {
+    .hidden-desktop {
+        display: none;
+    }
+}
+
+/* Show only on mobile */
+@media (min-width: 768px) {
+    .mobile-only {
+        display: none;
+    }
+}
+
+/* Show only on desktop */
+@media (max-width: 767px) {
+    .desktop-only {
+        display: none;
+    }
+}
+
+/* ========================================
+   Overflow Utilities
+   ======================================== */
+
+.overflow-auto {
+    overflow: auto;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.overflow-visible {
+    overflow: visible;
+}
+
+.overflow-scroll {
+    overflow: scroll;
+}
+
+.overflow-x-auto {
+    overflow-x: auto;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
+.overflow-x-hidden {
+    overflow-x: hidden;
+}
+
+.overflow-y-hidden {
+    overflow-y: hidden;
+}
+
+/* ========================================
+   Width and Height Utilities
+   ======================================== */
+
+.w-full {
+    width: 100%;
+}
+
+.w-auto {
+    width: auto;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.h-auto {
+    height: auto;
+}
+
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.max-w-full {
+    max-width: 100%;
+}
+
+.max-h-full {
+    max-height: 100%;
+}
+
+/* ========================================
+   Aspect Ratio Utilities
+   ======================================== */
+
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+    aspect-ratio: 16 / 9;
+}
+
+.aspect-auto {
+    aspect-ratio: auto;
+}
+
+/* ========================================
+   Object Fit Utilities
+   ======================================== */
+
+.object-contain {
+    object-fit: contain;
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.object-fill {
+    object-fit: fill;
+}
+
+.object-none {
+    object-fit: none;
+}
+
+.object-scale-down {
+    object-fit: scale-down;
+}

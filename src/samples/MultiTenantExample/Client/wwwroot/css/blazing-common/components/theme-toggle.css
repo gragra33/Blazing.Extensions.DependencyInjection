@@ -1,0 +1,96 @@
+/* ========================================
+   Theme Toggle Component
+   ======================================== */
+
+.theme-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-10);
+    height: var(--space-10);
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    margin-right: var(--space-3);
+}
+
+.theme-toggle:hover {
+    background-color: var(--muted);
+}
+
+.theme-toggle:focus {
+    outline: none;
+    box-shadow: var(--shadow-form-focus);
+}
+
+.theme-toggle__icon {
+    width: var(--icon-size-base);
+    height: var(--icon-size-base);
+    transition: var(--transition-transform);
+}
+
+.theme-toggle:hover .theme-toggle__icon {
+    transform: rotate(15deg);
+}
+
+/* Alternative styling for navigation menu integration */
+.nav-menu__theme-toggle .theme-toggle {
+    margin-right: 0;
+    width: var(--space-8);
+    height: var(--space-8);
+}
+
+.nav-menu__theme-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-8);
+    height: var(--space-8);
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: var(--transition-colors);
+    position: relative;
+}
+
+.nav-menu__theme-button:hover {
+    background-color: var(--muted);
+}
+
+.nav-menu__theme-button:focus {
+    outline: none;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+}
+
+.nav-menu__icon {
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+    transition: var(--transition-all);
+}
+
+.nav-menu__icon--light {
+    opacity: 1;
+}
+
+.nav-menu__icon--dark {
+    opacity: 0;
+    position: absolute;
+}
+
+/* Dark mode icon visibility */
+.dark .nav-menu__icon--light {
+    opacity: 0;
+}
+
+.dark .nav-menu__icon--dark {
+    opacity: 1;
+}

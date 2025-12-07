@@ -1,0 +1,181 @@
+@page "/orders"
+@using MultiTenantExample.Client.Components
+@inject TenantStateService TenantState
+@inject TenantApiService TenantApi
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<PageTitle>Orders - @(TenantState.CurrentTenant?.Name ?? "Multi-Tenant Example")</PageTitle>
+
+<div class="container">
+    @if (TenantState.CurrentTenant == null)
+    {
+        <NoTenantWarning>
+            Please <a href="/" class="link">select a tenant</a> to view orders.
+        </NoTenantWarning>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card__header">
+                <h1>
+                    <i data-lucide="shopping-cart"></i>
+                    Orders for @TenantState.CurrentTenant.Name
+                </h1>
+                <p class="text-muted">
+                    <strong>Tenant ID:</strong> @TenantState.CurrentTenantId
+                </p>
+            </div>
+            
+            @if (isLoading)
+            {
+                <LoadingSpinner Message="Loading orders..." />
+            }
+            else if (orders == null || orders.Length == 0)
+            {
+                <div class="empty-state">
+                    <i data-lucide="inbox" class="empty-state__icon"></i>
+                    <h3>No Orders Found</h3>
+                    <p>There are no orders for this tenant yet.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead class="data-table__header">
+                            <tr>
+                                <th class="data-table__header-cell">Order #</th>
+                                <th class="data-table__header-cell">Customer</th>
+                                <th class="data-table__header-cell">Email</th>
+                                <th class="data-table__header-cell">Total</th>
+                                <th class="data-table__header-cell">Status</th>
+                                <th class="data-table__header-cell">Created</th>
+                                <th class="data-table__header-cell">Items</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in orders)
+                            {
+                                <tr class="data-table__row">
+                                    <td class="data-table__cell">
+                                        <strong>@order.OrderNumber</strong>
+                                    </td>
+                                    <td class="data-table__cell">@order.CustomerName</td>
+                                    <td class="data-table__cell">@order.CustomerEmail</td>
+                                    <td class="data-table__cell">
+                                        <strong>$@order.TotalAmount.ToString("#,##0.00")</strong>
+                                    </td>
+                                    <td class="data-table__cell">
+                                        <span class="badge badge--@GetStatusBadgeClass(order.Status)">
+                                            @order.Status
+                                        </span>
+                                    </td>
+                                    <td class="data-table__cell">@order.CreatedAt.ToLocalTime().ToString("g")</td>
+                                    <td class="data-table__cell">
+                                        <span class="badge badge--info">@order.Items.Count items</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <ErrorAlert Message="@errorMessage" OnRetry="LoadOrdersAsync" />
+        </div>
+    }
+</div>
+
+@code {
+    private Order[]? orders;
+    private bool isLoading = false;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Subscribe to tenant changes
+        TenantState.TenantChanged += OnTenantChanged;
+        
+        if (TenantState.CurrentTenant != null)
+        {
+            await LoadOrdersAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+        }
+    }
+
+    private async void OnTenantChanged(object? sender, EventArgs e)
+    {
+        // Reset orders when tenant changes
+        orders = null;
+        errorMessage = null;
+        
+        if (TenantState.CurrentTenant != null)
+        {
+            await InvokeAsync(async () =>
+            {
+                await LoadOrdersAsync();
+                StateHasChanged();
+            });
+        }
+        else
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoadOrdersAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var response = await TenantApi.GetOrdersAsync();
+            if (response?.Success == true && response.Data != null)
+            {
+                orders = response.Data.ToArray();
+            }
+            else
+            {
+                errorMessage = response?.ErrorMessage ?? "Failed to load orders";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading orders: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+        finally
+        {
+            isLoading = false;
+            await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+        }
+    }
+
+    private string GetStatusBadgeClass(OrderStatus status)
+    {
+        return status switch
+        {
+            OrderStatus.Pending => "warning",
+            OrderStatus.Processing => "info",
+            OrderStatus.Shipped => "primary",
+            OrderStatus.Delivered => "success",
+            OrderStatus.Cancelled => "error",
+            _ => "secondary"
+        };
+    }
+
+    public void Dispose()
+    {
+        TenantState.TenantChanged -= OnTenantChanged;
+    }
+}

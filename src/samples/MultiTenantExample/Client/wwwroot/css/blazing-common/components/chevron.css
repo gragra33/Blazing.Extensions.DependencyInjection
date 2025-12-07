@@ -1,0 +1,138 @@
+/* =============================================================================
+   Chevron Component
+   
+   A reusable chevron icon component for indicating state changes and 
+   directional information across various UI components.
+   
+   Usage:
+   - Navigation menu triggers
+   - Accordion headers  
+   - Dropdown buttons
+   - Sort indicators
+   - Expandable content controls
+   
+   BEM Methodology:
+   - .c-chevron (Block)
+   - .c-chevron--direction (Modifier for different directions)
+   - .c-chevron--size (Modifier for different sizes)
+   - .c-chevron--state (Modifier for different states)
+   
+   ============================================================================= */
+
+/* Base Chevron Component */
+.c-chevron {
+    display: inline-block;
+    vertical-align: middle;
+    transition: var(--transition-transform);
+    flex-shrink: 0;
+    transform-origin: center;
+}
+
+/* Size Modifiers */
+.c-chevron--xs {
+    width: var(--icon-size-xs);
+    height: var(--icon-size-xs);
+}
+
+.c-chevron--sm {
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
+}
+
+.c-chevron--md {
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
+}
+
+.c-chevron--lg {
+    width: var(--icon-size-lg);
+    height: var(--icon-size-lg);
+}
+
+/* Default size (medium) */
+.c-chevron:not([class*="--"]) {
+    width: var(--icon-size-xs); /* Default to xs for navigation menus */
+    height: var(--icon-size-xs);
+}
+
+/* Direction Modifiers */
+.c-chevron--up {
+    transform: rotate(-90deg);
+}
+
+.c-chevron--down {
+    transform: rotate(90deg);
+}
+
+.c-chevron--left {
+    transform: rotate(180deg);
+}
+
+.c-chevron--right {
+    transform: rotate(0deg);
+}
+
+/* State Modifiers */
+.c-chevron--expanded {
+    transform: rotate(-180deg);
+}
+
+.c-chevron--collapsed {
+    transform: rotate(0deg);
+}
+
+/* Interactive States */
+.c-chevron--interactive {
+    cursor: pointer;
+}
+
+.c-chevron--interactive:hover {
+    opacity: var(--opacity-hover);
+}
+
+.c-chevron--interactive:active {
+    transform: scale(0.95);
+}
+
+/* Disabled State */
+.c-chevron--disabled {
+    opacity: var(--opacity-disabled);
+    cursor: not-allowed;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .c-chevron {
+        transition: none;
+    }
+
+    .c-chevron--interactive:active {
+        transform: none;
+    }
+}
+
+/* =============================================================================
+   Legacy Support for Navigation Menu
+   
+   These classes maintain compatibility with existing navigation menu 
+   implementations while transitioning to the new chevron component.
+   
+   TODO: Consider deprecating these in favor of .c-chevron classes
+   ============================================================================= */
+
+.c-nav-menu__trigger__icon {
+    width: var(--icon-size-xs);
+    height: var(--icon-size-xs);
+    transition: var(--transition-transform);
+}
+
+.c-nav-menu__trigger[data-state="open"] .c-nav-menu__trigger__icon {
+    transform: rotate(-180deg);
+}
+
+/* Reduced motion support for legacy classes */
+@media (prefers-reduced-motion: reduce) {
+    .c-nav-menu__trigger__icon {
+        transition: none;
+    }
+}

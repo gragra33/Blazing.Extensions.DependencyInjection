@@ -1,0 +1,49 @@
+@* 
+    Reusable error alert component
+    Usage: <ErrorAlert Message="@errorMessage" OnRetry="LoadDataAsync" />
+    Or without retry: <ErrorAlert Message="@errorMessage" />
+*@
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div class="alert alert--error">
+        <i data-lucide="alert-circle" class="alert__icon"></i>
+        <div>
+            <strong>@Title</strong> @Message
+            @if (OnRetry.HasDelegate)
+            {
+                <button class="btn btn--sm btn--primary" style="margin-left: 1rem;" @onclick="HandleRetry">
+                    Retry
+                </button>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>
+    /// The error message to display
+    /// </summary>
+    [Parameter]
+    public string? Message { get; set; }
+
+    /// <summary>
+    /// The title/heading for the error (default: "Error:")
+    /// </summary>
+    [Parameter]
+    public string Title { get; set; } = "Error:";
+
+    /// <summary>
+    /// Optional callback to retry the failed operation
+    /// </summary>
+    [Parameter]
+    public EventCallback OnRetry { get; set; }
+
+    private async Task HandleRetry()
+    {
+        if (OnRetry.HasDelegate)
+        {
+            await OnRetry.InvokeAsync();
+        }
+    }
+}

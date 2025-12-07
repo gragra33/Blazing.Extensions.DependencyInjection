@@ -1,0 +1,163 @@
+@page "/"
+@using MultiTenantExample.Client.Components
+@inject TenantStateService TenantState
+@inject TenantApiService TenantApi
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Home - Multi-Tenant Example</PageTitle>
+
+<div class="container">
+    <!-- Welcome Section -->
+    <div class="hero hero--primary">
+        <div class="hero__content">
+            <div class="hero__main">
+                <h1 class="hero__title">
+                    <i data-lucide="building-2" class="hero__title-icon"></i>
+                    Welcome to Multi-Tenant Example
+                </h1>
+                <p class="hero__description">
+                    Select a tenant below to explore orders and products in an enterprise multi-tenant architecture.
+                </p>
+                <div class="hero__actions">
+                    <a href="/about" class="button button--outline-light">
+                        <i data-lucide="info" class="button__icon"></i>
+                        Learn More About This Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tenant Selection Section -->
+    <div class="card">
+        <h2>
+            <i data-lucide="building-2"></i>
+            Select a Tenant
+        </h2>
+        
+        @if (isLoading)
+        {
+            <LoadingSpinner Message="Loading tenants..." />
+        }
+        else if (tenants == null || tenants.Length == 0)
+        {
+            <div class="alert alert--info">
+                <i data-lucide="info" class="alert__icon"></i>
+                <p>No tenants available. Please contact your administrator.</p>
+            </div>
+        }
+        else
+        {
+            <div class="tenant-grid">
+                @foreach (var tenant in tenants)
+                {
+                    <div class="tenant-card @(TenantState.CurrentTenantId == tenant.Id ? "tenant-card--selected" : "")"
+                         @onclick="() => SelectTenant(tenant)">
+                        @if (TenantState.CurrentTenantId == tenant.Id)
+                        {
+                            <div class="tenant-card__badge">
+                                <i data-lucide="check"></i> Selected
+                            </div>
+                        }
+                        <h3 class="tenant-card__title">@tenant.Name</h3>
+                        <div class="tenant-card__info">
+                            <span class="tenant-card__label">ID:</span> @tenant.Id
+                        </div>
+                        <div class="tenant-card__info">
+                            <span class="tenant-card__label">Status:</span> 
+                            @if (tenant.IsActive)
+                            {
+                                <span class="badge badge--success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge--secondary">Inactive</span>
+                            }
+                        </div>
+                        <div class="tenant-card__info">
+                            <span class="tenant-card__label">Created:</span> @tenant.CreatedAt.ToLocalTime().ToString("g")
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <ErrorAlert Message="@errorMessage" OnRetry="LoadTenantsAsync" />
+    </div>
+
+    @if (TenantState.CurrentTenant != null)
+    {
+        <div class="card card--success">
+            <h2>
+                <i data-lucide="check-circle"></i>
+                Current Tenant: @TenantState.CurrentTenant.Name
+            </h2>
+            <p>You are now viewing data for <strong>@TenantState.CurrentTenant.Name</strong>. Browse the following:</p>
+            <div class="button-group">
+                <a href="/orders" class="button button--primary">
+                    <i data-lucide="shopping-cart" class="button__icon"></i>
+                    View Orders
+                </a>
+                <a href="/products" class="button button--secondary">
+                    <i data-lucide="package" class="button__icon"></i>
+                    View Products
+                </a>
+                <a href="/settings" class="button button--secondary">
+                    <i data-lucide="settings" class="button__icon"></i>
+                    View Settings
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private Tenant[]? tenants;
+    private bool isLoading = false;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTenantsAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Reinitialize icons after every render to ensure new icons are displayed
+        await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+    }
+
+    private async Task LoadTenantsAsync()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var response = await TenantApi.GetAllTenantsAsync();
+            if (response?.Success == true && response.Data != null)
+            {
+                tenants = response.Data.ToArray();
+            }
+            else
+            {
+                errorMessage = response?.ErrorMessage ?? "Failed to load tenants";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading tenants: {ex.Message}";
+            Console.WriteLine($"Error loading tenants: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task SelectTenant(Tenant tenant)
+    {
+        TenantState.SetCurrentTenant(tenant);
+        await JSRuntime.InvokeVoidAsync("reinitializeIcons");
+    }
+}

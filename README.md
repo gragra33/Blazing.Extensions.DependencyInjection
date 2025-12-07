@@ -642,13 +642,13 @@ Provides convenient methods for registering services with factory delegates, ena
 
 **Key Methods:**
 
-| Method | Description | Lifetime |
-|--------|-------------|----------|
-| `RegisterFactory<T>(factory)` | Register singleton factory | Singleton |
-| `RegisterTransientFactory<T>(factory)` | Register transient factory | Transient |
-| `RegisterScopedFactory<T>(factory)` | Register scoped factory | Scoped |
-| `RegisterConditionalFactory<T>(factory)` | Conditional singleton factory | Singleton |
-| `RegisterKeyedFactory<T>(key, factory)` | Keyed factory registration | Singleton |
+| Method | Description |
+|--------|-------------|
+| `RegisterFactory<T>(factory)` | Register singleton factory |
+| `RegisterTransientFactory<T>(factory)` | Register transient factory |
+| `RegisterScopedFactory<T>(factory)` | Register scoped factory |
+| `RegisterConditionalFactory<T>(factory)` | Conditional singleton factory |
+| `RegisterKeyedFactory<T>(key, factory)` | Keyed factory registration |
 
 **Examples:**
 
@@ -698,14 +698,14 @@ Enables enumeration and filtering of registered service implementations. Essenti
 
 **Key Methods:**
 
-| Method | Description | Use Case |
-|--------|-------------|----------|
-| `GetRequiredServices<T>()` | Get all implementations | Plugin systems |
-| `GetServices<T>(predicate)` | Filter by condition | Conditional execution |
-| `GetFirstService<T>(predicate)` | Get first matching | Strategy pattern |
-| `ForEachService<T>(action)` | Execute for each | Batch operations |
-| `MapServices<T, TResult>(selector)` | Transform services | Data aggregation |
-| `GetServiceCount<T>()` | Count implementations | Diagnostics |
+| Method | Description |
+|--------|-------------|
+| `GetRequiredServices<T>()` | Get all implementations |
+| `GetServices<T>(predicate)` | Filter by condition |
+| `GetFirstService<T>(predicate)` | Get first matching |
+| `ForEachService<T>(action)` | Execute for each |
+| `MapServices<T, TResult>(selector)` | Transform services |
+| `GetServiceCount<T>()` | Count implementations |
 
 **Examples:**
 
@@ -1067,6 +1067,28 @@ Complete API documentation with all extension methods organized by feature area.
 
 The solution includes comprehensive sample applications demonstrating real-world usage patterns across different application types.
 
+### MultiTenantExample - Advanced Multi-Tenant ASP.NET Core Web API (NEW!)
+
+**Location:** `src/samples/MultiTenantExample/`
+
+A comprehensive multi-tenant application demonstrating:
+- **Multi-Tenant Architecture** - Client/Server application with Blazor WebAssembly frontend
+- **Tenant Isolation** - Per-tenant data isolation using keyed services and middleware
+- **AutoRegister Attribute** - Automatic service discovery in both Server and Client projects
+- **Keyed Services** - Tenant-specific configurations and database contexts
+- **Service Scoping** - Request-level scope management with async disposal
+- **Lazy Initialization** - Deferred tenant configuration loading for performance
+- **Service Factories** - Dynamic tenant database context creation
+- **Service Validation** - Startup validation with comprehensive diagnostics
+- **Async Initialization** - Priority-based initialization (migrations → validation → cache warmup)
+- **Swagger Integration** - Interactive API testing with tenant authentication
+- **Production-Ready Patterns** - Middleware pipeline, error handling, XML documentation, source-generated logging
+
+**Run the example:**
+```bash
+dotnet run --project src/samples/MultiTenantExample/Server
+```
+
 ### WpfExample - Complete MVVM Application
 
 **Location:** `src/samples/WpfExample/`
@@ -1161,7 +1183,8 @@ Blazing.Extensions.DependencyInjection/           # Solution root
 │       ├── BlazorServerExample/                  # Blazor Server app with AutoRegister attributes
 │       ├── ConsoleExample/                       # Console app demonstrating all features
 │       ├── WinFormsExample/                      # WinForms with AutoRegister attributes
-│       └── WpfExample/                           # WPF MVVM with TabViewHandler pattern
+│       ├── WpfExample/                           # WPF MVVM with TabViewHandler pattern
+│       └── MultiTenantExample/                  # Multi-tenant Blazor WebAssembly and ASP.NET Core API
 ├── tests/
 │   └── UnitTests/                                # Comprehensive unit tests (104 tests)
 ├── Directory.Build.props                         # Centralized build properties
@@ -1194,6 +1217,12 @@ dotnet run --project src/samples/WinFormsExample
 
 # Run Console example
 dotnet run --project src/samples/ConsoleExample
+
+# Run MultiTenant example (Server project)
+dotnet run --project src/samples/MultiTenantExample/Server
+
+# Run MultiTenant example (Client project - Blazor WASM)
+dotnet run --project src/samples/MultiTenantExample/Client
 ```
 
 ## Contributing
@@ -1227,6 +1256,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Modern .NET patterns and practices from the .NET community
 
 ## History
+
+### V2.2.0 - 8 December 2025
+
+**Improvements:**
+- **Enhanced Extension Methods** - Improved AsyncInitializationExtensions, ServiceEnumerationExtensions, and ServiceValidationExtensions with better error handling and performance optimizations
+
+**New Sample:**
+- **MultiTenantExample** - Advanced multi-tenant ASP.NET Core Web API with Blazor WebAssembly client demonstrating enterprise-grade patterns, tenant isolation, and comprehensive DI features integration
 
 ### V2.1.0 - 21 November 2025
 

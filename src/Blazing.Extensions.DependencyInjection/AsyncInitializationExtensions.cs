@@ -158,17 +158,22 @@ public static class AsyncInitializationExtensions
         var allServices = serviceProvider.GetServices<IAsyncInitializable>().ToList();
         var order = new InitializationOrder();
 
+        if (allServices.Count == 0)
+        {
+            return order;
+        }
+
         var sorted = allServices
             .OrderByDescending(s => s.InitializationPriority)
             .ThenBy(s => s.GetType().Name)
             .ToList();
 
-        var stepOrder = 0;
-        foreach (var service in sorted)
+        for (var i = 0; i < sorted.Count; i++)
         {
+            var service = sorted[i];
             var step = new InitializationStep
             {
-                Order = stepOrder++,
+                Order = i + 1,
                 ServiceType = service.GetType(),
                 Priority = service.InitializationPriority
             };
@@ -177,11 +182,11 @@ public static class AsyncInitializationExtensions
             {
                 foreach (var dep in service.DependsOn)
                 {
-                    ((System.Collections.ObjectModel.Collection<Type>)step.DependsOn).Add(dep);
+                    step.DependsOn.Add(dep);
                 }
             }
 
-            ((System.Collections.ObjectModel.Collection<InitializationStep>)order.Steps).Add(step);
+            order.Steps.Add(step);
         }
 
         return order;

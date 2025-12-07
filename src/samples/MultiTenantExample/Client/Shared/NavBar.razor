@@ -1,0 +1,78 @@
+<nav class="navbar navbar--light navbar--sticky">
+    <div class="container">
+        <div class="navbar__container">
+            <a class="navbar__brand" href="/">
+                <i data-lucide="building-2" class="navbar__brand-icon"></i>
+                Multi-Tenant
+            </a>
+            <button class="navbar__toggle @(isMenuOpen ? "navbar__toggle--active" : "")" 
+                    type="button" 
+                    aria-expanded="@isMenuOpen.ToString().ToLower()" 
+                    aria-controls="navbarMenu" 
+                    aria-label="Toggle navigation"
+                    @onclick="ToggleMenu">
+                <span class="navbar__toggle-icon"></span>
+                <span class="navbar__toggle-icon"></span>
+                <span class="navbar__toggle-icon"></span>
+            </button>
+            <div class="navbar__menu @(isMenuOpen ? "navbar__menu--open" : "")" id="navbarMenu">
+                <ul class="navbar__nav">
+                    @* <li class="navbar__item">
+                        <NavLink class="navbar__link" 
+                                 ActiveClass="navbar__link--active"
+                                 href="/" 
+                                 Match="NavLinkMatch.All"
+                                 @onclick="CloseMenu">
+                            <i data-lucide="home" class="navbar__link-icon"></i>Home
+                        </NavLink>
+                    </li> *@
+                    <li class="navbar__item">
+                        <NavLink class="navbar__link" 
+                                 ActiveClass="navbar__link--active"
+                                 href="/about" 
+                                 @onclick="CloseMenu">
+                            <i data-lucide="info" class="navbar__link-icon"></i>About
+                        </NavLink>
+                    </li>
+                    <li class="navbar__item">
+                        <NavLink class="navbar__link" 
+                                 ActiveClass="navbar__link--active"
+                                 href="/orders" 
+                                 @onclick="CloseMenu">
+                            <i data-lucide="shopping-cart" class="navbar__link-icon"></i>Orders
+                        </NavLink>
+                    </li>
+                    <li class="navbar__item">
+                        <NavLink class="navbar__link" 
+                                 ActiveClass="navbar__link--active"
+                                 href="/products" 
+                                 @onclick="CloseMenu">
+                            <i data-lucide="package" class="navbar__link-icon"></i>Products
+                        </NavLink>
+                    </li>
+                    <li class="navbar__item">
+                        <NavLink class="navbar__link" 
+                                 ActiveClass="navbar__link--active"
+                                 href="/settings" 
+                                 @onclick="CloseMenu">
+                            <i data-lucide="settings" class="navbar__link-icon"></i>Settings
+                        </NavLink>
+                    </li>
+                    <li class="navbar__item">
+                        <a class="navbar__link" 
+                           href="/swagger" 
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           @onclick="CloseMenu">
+                            <i data-lucide="book-open" class="navbar__link-icon"></i>Swagger API
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar__actions">
+                    <TenantSelector />
+                    <ThemeToggle />
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
