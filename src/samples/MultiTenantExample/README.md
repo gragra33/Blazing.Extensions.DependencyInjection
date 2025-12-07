@@ -63,6 +63,11 @@ A comprehensive example demonstrating enterprise-grade multi-tenant architecture
 
 This sample application showcases real-world multi-tenant patterns combining multiple advanced features of Blazing.Extensions.DependencyInjection in a cohesive, production-ready architecture.
 
+![Light Mode](Multi-Tenant-light.png)
+
+![Dark Mode](Multi-Tenant-dark.png)
+
+
 ### Technology Stack
 
 - **Server**: ASP.NET Core Web API (.NET 8.0, 9.0, 10.0)
