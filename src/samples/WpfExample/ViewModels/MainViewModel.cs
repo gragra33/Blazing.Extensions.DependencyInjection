@@ -10,7 +10,7 @@ public partial class MainViewModel : ViewModelBase
 {
     private readonly IDialogService _dialogService;
     private readonly ITabViewHandler _tabViewHandler;
-    private IEnumerable<TabViewModel> _tabViewModels;
+    private IEnumerable<TabViewModel> _tabViewModels = null!;
 
     [ObservableProperty]
     private string _statusMessage = "Ready";

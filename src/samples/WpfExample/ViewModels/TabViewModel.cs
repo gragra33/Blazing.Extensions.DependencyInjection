@@ -22,7 +22,7 @@ public class TabViewModel
     /// </summary>
     public int Order { get; }
     
-    private object _viewInstance;
+    private object _viewInstance = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TabViewModel"/> class.

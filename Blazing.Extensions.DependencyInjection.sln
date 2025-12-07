@@ -52,6 +52,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTenantExample.Server",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTenantExample.Client", "src\samples\MultiTenantExample\Client\MultiTenantExample.Client.csproj", "{D2FEFB81-B38E-80FC-3C97-7F466FAAD24D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{AD3E9D63-B807-4EA0-A463-3167D411C5A0}"
+	ProjectSection(SolutionItems) = preProject
+		src\samples\Directory.Build.props = src\samples\Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +230,7 @@ Global
 		{43F2B06C-08A7-4B16-BEE5-5DE4F19AF639} = {D1B4CF99-7947-DD6C-81D0-5B5B3989814C}
 		{47F70BF0-B84B-0B24-2813-9C9119FE64A5} = {43F2B06C-08A7-4B16-BEE5-5DE4F19AF639}
 		{D2FEFB81-B38E-80FC-3C97-7F466FAAD24D} = {43F2B06C-08A7-4B16-BEE5-5DE4F19AF639}
+		{AD3E9D63-B807-4EA0-A463-3167D411C5A0} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D79F5621-11D8-45CC-BB22-2190C1F03E91}
