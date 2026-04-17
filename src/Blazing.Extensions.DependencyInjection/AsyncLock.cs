@@ -9,9 +9,11 @@ namespace Blazing.Extensions.DependencyInjection;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The handle returned by <see cref="LockAsync"/> is pre-allocated in the constructor
-/// and reused on every call, meaning <see cref="LockAsync"/> produces zero heap allocations
-/// on the happy path.
+/// Each call to <see cref="LockAsync"/> returns a new <see cref="IDisposable"/> handle tied
+/// to that specific acquisition. Disposing the handle releases the lock exactly once;
+/// subsequent calls to <see cref="IDisposable.Dispose"/> on the same handle are no-ops.
+/// This prevents a late or double-disposed handle from inadvertently releasing a lock
+/// held by a different, concurrent acquisition.
 /// </para>
 /// <para>
 /// If the lock has been disposed or the provided <see cref="CancellationToken"/> is cancelled
@@ -24,17 +26,9 @@ public sealed class AsyncLock : IDisposable
     [SuppressMessage("Usage", "CA2213:Disposable fields should be disposed",
         Justification = "_semaphore is disposed via Interlocked.Exchange for atomic once-only disposal; the analyzer does not recognise this indirect pattern.")]
     private SemaphoreSlim? _semaphore = new(1, 1);
-    private readonly LockHandle _handle;
-
-    /// <summary>
-    /// 1 when the semaphore is currently held by a caller; 0 when free.
-    /// Guards against double-release when the same pre-allocated handle is referenced
-    /// by multiple <c>using</c> variables.
-    /// </summary>
-    private int _held;
 
     /// <summary>Initializes a new instance of <see cref="AsyncLock"/>.</summary>
-    public AsyncLock() => _handle = new LockHandle(this);
+    public AsyncLock() { }
 
     /// <summary>
     /// Asynchronously acquires the lock and returns a handle that frees it when disposed.
@@ -55,8 +49,7 @@ public sealed class AsyncLock : IDisposable
         try
         {
             await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-            Interlocked.Exchange(ref _held, 1);
-            return _handle;
+            return new LockHandle(this);
         }
         catch (Exception ex) when (ex is OperationCanceledException or ObjectDisposedException)
         {
@@ -65,17 +58,11 @@ public sealed class AsyncLock : IDisposable
     }
 
     /// <summary>
-    /// Releases the semaphore exactly once per acquisition.
-    /// Called by <see cref="LockHandle.Dispose"/>; idempotent across multiple calls.
+    /// Releases the semaphore. Called by a <see cref="LockHandle"/> exactly once
+    /// (the handle's own release flag prevents double-release).
     /// </summary>
     private void Unlock()
     {
-        // Only release if this instance currently holds the semaphore.
-        // Prevents double-release when the pre-allocated handle is referenced
-        // by more than one using variable.
-        if (Interlocked.CompareExchange(ref _held, 0, 1) != 1)
-            return;
-
         try { _semaphore?.Release(); }
         catch (ObjectDisposedException)
         {
@@ -85,14 +72,23 @@ public sealed class AsyncLock : IDisposable
 
     /// <inheritdoc/>
     public void Dispose()
-    {
-        Interlocked.Exchange(ref _semaphore, null)?.Dispose();
-        _handle.Dispose(); // Unlock() null-checks _semaphore — safe after disposal
-    }
+        => Interlocked.Exchange(ref _semaphore, null)?.Dispose();
 
+    /// <summary>
+    /// Per-acquisition handle. Each call to <see cref="LockAsync"/> that succeeds
+    /// creates a new instance; the <see cref="_released"/> flag ensures <see cref="Dispose"/>
+    /// is idempotent and that disposing a stale handle cannot release a different
+    /// caller's acquisition.
+    /// </summary>
     private sealed class LockHandle(AsyncLock owner) : IDisposable
     {
-        public void Dispose() => owner.Unlock();
+        private int _released;
+
+        public void Dispose()
+        {
+            if (Interlocked.Exchange(ref _released, 1) == 0)
+                owner.Unlock();
+        }
     }
 
     private sealed class NullHandle : IDisposable

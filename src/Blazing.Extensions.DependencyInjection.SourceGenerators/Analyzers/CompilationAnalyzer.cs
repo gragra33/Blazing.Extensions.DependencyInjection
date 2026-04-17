@@ -107,14 +107,12 @@ internal static class CompilationAnalyzer
         var serviceType = ExtractServiceType(attrData);
         var key = ExtractKey(attrData);
 
-        var implFqn = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-            .TrimStart("global::".ToCharArray());
+        var implFqn = StripGlobalPrefix(type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
 
         string[] interfaces;
         if (serviceType is not null)
         {
-            interfaces = [serviceType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                .TrimStart("global::".ToCharArray())];
+            interfaces = [StripGlobalPrefix(serviceType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat))];
         }
         else
         {
@@ -125,8 +123,7 @@ internal static class CompilationAnalyzer
                 var ifaceName = iface.Name;
                 if (ifaceName is "IDisposable" or "IAsyncDisposable")
                     continue;
-                ifaceList.Add(iface.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                    .TrimStart("global::".ToCharArray()));
+                ifaceList.Add(StripGlobalPrefix(iface.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)));
             }
 
             interfaces = ifaceList.ToArray();
@@ -170,13 +167,29 @@ internal static class CompilationAnalyzer
         {
             if (namedArg is { Key: "Key", Value.IsNull: false })
             {
-                var val = namedArg.Value.Value;
-                return val is string s ? $"\"{s}\"" : val?.ToString();
+                var constant = namedArg.Value;
+                if (constant.Kind == TypedConstantKind.Enum)
+                {
+                    // Emit a cast expression so the key preserves its enum type: (global::MyEnum)42
+                    var typeName = constant.Type?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) ?? "object";
+                    return $"({typeName}){constant.Value}";
+                }
+
+                return constant.Value is string s ? $"\"{s}\"" : constant.Value?.ToString();
             }
         }
 
         return null;
     }
+
+    /// <summary>
+    /// Removes the <c>global::</c> prefix from a fully-qualified symbol name using an exact
+    /// string comparison, avoiding the character-set pitfall of <see cref="string.TrimStart(char[])"/>.
+    /// </summary>
+    private static string StripGlobalPrefix(string fullyQualifiedName)
+        => fullyQualifiedName.StartsWith("global::", StringComparison.Ordinal)
+            ? fullyQualifiedName.Substring("global::".Length)
+            : fullyQualifiedName;
     /// <summary>
     /// Returns <see langword="true" /> if the type's <c>[AutoRegister]</c> attribute has
     /// <c>LocalOnly = true</c>, meaning it should be skipped when scanning referenced assemblies.

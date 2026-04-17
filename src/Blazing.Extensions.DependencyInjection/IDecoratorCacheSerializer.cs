@@ -25,7 +25,7 @@ public interface IDecoratorCacheSerializer
 
     /// <summary>Deserializes a value of type <typeparamref name="T"/> from <paramref name="bytes"/>.</summary>
     /// <typeparam name="T">The expected type of the deserialized value.</typeparam>
-    /// <param name="bytes">The bytes to deserialize.</param>
-    /// <returns>The deserialized value, or <see langword="default"/> if <paramref name="bytes"/> is empty.</returns>
-    T? Deserialize<T>(byte[] bytes);
+    /// <param name="bytes">The bytes to deserialize. May be <see langword="null"/>.</param>
+    /// <returns>The deserialized value, or <see langword="default"/> if <paramref name="bytes"/> is <see langword="null"/> or empty.</returns>
+    T? Deserialize<T>(byte[]? bytes);
 }

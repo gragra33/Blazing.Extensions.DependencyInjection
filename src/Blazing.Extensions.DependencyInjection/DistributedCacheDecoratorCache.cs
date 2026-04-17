@@ -94,11 +94,17 @@ public sealed class DistributedCacheDecoratorCache : IDecoratorCache, IDisposabl
 
     /// <inheritdoc/>
     public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
-        => await _distributedCache.RemoveAsync(key, cancellationToken).ConfigureAwait(false);
+    {
+        await _distributedCache.RemoveAsync(key, cancellationToken).ConfigureAwait(false);
+        _locks.TryRemove(key, out _);
+    }
 
     /// <inheritdoc/>
     public void Remove(string key)
-        => _distributedCache.RemoveAsync(key).GetAwaiter().GetResult();
+    {
+        _distributedCache.Remove(key);
+        _locks.TryRemove(key, out _);
+    }
 
     /// <inheritdoc/>
     public void Dispose()

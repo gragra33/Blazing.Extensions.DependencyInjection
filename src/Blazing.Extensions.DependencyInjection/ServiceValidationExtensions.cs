@@ -344,7 +344,7 @@ public static class ServiceValidationExtensions
         {
             var message = string.Join(
                 Environment.NewLine,
-                violations.Select(v => $"  � {v.ErrorMessage}"));
+                violations.Select(v => $"  - {v.ErrorMessage}"));
             throw new InvalidOperationException(
                 $"Service collection validation failed:{Environment.NewLine}{message}");
         }
@@ -354,7 +354,7 @@ public static class ServiceValidationExtensions
         {
             var message = string.Join(
                 Environment.NewLine,
-                cycles.Select(c => $"  � {c.Description}"));
+                cycles.Select(c => $"  - {c.Description}"));
             throw new InvalidOperationException(
                 $"Circular dependencies detected:{Environment.NewLine}{message}");
         }

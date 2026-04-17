@@ -44,13 +44,18 @@ public static class ServiceDecorationExtensions
             wrappedDescriptor.ImplementationType ?? typeof(TService),
             Type.EmptyTypes);
 
+        var lifetime = wrappedDescriptor.Lifetime;
         services.Remove(wrappedDescriptor);
 
-        services.AddSingleton(provider =>
-        {
-            var inner = (TService)objectFactory(provider, null);
-            return decoratorFactory(inner, provider);
-        });
+        var descriptor = ServiceDescriptor.Describe(
+            typeof(TService),
+            provider =>
+            {
+                var inner = (TService)objectFactory(provider, null);
+                return decoratorFactory(inner, provider);
+            },
+            lifetime);
+        services.Add(descriptor);
 
         return services;
     }

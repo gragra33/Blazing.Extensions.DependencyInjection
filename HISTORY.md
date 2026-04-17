@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Removed `services.Register<TInterface>(lifetime)` — use `[AutoRegister(lifetime, typeof(TInterface))]` on the implementation class instead
 - Removed `services.Register(Assembly[])` — cross-assembly discovery is now automatic via the source generator
-- Removed `host.AddAssembly()` / `host.AddAssemblies()` — deprecated; cross-assembly discovery is now automatic via the source generator
+- Deprecated `host.AddAssembly()` / `host.AddAssemblies()` — these APIs still exist for backward compatibility but are no longer required; cross-assembly discovery is now automatic via the source generator
 - Removed `services.AddCachingDecorator<T>()` / `services.AddLoggingDecorator<T>()` — use `[CachingDecorator]` / `[LoggingDecorator]` attributes instead
 - Removed single-argument open generic overloads from `GenericServiceExtensions`
 
