@@ -1,8 +1,25 @@
 <Project>
+  <!-- Chain to the root Directory.Build.props so test projects inherit ImplicitUsings,
+       Nullable, LangVersion, TreatWarningsAsErrors, and all other global settings. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
   <!-- Test projects don't require XML documentation -->
   <PropertyGroup>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <!-- Tests use underscores and nested types which is fine for test code -->
     <NoWarn>$(NoWarn);CA1707;CA1034;CA1063;CA1040;CA1816;CA1724</NoWarn>
+    <!-- Suppressions appropriate for test projects:
+         CA1515 – test fixture types are intentionally public for cross-file access
+         CA2007 – tests don't need ConfigureAwait (no SynchronizationContext to deadlock)
+         CA1812 – DI/generic-based instantiation is invisible to the analyzer
+         CA1031 – broad catch in test cleanup/Dispose is acceptable -->
+    <NoWarn>$(NoWarn);CA1515;CA2007;CA1812;CA1031</NoWarn>
+    <!-- Pin transitive Roslyn packages in test projects only.
+         The testing package pulls in Microsoft.CodeAnalysis.CSharp.Workspaces 3.8.0 as a
+         transitive dependency, which conflicts with our pinned 4.9.2 versions and raises
+         NU1608. Enabling transitive pinning here (scoped to tests/) forces the
+         PackageVersion entries in Directory.Packages.props to win for transitive deps too,
+         without promoting those packages into the nuspec of the packable library project. -->
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
 </Project>

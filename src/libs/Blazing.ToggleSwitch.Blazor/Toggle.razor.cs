@@ -112,7 +112,7 @@ public partial class Toggle
     {
         get
         {
-            CssBuilder builder = new CssBuilder(CSS.Root);
+            CssBuilder builder = new(CSS.Root);
 
             if (Disabled)
                 builder.AddClass(CSS.Modifier.Disabled);

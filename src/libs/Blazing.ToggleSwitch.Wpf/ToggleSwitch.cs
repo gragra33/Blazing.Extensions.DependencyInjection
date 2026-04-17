@@ -113,17 +113,17 @@ public class ToggleSwitch : ToggleButton
     /// <summary>
     /// The default padding value for header content.
     /// </summary>
-    private static readonly Thickness DefaultHeaderPaddingValue = new Thickness(0D);
+    private static readonly Thickness DefaultHeaderPaddingValue = new(0D);
         
     /// <summary>
     /// The default padding value for check content.
     /// </summary>
-    private static readonly Thickness DefaultCheckPaddingValue = new Thickness(0D);
+    private static readonly Thickness DefaultCheckPaddingValue = new(0D);
         
     /// <summary>
     /// The default padding value for switch content.
     /// </summary>
-    private static readonly Thickness DefaultSwitchPaddingValue = new Thickness(8D, 0D, 8D, 0D);
+    private static readonly Thickness DefaultSwitchPaddingValue = new(8D, 0D, 8D, 0D);
 
     /// <summary>
     /// The default background brush for checked state.

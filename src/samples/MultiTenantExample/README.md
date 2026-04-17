@@ -5,55 +5,55 @@ A comprehensive example demonstrating enterprise-grade multi-tenant architecture
 ## Table of Contents
 
 - [Overview](#overview)
-  - [Technology Stack](#technology-stack)
+    - [Technology Stack](#technology-stack)
 - [Architecture](#architecture)
 - [Features Demonstrated](#features-demonstrated)
-  - [1. AutoRegister - Automatic Service Discovery](#1-autoregister---automatic-service-discovery)
-  - [2. Keyed Services - Per-Tenant Isolation](#2-keyed-services---per-tenant-isolation)
-  - [3. Service Scoping - Lifecycle Management](#3-service-scoping---lifecycle-management)
-  - [4. Lazy Initialization - Performance Optimization](#4-lazy-initialization---performance-optimization)
-  - [5. Service Factories - Conditional Service Creation](#5-service-factories---conditional-service-creation)
-  - [6. Service Validation - Configuration Safety](#6-service-validation---configuration-safety)
-  - [7. Async Initialization - Priority-Based Startup](#7-async-initialization---priority-based-startup)
+    - [1. AutoRegister - Automatic Service Discovery](#1-autoregister---automatic-service-discovery)
+    - [2. Keyed Services - Per-Tenant Isolation](#2-keyed-services---per-tenant-isolation)
+    - [3. Service Scoping - Lifecycle Management](#3-service-scoping---lifecycle-management)
+    - [4. Lazy Initialization - Performance Optimization](#4-lazy-initialization---performance-optimization)
+    - [5. Service Factories - Conditional Service Creation](#5-service-factories---conditional-service-creation)
+    - [6. Service Validation - Configuration Safety](#6-service-validation---configuration-safety)
+    - [7. Async Initialization - Priority-Based Startup](#7-async-initialization---priority-based-startup)
 - [Feature Usage Matrix](#feature-usage-matrix)
 - [Feature Location Guide](#feature-location-guide)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Running the Application](#running-the-application)
-  - [Available Tenants](#available-tenants)
+    - [Prerequisites](#prerequisites)
+    - [Running the Application](#running-the-application)
+    - [Available Tenants](#available-tenants)
 - [Using Swagger UI](#using-swagger-ui)
-  - [Access Swagger UI](#1-access-swagger-ui)
-  - [Authorize with Tenant ID](#2-authorize-with-tenant-id)
-  - [Test API Endpoints](#3-test-api-endpoints)
-  - [Switch Tenants](#4-switch-tenants)
-  - [Verify Tenant Isolation](#5-verify-tenant-isolation)
-  - [Alternative: Using Query Parameters](#alternative-using-query-parameters)
-  - [Swagger Troubleshooting](#swagger-troubleshooting)
+    - [Access Swagger UI](#1-access-swagger-ui)
+    - [Authorize with Tenant ID](#2-authorize-with-tenant-id)
+    - [Test API Endpoints](#3-test-api-endpoints)
+    - [Switch Tenants](#4-switch-tenants)
+    - [Verify Tenant Isolation](#5-verify-tenant-isolation)
+    - [Alternative: Using Query Parameters](#alternative-using-query-parameters)
+    - [Swagger Troubleshooting](#swagger-troubleshooting)
 - [API Usage](#api-usage)
-  - [Using Headers (Recommended)](#using-headers-recommended)
-  - [Using Query Parameters](#using-query-parameters)
-  - [Available Endpoints](#available-endpoints)
+    - [Using Headers (Recommended)](#using-headers-recommended)
+    - [Using Query Parameters](#using-query-parameters)
+    - [Available Endpoints](#available-endpoints)
 - [Key Implementation Details](#key-implementation-details)
-  - [Tenant Resolution Flow](#tenant-resolution-flow)
-  - [Database Context Management](#database-context-management)
-  - [Middleware Order Importance](#middleware-order-importance)
+    - [Tenant Resolution Flow](#tenant-resolution-flow)
+    - [Database Context Management](#database-context-management)
+    - [Middleware Order Importance](#middleware-order-importance)
 - [Code Quality Features](#code-quality-features)
-  - [XML Documentation](#xml-documentation)
-  - [Source-Generated Logging](#source-generated-logging)
-  - [Cancellation Token Support](#cancellation-token-support)
-  - [Nullable Reference Types](#nullable-reference-types)
+    - [XML Documentation](#xml-documentation)
+    - [Source-Generated Logging](#source-generated-logging)
+    - [Cancellation Token Support](#cancellation-token-support)
+    - [Nullable Reference Types](#nullable-reference-types)
 - [Testing the Features](#testing-the-features)
-  - [Test AutoRegister](#test-autoregister)
-  - [Test Async Initialization](#test-async-initialization)
-  - [Test Lazy Initialization](#test-lazy-initialization)
-  - [Test Tenant Isolation](#test-tenant-isolation)
-  - [Testing Multi-Tenant Features via Swagger](#testing-multi-tenant-features-via-swagger)
+    - [Test AutoRegister](#test-autoregister)
+    - [Test Async Initialization](#test-async-initialization)
+    - [Test Lazy Initialization](#test-lazy-initialization)
+    - [Test Tenant Isolation](#test-tenant-isolation)
+    - [Testing Multi-Tenant Features via Swagger](#testing-multi-tenant-features-via-swagger)
 - [Learning Resources](#learning-resources)
 - [Production Considerations](#production-considerations)
-  - [Security](#security)
-  - [Performance](#performance)
-  - [Reliability](#reliability)
-  - [Scalability](#scalability)
+    - [Security](#security)
+    - [Performance](#performance)
+    - [Reliability](#reliability)
+    - [Scalability](#scalability)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
@@ -66,7 +66,6 @@ This sample application showcases real-world multi-tenant patterns combining mul
 ![Light Mode](Multi-Tenant-light.png)
 
 ![Dark Mode](Multi-Tenant-dark.png)
-
 
 ### Technology Stack
 
@@ -84,6 +83,12 @@ MultiTenantExample/
 │   │   ├── TenantsController.cs         # Tenant management API
 │   │   ├── OrdersController.cs          # Multi-tenant orders API
 │   │   └── ProductsController.cs        # Multi-tenant products API
+│   ├── Extensions/
+│   │   ├── AsyncInitializationExtensions.cs
+│   │   ├── MultiTenantMiddlewareExtensions.cs
+│   │   ├── MultiTenantServiceExtensions.cs
+│   │   ├── ServiceValidationExtensions.cs
+│   │   └── SwaggerServiceExtensions.cs
 │   ├── Initialization/
 │   │   ├── TenantMigrationService.cs
 │   │   ├── TenantValidationService.cs
@@ -103,7 +108,8 @@ MultiTenantExample/
 │   │   ├── About.razor
 │   │   ├── Home.razor
 │   │   ├── Orders.razor
-│   │   └── Products.razor
+│   │   ├── Products.razor
+│   │   └── Settings.razor
 │   ├── Services/
 │   │   ├── TenantApiService.cs
 │   │   └── TenantStateService.cs
@@ -139,12 +145,20 @@ public sealed class TenantService : ITenantService { }
 [AutoRegister(ServiceLifetime.Singleton, typeof(IAsyncInitializable))]
 public sealed class TenantMigrationService : IAsyncInitializable { }
 
+// In Extensions/MultiTenantServiceExtensions.cs
+public static IServiceCollection AddMultiTenantServices(this IServiceCollection services)
+{
+    services.AddAssembly(typeof(Program).Assembly);
+    services.Register();  // Discovers and registers all marked services
+    // ...
+}
+
 // In Program.cs
-builder.Services.AddAssembly(typeof(Program).Assembly);
-builder.Services.Register();  // Discovers and registers all marked services
+builder.Services.AddMultiTenantServices();
 ```
 
 **Services Using AutoRegister:**
+
 - `TenantService` - Tenant management
 - `TenantMigrationService` - Database migrations
 - `TenantValidationService` - Configuration validation
@@ -153,6 +167,7 @@ builder.Services.Register();  // Discovers and registers all marked services
 - `TenantStateService` (Client) - Tenant state management
 
 **Files:**
+
 - `Server/Services/TenantService.cs`
 - `Server/Initialization/TenantMigrationService.cs`
 - `Server/Initialization/TenantValidationService.cs`
@@ -170,15 +185,16 @@ builder.Services.Register();  // Discovers and registers all marked services
 // Register tenant-specific configurations with keys
 builder.Services.AddLazyKeyedSingleton<TenantConfigurationService>("tenant-a",
     (provider, key) => new TenantConfigurationService("tenant-a", logger));
-    
+
 builder.Services.AddLazyKeyedSingleton<TenantConfigurationService>("tenant-b",
     (provider, key) => new TenantConfigurationService("tenant-b", logger));
 
 // Resolve specific tenant configuration
-var config = serviceProvider.GetRequiredKeyedService<ITenantConfig>("tenant-a");
+var config = serviceProvider.GetRequiredKeyedService<TenantConfigurationService>("tenant-a");
 ```
 
 **Use Cases:**
+
 - Per-tenant database contexts
 - Tenant-specific configuration settings
 - Isolated tenant data access
@@ -207,6 +223,7 @@ await using var dbContext = await _dbContextFactory
 ```
 
 **Benefits:**
+
 - Proper resource disposal
 - Request-level isolation
 - Prevents memory leaks
@@ -232,6 +249,7 @@ public Dictionary<string, string> CustomSettings => _lazySettings.Value;
 ```
 
 **Benefits:**
+
 - Faster application startup
 - Lower memory footprint
 - Configuration loaded only when needed
@@ -261,6 +279,7 @@ await using var dbContext = await _dbContextFactory
 ```
 
 **Use Cases:**
+
 - Tenant-specific database connections
 - Environment-based service selection
 - Dynamic service configuration
@@ -292,6 +311,7 @@ catch (InvalidOperationException ex)
 ```
 
 **Checks:**
+
 - Circular dependencies
 - Lifetime compatibility violations
 - Duplicate registrations
@@ -312,7 +332,7 @@ public sealed class TenantMigrationService : IAsyncInitializable
 {
     public int InitializationPriority => 100;  // Highest priority
     public IEnumerable<Type>? DependsOn => null;
-    
+
     public async Task InitializeAsync(IServiceProvider serviceProvider)
     {
         // Migrate all tenant databases
@@ -332,10 +352,11 @@ public IEnumerable<Type> DependsOn => new[]
 };
 
 // In Program.cs
-await app.Services.InitializeAllAsync();
+await app.Services.InitializeServicesAsync();
 ```
 
 **Execution Order:**
+
 1. **Priority 100**: `TenantMigrationService` - Database migrations
 2. **Priority 50**: `TenantValidationService` - Configuration validation (after migrations)
 3. **Priority 10**: `TenantCacheInitializer` - Cache warmup (after validation)
@@ -344,27 +365,27 @@ await app.Services.InitializeAllAsync();
 
 ## Feature Usage Matrix
 
-| Feature | Server | Client | Shared |
-|---------|--------|--------|--------|
-| AutoRegister | ✅ | ✅ | ❌ |
-| Keyed Services | ✅ | ❌ | ❌ |
-| Service Scoping | ✅ | ❌ | ❌ |
-| Lazy Initialization | ✅ | ❌ | ❌ |
-| Service Factories | ✅ | ❌ | ❌ |
-| Service Validation | ✅ | ✅ | ❌ |
-| Async Initialization | ✅ | ❌ | ❌ |
+| Feature              | Server | Client | Shared |
+| -------------------- | ------ | ------ | ------ |
+| AutoRegister         | ✅     | ✅     | ❌     |
+| Keyed Services       | ✅     | ❌     | ❌     |
+| Service Scoping      | ✅     | ❌     | ❌     |
+| Lazy Initialization  | ✅     | ❌     | ❌     |
+| Service Factories    | ✅     | ❌     | ❌     |
+| Service Validation   | ✅     | ✅     | ❌     |
+| Async Initialization | ✅     | ❌     | ❌     |
 
 ## Feature Location Guide
 
-| Feature | Primary File | Line Reference |
-|---------|-------------|----------------|
-| AutoRegister Setup | `Server/Program.cs` | Lines 24-27 |
-| Keyed Services | `Server/Program.cs` | Lines 40-55 |
-| Service Validation | `Server/Program.cs` | Lines 58-77 |
-| Async Initialization | `Server/Program.cs` | Lines 111-124 |
-| Service Scoping | `Server/Middleware/TenantScopeMiddleware.cs` | Lines 60-75 |
-| Lazy Initialization | `Server/Services/TenantConfigurationService.cs` | Lines 23-26 |
-| Service Factories | `Server/Services/TenantDbContextFactory.cs` | Lines 33-45 |
+| Feature              | Primary File                                         | Line Reference |
+| -------------------- | ---------------------------------------------------- | -------------- |
+| AutoRegister Setup   | `Server/Extensions/MultiTenantServiceExtensions.cs`  | Lines 18-21    |
+| Keyed Services       | `Server/Extensions/MultiTenantServiceExtensions.cs`  | Lines 30-47    |
+| Service Validation   | `Server/Extensions/ServiceValidationExtensions.cs`   | Lines 14-42    |
+| Async Initialization | `Server/Extensions/AsyncInitializationExtensions.cs` | Lines 17-37    |
+| Service Scoping      | `Server/Middleware/TenantScopeMiddleware.cs`         | Lines 60-75    |
+| Lazy Initialization  | `Server/Services/TenantConfigurationService.cs`      | Lines 23-26    |
+| Service Factories    | `Server/Services/TenantDbContextFactory.cs`          | Lines 33-45    |
 
 ## Getting Started
 
@@ -377,46 +398,50 @@ await app.Services.InitializeAllAsync();
 ### Running the Application
 
 1. **Clone the repository:**
-   ```bash
-   cd src/samples/MultiTenantExample
-   ```
+
+    ```bash
+    cd src/samples/MultiTenantExample
+    ```
 
 2. **Build the solution:**
-   ```bash
-   dotnet build
-   ```
+
+    ```bash
+    dotnet build
+    ```
 
 3. **Run the server:**
-   ```bash
-   dotnet run --project Server
-   ```
+
+    ```bash
+    dotnet run --project Server
+    ```
 
 4. **Access the application:**
-   - Open your browser to: `https://localhost:5001`
-   - Or check the console output for the actual URL
+    - Open your browser to: `https://localhost:52409`
+    - Or check the console output for the actual URL
 
 ### Available Tenants
 
 The application comes pre-configured with three sample tenants:
 
-| Tenant ID | Name | Description |
-|-----------|------|-------------|
+| Tenant ID  | Name                | Description                               |
+| ---------- | ------------------- | ----------------------------------------- |
 | `tenant-a` | Contoso Corporation | Enterprise customer with premium features |
-| `tenant-b` | Fabrikam Industries | Standard customer with basic features |
-| `tenant-c` | Adventure Works | Premium customer with extended features |
+| `tenant-b` | Fabrikam Industries | Standard customer with basic features     |
+| `tenant-c` | Adventure Works     | Premium customer with extended features   |
 
 ## Using Swagger UI
 
 ### 1. Access Swagger UI
+
 Navigate to: `https://localhost:52409/swagger` (port may vary based on your configuration)
 
 ### 2. Authorize with Tenant ID
 
 1. Click the **🔓 Authorize** button at the top right of the Swagger UI
 2. In the "TenantId (apiKey)" dialog, enter one of the tenant IDs:
-   - `tenant-a`
-   - `tenant-b`
-   - `tenant-c`
+    - `tenant-a`
+    - `tenant-b`
+    - `tenant-c`
 3. Click **Authorize**
 4. Click **Close**
 
@@ -425,44 +450,54 @@ The `X-Tenant-Id` header will now be automatically added to all API requests!
 ### 3. Test API Endpoints
 
 #### Get All Tenants (No Tenant ID Required)
+
 ```
 GET /api/Tenants
 ```
+
 This endpoint lists all available tenants.
 
 #### Get Orders for Current Tenant
+
 ```
 GET /api/Orders
 ```
+
 Returns orders specific to the tenant you authorized with.
 
 #### Get Products for Current Tenant
+
 ```
 GET /api/Products
 ```
+
 Returns products specific to the tenant you authorized with.
 
 #### Create an Order
+
 ```
 POST /api/Orders
 ```
+
 Example request body:
+
 ```json
 {
-  "customerName": "John Doe",
-  "customerEmail": "john.doe@example.com",
-  "items": [
-    {
-      "productId": 1,
-      "quantity": 2
-    }
-  ]
+    "customerName": "John Doe",
+    "customerEmail": "john.doe@example.com",
+    "items": [
+        {
+            "productId": 1,
+            "quantity": 2
+        }
+    ]
 }
 ```
 
 ### 4. Switch Tenants
 
 To test with a different tenant:
+
 1. Click the **🔓 Authorize** button again
 2. Click **Logout** to clear the current tenant
 3. Enter a different tenant ID
@@ -473,16 +508,16 @@ To test with a different tenant:
 Try this experiment to see multi-tenancy in action:
 
 1. **Authorize as tenant-a**
-   - GET `/api/Products` - Note the products (Enterprise License, Professional Support, etc.)
-   - GET `/api/Orders` - Note the orders
+    - GET `/api/Products` - Note the products (Enterprise License, Professional Support, etc.)
+    - GET `/api/Orders` - Note the orders
 
 2. **Logout and authorize as tenant-b**
-   - GET `/api/Products` - See different products (Cloud Storage, Backup Service, etc.)
-   - GET `/api/Orders` - See different orders
+    - GET `/api/Products` - See different products (Cloud Storage, Backup Service, etc.)
+    - GET `/api/Orders` - See different orders
 
 3. **Logout and authorize as tenant-c**
-   - GET `/api/Products` - See different products again (Mountain Bike, Road Bike, etc.)
-   - GET `/api/Orders` - See different orders
+    - GET `/api/Products` - See different products again (Mountain Bike, Road Bike, etc.)
+    - GET `/api/Orders` - See different orders
 
 Each tenant has completely isolated data!
 
@@ -496,6 +531,7 @@ GET /api/Products?tenantId=tenant-b
 ```
 
 However, using the **Authorize** button is recommended as it:
+
 - Automatically adds the header to all requests
 - Is more RESTful (headers vs query params)
 - Provides better security practices
@@ -503,24 +539,30 @@ However, using the **Authorize** button is recommended as it:
 ### Swagger Troubleshooting
 
 #### "Tenant ID is required" Error
+
 **Problem:** You see `400 Bad Request` with message "Tenant ID is required"
 
-**Solution:** 
+**Solution:**
+
 1. Click the **Authorize** button in Swagger UI
 2. Enter a valid tenant ID
 3. Make sure you clicked **Authorize** (not just typed and closed)
 
 #### "Tenant 'xxx' is not valid or inactive" Error
+
 **Problem:** You see `403 Forbidden` with this message
 
 **Solution:**
+
 - Make sure you're using one of the valid tenant IDs: `tenant-a`, `tenant-b`, or `tenant-c`
 - Check for typos (IDs are case-sensitive)
 
 #### No Authorize Button Visible
+
 **Problem:** The Authorize button doesn't appear
 
 **Solution:**
+
 - Refresh the Swagger UI page
 - Make sure you're accessing `/swagger` not `/swagger/v1/swagger.json`
 - Check that the server started successfully
@@ -530,30 +572,33 @@ However, using the **Authorize** button is recommended as it:
 ### Using Headers (Recommended)
 
 ```bash
-curl -H "X-Tenant-Id: tenant-a" https://localhost:5001/api/orders
+curl -H "X-Tenant-Id: tenant-a" https://localhost:52409/api/orders
 ```
 
 ### Using Query Parameters
 
 ```bash
-curl https://localhost:5001/api/orders?tenantId=tenant-a
+curl https://localhost:52409/api/orders?tenantId=tenant-a
 ```
 
 ### Available Endpoints
 
 **Tenants:**
+
 - `GET /api/tenants` - Get all tenants
 - `GET /api/tenants/{id}` - Get specific tenant
 - `GET /api/tenants/{id}/validate` - Validate tenant
 - `GET /api/tenants/{id}/configuration` - Get tenant configuration (demonstrates lazy initialization)
 
 **Orders:**
+
 - `GET /api/orders` - Get tenant orders
 - `GET /api/orders/{id}` - Get specific order
 - `POST /api/orders` - Create order
 - `PUT /api/orders/{id}/status` - Update order status
 
 **Products:**
+
 - `GET /api/products` - Get tenant products
 - `GET /api/products/{id}` - Get specific product
 - `POST /api/products` - Create product
@@ -566,10 +611,12 @@ All API responses follow this format:
 
 ```json
 {
-  "success": true,
-  "data": { /* your data here */ },
-  "errorMessage": null,
-  "tenantId": "tenant-a"
+    "success": true,
+    "data": {
+        /* your data here */
+    },
+    "errorMessage": null,
+    "tenantId": "tenant-a"
 }
 ```
 
@@ -580,19 +627,19 @@ The `tenantId` field in the response confirms which tenant the data belongs to.
 ### Tenant Resolution Flow
 
 1. **TenantResolutionMiddleware** extracts tenant ID from:
-   - `X-Tenant-Id` header (preferred)
-   - `tenantId` query parameter
-   - Could be extended for subdomain, path segment, etc.
+    - `X-Tenant-Id` header (preferred)
+    - `tenantId` query parameter
+    - Could be extended for subdomain, path segment, etc.
 
 2. **TenantScopeMiddleware** validates tenant and creates scope:
-   - Validates tenant exists and is active
-   - Creates async service scope for the request
-   - Stores scope in `HttpContext.Items`
+    - Validates tenant exists and is active
+    - Creates async service scope for the request
+    - Stores scope in `HttpContext.Items`
 
 3. **TenantExceptionMiddleware** handles tenant-specific errors:
-   - `TenantNotFoundException` → 404
-   - `TenantAccessDeniedException` → 403
-   - Generic exceptions → 500
+    - `TenantNotFoundException` → 404
+    - `TenantAccessDeniedException` → 403
+    - Generic exceptions → 500
 
 ### Database Context Management
 
@@ -603,13 +650,13 @@ The sample uses **in-memory data stores** for demonstration. In a real applicati
 public class TenantDbContext : DbContext, ITenantDbContext
 {
     private readonly string _tenantId;
-    
+
     public TenantDbContext(string tenantId, DbContextOptions options)
         : base(options)
     {
         _tenantId = tenantId;
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // Get tenant-specific connection string
@@ -665,7 +712,7 @@ public sealed partial class TenantService : ITenantService
 {
     [LoggerMessage(Level = LogLevel.Information, Message = "Getting all tenants. Total count: {Count}")]
     partial void LogGettingAllTenants(int count);
-    
+
     [LoggerMessage(Level = LogLevel.Warning, Message = "Tenant not found: '{TenantId}'")]
     partial void LogTenantNotFound(string tenantId);
 }
@@ -681,7 +728,7 @@ public async Task<IEnumerable<Order>> GetOrdersAsync(
 {
     await using var dbContext = await _dbContextFactory
         .CreateContextAsync(tenantId, cancellationToken);
-    
+
     return dbContext.Orders.ToList();
 }
 ```
@@ -703,12 +750,13 @@ All projects have nullable reference types enabled:
 Check the console output when the application starts:
 
 ```
-✅ Service Collection Diagnostics:
++ Service Collection Diagnostics:
   Total Services: 236
   Singletons: 171
   Scoped: 4
   Transient: 61
-✅ Service collection validation passed
+
++ Service collection validation passed
 ```
 
 ### Test Async Initialization
@@ -768,7 +816,7 @@ The lazy initialization feature defers loading tenant configurations until they'
 **Using Swagger UI:**
 
 1. **Access Swagger** at `https://localhost:52409/swagger`
-2. **Call** `GET /api/tenants/tenant-a/configuration` 
+2. **Call** `GET /api/tenants/tenant-a/configuration`
 3. **Watch the console logs** - you'll see:
 
 ```
@@ -816,27 +864,32 @@ Make requests for different tenants and verify data isolation:
 
 ```bash
 # Get orders for tenant-a
-curl -H "X-Tenant-Id: tenant-a" https://localhost:5001/api/orders
+curl -H "X-Tenant-Id: tenant-a" https://localhost:52409/api/orders
 
 # Get orders for tenant-b (different data)
-curl -H "X-Tenant-Id: tenant-b" https://localhost:5001/api/orders
+curl -H "X-Tenant-Id: tenant-b" https://localhost:52409/api/orders
 ```
 
 ### Testing Multi-Tenant Features via Swagger
 
 #### Feature: Data Isolation
+
 1. Create an order as `tenant-a`
 2. Switch to `tenant-b` and list orders
 3. The order from `tenant-a` should NOT appear
 
 #### Feature: Tenant Configuration
+
 Different tenants have different configurations:
+
 - `tenant-a`: Premium features, 5000 max orders
-- `tenant-b`: Standard features, 1000 max orders  
+- `tenant-b`: Standard features, 1000 max orders
 - `tenant-c`: Premium features, 2000 max orders
 
 #### Feature: Tenant Validation
+
 Try accessing with an invalid tenant:
+
 1. Authorize with `invalid-tenant`
 2. Make any API call
 3. You should get a 403 Forbidden error
@@ -861,6 +914,7 @@ This demonstrates the tenant validation middleware in action!
 ### Key Demonstration Points
 
 This sample demonstrates:
+
 - ✅ Real-world multi-tenant architecture patterns
 - ✅ Enterprise-grade dependency injection setup
 - ✅ Production-ready code quality standards
@@ -919,7 +973,7 @@ All working together to provide a seamless multi-tenant experience!
 **Solution:** Ensure you're sending the `X-Tenant-Id` header or `tenantId` query parameter.
 
 ```bash
-curl -H "X-Tenant-Id: tenant-a" https://localhost:5001/api/orders
+curl -H "X-Tenant-Id: tenant-a" https://localhost:52409/api/orders
 ```
 
 ### "Tenant 'xxx' is not valid or inactive"

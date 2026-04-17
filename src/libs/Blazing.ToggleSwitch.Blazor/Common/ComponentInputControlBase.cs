@@ -108,14 +108,5 @@ public abstract class ComponentInputControlBase<TValue> : InputBase<TValue>
     /// <returns>The CSS class string.</returns>
     public virtual string GetComponentCssClass() => CssClass ?? "";
 
-    /// <summary>
-    /// Disposes resources used by the component.
-    /// </summary>
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-        // Dispose logic if needed
-    }
-
     #endregion
 }

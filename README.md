@@ -6,9 +6,18 @@
 
 ## Overview
 
-A comprehensive dependency injection library that **brings and enhances Microsoft's DI container** for any .NET application. WPF, WinForms, Blazor, MAUI, Console apps, and more, without framework-specific integration. Built as powerful extension methods for `Microsoft.Extensions.DependencyInjection`, it delivers enterprise-grade enhancements including **keyed services**, **attribute-based auto-registration**, **lazy initialization**, **service scoping**, **open generics**, and **service validation** that extend beyond the standard Microsoft DI features.
+A comprehensive dependency injection library that **brings and enhances Microsoft's DI container** for any .NET application. WPF, WinForms, Blazor, MAUI, Console apps, and more, without framework-specific integration. Built as powerful extension methods for `Microsoft.Extensions.DependencyInjection`, it delivers enterprise-grade enhancements including **keyed services**, **source-generated auto-registration**, **lazy initialization**, **service scoping**, **open generics**, and **service validation** that extend beyond the standard Microsoft DI features.
 
-**V2.1.0 New Capabilities:**
+**V3.0.0 New Capabilities:**
+
+- **Source Generator / AOT Compatible** — `services.Register()` is now emitted at compile time by a Roslyn source generator; zero runtime reflection; fully compatible with `PublishAot=true`
+- **Cross-Assembly Auto-Discovery** — `[AutoRegister]` services in all referenced assemblies are discovered automatically via `compilation.References`
+- **Updated `[AutoRegister]` Attribute** — new `Key` property for keyed service registration; new `LocalOnly` property to restrict registration to the declaring assembly only
+- **`[CachingDecorator(seconds)]`** — attribute-driven, source-generated caching decorator; caches sync, `Task<T>`, and `ValueTask<T>` method results (AOT-safe)
+- **`[LoggingDecorator]`** — attribute-driven, source-generated logging decorator using `[LoggerMessage]` partial methods (high-performance, AOT-safe)
+
+**V2.1.0 Capabilities** (unchanged):
+
 - **Service Scoping** - Comprehensive scope management with async disposal
 - **Lazy Initialization** - Deferred service creation for performance
 - **Open Generic Types** - Single registration for all closed-type variants
@@ -21,27 +30,28 @@ A comprehensive dependency injection library that **brings and enhances Microsof
 ## Table of Contents
 
 - [Quick Start](#quick-start)
-  - [Installation](#installation)
-  - [Basic Configuration](#basic-configuration)
-  - [WPF Applications](#wpf-applications)
-  - [WinForms Applications](#winforms-applications)
-  - [Blazor Server Applications](#blazor-server-applications)
-  - [Console Applications](#console-applications)
+    - [Installation](#installation)
+    - [Basic Configuration](#basic-configuration)
+    - [WPF Applications](#wpf-applications)
+    - [WinForms Applications](#winforms-applications)
+    - [Blazor Server Applications](#blazor-server-applications)
+    - [Console Applications](#console-applications)
 - [Give a ⭐](#give-a-)
 - [Core Features](#core-features)
-  - [Service Configuration](#service-configuration)
-  - [Service Resolution](#service-resolution)
-  - [Keyed Services](#keyed-services)
-  - [Auto-Discovery](#auto-discovery)
-- [Advanced Features (V2.1.0)](#advanced-features-v210)
-  - [Service Scoping & Lifecycle Management](#service-scoping--lifecycle-management)
-  - [Lazy Service Initialization](#lazy-service-initialization)
-  - [Open Generic Type Registration](#open-generic-type-registration)
-  - [Service Factory Delegates](#service-factory-delegates)
-  - [Service Enumeration & Filtering](#service-enumeration--filtering)
-  - [Service Decoration Patterns](#service-decoration-patterns)
-  - [Service Validation & Diagnostics](#service-validation--diagnostics)
-  - [Async Service Initialization](#async-service-initialization)
+    - [Service Configuration](#service-configuration)
+    - [Service Resolution](#service-resolution)
+    - [Keyed Services](#keyed-services)
+    - [Auto-Discovery (V3.0.0)](#auto-discovery)
+- [Advanced Features](#advanced-features)
+    - [Service Scoping & Lifecycle Management](#service-scoping--lifecycle-management)
+    - [Lazy Service Initialization](#lazy-service-initialization)
+    - [Open Generic Type Registration](#open-generic-type-registration)
+    - [Service Factory Delegates](#service-factory-delegates)
+    - [Service Enumeration & Filtering](#service-enumeration--filtering)
+    - [Service Decoration Patterns](#service-decoration-patterns)
+    - [Pluggable Cache Backends](#pluggable-cache-backends)
+    - [Service Validation & Diagnostics](#service-validation--diagnostics)
+    - [Async Service Initialization](#async-service-initialization)
 - [API Reference](#api-reference)
 - [Sample Applications](#sample-applications)
 - [Requirements](#requirements)
@@ -75,7 +85,7 @@ var provider = instance.ConfigureServices(services =>
 {
     services.AddSingleton<IMyService, MyService>();
     services.AddTransient<IOtherService, OtherService>();
-    
+
     // Auto-discover services with [AutoRegister] attribute
     services.Register();
 });
@@ -106,9 +116,8 @@ public partial class App : Application
             services.AddKeyedSingleton<IDbContext, PrimaryDbContext>("primary");
             services.AddKeyedSingleton<IDbContext, AnalyticsDbContext>("analytics");
 
-            // Auto-discovery
-            services.Register<ITabView>(ServiceLifetime.Transient);
-            services.Register(); // Scans for [AutoRegister] attributes
+            // Auto-discovery: scans [AutoRegister]
+            services.Register();
         });
 
         // Resolve and show main window
@@ -126,7 +135,7 @@ public partial class MainWindow : Window
 
         // Get services from Application
         var dataService = Application.Current.GetRequiredService<IDataService>();
-        
+
         // Resolve keyed services
         var primaryDb = Application.Current.GetRequiredKeyedService<IDbContext>("primary");
     }
@@ -222,7 +231,7 @@ Use services in Blazor components:
     {
         // Resolve keyed services
         var primaryDb = ServiceProvider.GetRequiredKeyedService<IDbContext>("primary");
-        
+
         // Use scoped services
         await ServiceProvider.GetScopedServiceAsync<IDataProcessor>(async processor =>
         {
@@ -247,7 +256,7 @@ class Program
         {
             services.AddSingleton<IService, ServiceImpl>();
             services.AddTransient<IProcessor, Processor>();
-            
+
             // Auto-discovery
             services.Register();
         });
@@ -282,13 +291,13 @@ Application.Current.ConfigureServices(services =>
     services.AddSingleton<IMyService, MyService>();
     services.AddScoped<IScopedService, ScopedService>();
     services.AddTransient<ITransientService, TransientService>();
-    
+
     // Keyed services (multiple implementations)
     services.AddKeyedSingleton<IRepository, SqlRepository>("sql");
     services.AddKeyedSingleton<IRepository, NoSqlRepository>("nosql");
-    
+
     // Factory delegates
-    services.AddSingleton<IService>(provider => 
+    services.AddSingleton<IService>(provider =>
         new Service(provider.GetRequiredService<IDependency>()));
 });
 ```
@@ -299,7 +308,6 @@ Application.Current.ConfigureServices(services =>
 // Separate configuration from building for complex scenarios
 var services = host.GetServiceCollection(s =>
 {
-    s.AddSingleton<IDataService, DataService>();
     s.Register(); // Auto-discovery
 });
 
@@ -311,15 +319,16 @@ var provider = host.BuildServiceProvider(services);
 
 Resolve services throughout your application with type-safe methods:
 
-| Method | Description | Returns |
-|--------|-------------|---------|
-| `GetRequiredService<T>()` | Resolves required service (throws if not found) | `T` |
-| `GetService<T>()` | Resolves optional service (returns null if not found) | `T?` |
-| `GetRequiredKeyedService<T>(key)` | Resolves required keyed service | `T` |
-| `GetKeyedService<T>(key)` | Resolves optional keyed service | `T?` |
-| `GetRequiredServices<T>()` | Resolves all registered implementations | `IEnumerable<T>` |
+| Method                            | Description                                           | Returns          |
+| --------------------------------- | ----------------------------------------------------- | ---------------- |
+| `GetRequiredService<T>()`         | Resolves required service (throws if not found)       | `T`              |
+| `GetService<T>()`                 | Resolves optional service (returns null if not found) | `T?`             |
+| `GetRequiredKeyedService<T>(key)` | Resolves required keyed service                       | `T`              |
+| `GetKeyedService<T>(key)`         | Resolves optional keyed service                       | `T?`             |
+| `GetRequiredServices<T>()`        | Resolves all registered implementations               | `IEnumerable<T>` |
 
 **Examples:**
+
 ```csharp
 // Required service (throws if not found)
 var service = instance.GetRequiredService<IMyService>();
@@ -348,6 +357,7 @@ foreach (var handler in allHandlers)
 Register and resolve multiple implementations of the same interface:
 
 **Registration:**
+
 ```csharp
 services.AddKeyedSingleton<IEmailService, SmtpEmailService>("smtp");
 services.AddKeyedSingleton<IEmailService, SendGridEmailService>("sendgrid");
@@ -364,6 +374,7 @@ services.AddKeyedScoped<IDbContext, AuditDbContext>("audit");
 ```
 
 **Resolution:**
+
 ```csharp
 public class CheckoutService
 {
@@ -372,7 +383,7 @@ public class CheckoutService
         // Dynamically resolve based on runtime condition
         var processor = Application.Current
             .GetRequiredKeyedService<IPaymentProcessor>(method);
-        
+
         var result = await processor.ProcessAsync(order);
         return result;
     }
@@ -386,7 +397,7 @@ public class DataService
         var primaryDb = instance.GetRequiredKeyedService<IDbContext>("primary");
         await primaryDb.Orders.AddAsync(order);
         await primaryDb.SaveChangesAsync();
-        
+
         // Log to audit database
         var auditDb = instance.GetRequiredKeyedService<IDbContext>("audit");
         await auditDb.AuditLog.AddAsync(new AuditEntry { Action = "OrderCreated" });
@@ -397,39 +408,30 @@ public class DataService
 
 ### Auto-Discovery
 
-Two powerful mechanisms for automatic service registration:
+#### Source-Generated Registration (V3.0.0)
 
-#### Interface-Based Discovery
-
-Automatically register all implementations of a specified interface:
+`services.Register()` is emitted at **compile time** by a Roslyn source generator — zero runtime reflection, fully AOT / trim compatible. The generator automatically discovers `[AutoRegister]` services in all referenced assemblies via `compilation.References`. No assembly lists are required.
 
 ```csharp
-// Register all ITabView implementations as transient
-services.Register<ITabView>(ServiceLifetime.Transient);
-
-// Register all IRepository implementations as scoped
-services.Register<IRepository>(ServiceLifetime.Scoped);
-
-// Register all IValidator implementations as singletons
-services.Register<IValidator>(ServiceLifetime.Singleton);
+// Scans the calling assembly and all referenced assemblies automatically
+services.Register();
 ```
 
 #### Attribute-Based Discovery
 
-Mark classes with `[AutoRegister]` for declarative registration:
+Mark classes with `[AutoRegister]` for declarative, source-generated registration:
 
 ```csharp
-// Mark services with AutoRegister attribute
 [AutoRegister(ServiceLifetime.Singleton)]
-public class DataService : IDataService 
+public class DataService : IDataService
 {
     public async Task<Data> GetDataAsync() => await LoadDataAsync();
 }
 
 [AutoRegister(ServiceLifetime.Transient)]
-public class EmailService : IEmailService 
+public class EmailService : IEmailService
 {
-    public async Task SendAsync(string to, string subject, string body) 
+    public async Task SendAsync(string to, string subject, string body)
         => await SendEmailAsync(to, subject, body);
 }
 
@@ -446,47 +448,71 @@ public class LoggingService : ILoggingService, IDisposable
     // Registered as ILoggingService and LoggingService
     // IDisposable excluded automatically
 }
-
-// Scan and register all marked classes
-services.Register();
-
-// Or scan specific assemblies
-services.Register(
-    typeof(BusinessLayer).Assembly, 
-    typeof(DataLayer).Assembly);
 ```
 
-#### Assembly Management
+#### Keyed Auto-Registration
 
-Control which assemblies are scanned:
+Use the `Key` property to emit a keyed registration:
 
 ```csharp
-// Add assemblies before configuration
-Application.Current
-    .AddAssembly(typeof(Business.IBusinessService).Assembly)
-    .AddAssembly(typeof(Data.IRepository).Assembly)
-    .ConfigureServices(services =>
-    {
-        services.Register(); // Scans added assemblies
-    });
+[AutoRegister(ServiceLifetime.Singleton, Key = "sql")]
+public class SqlRepository : IRepository { }
 
-// Fluent chaining for multiple assemblies
-host.AddAssemblies(
-        typeof(Core.ICoreService).Assembly,
-        typeof(Business.IBusinessService).Assembly,
-        typeof(Data.IDataService).Assembly
-    )
-    .ConfigureServices(services =>
-    {
-        services.Register();
-    });
+[AutoRegister(ServiceLifetime.Singleton, Key = "nosql")]
+public class NoSqlRepository : IRepository { }
+
+// Resolve by key
+var repo = provider.GetRequiredKeyedService<IRepository>("sql");
 ```
 
-**Fallback Behavior:**
-- If no assemblies specified, scans the calling assembly
-- Works out-of-the-box for single-assembly projects
+#### LocalOnly — Restricting Cross-Assembly Discovery
 
-## Advanced Features (V2.1.0)
+When a host project (e.g. Blazor Server) references a library (e.g. Blazor WASM Client), the source generator discovers `[AutoRegister]` types from the referenced assembly too. Services that depend on runtime infrastructure absent in the host (such as `HttpClient` in a WASM client) must be excluded from cross-assembly import.
+
+Set `LocalOnly = true` to register the service only within the assembly that declares it:
+
+```csharp
+// Client project — only registers when Client's own Register() runs
+[AutoRegister(ServiceLifetime.Scoped, LocalOnly = true)]
+public sealed class TenantApiService   // requires browser HttpClient
+{
+    public TenantApiService(HttpClient httpClient, TenantStateService tenantState) { }
+}
+
+// Server Program.cs — TenantApiService is NOT imported from the Client assembly
+services.Register();
+
+// Client Program.cs — TenantApiService IS registered (local assembly)
+services.Register();
+```
+
+> See the `MultiTenantExample` sample for the full multi-assembly scenario.
+
+#### Source-Generated Decorators
+
+Apply `[CachingDecorator]` or `[LoggingDecorator]` alongside `[AutoRegister]` to have the generator emit a concrete decorator class and wire it up in `Register()` automatically — no DispatchProxy, fully AOT-safe:
+
+```csharp
+// Caching decorator — caches sync, Task<T>, and ValueTask<T> method results
+[AutoRegister(ServiceLifetime.Singleton)]
+[CachingDecorator(seconds: 120)]
+public class ProductService : IProductService
+{
+    public Product GetById(int id) { /* sync — cached with lock */ }
+    public async Task<Product> GetByIdAsync(int id) { /* async — cached with AsyncLock */ }
+    public async ValueTask<Product> FindBySkuAsync(string sku) { /* ValueTask<T> — also cached */ }
+}
+
+// Logging decorator — [LoggerMessage]-based structured logging per interface method
+[AutoRegister(ServiceLifetime.Singleton)]
+[LoggingDecorator]
+public class OrderService : IOrderService
+{
+    public Task<Order> CreateOrderAsync(Cart cart) { /* ... */ }
+}
+```
+
+## Advanced Features
 
 Version 2.1.0 introduces eight powerful feature groups that extend Microsoft's Dependency Injection with enterprise-grade capabilities. These features work seamlessly across all application types (WPF, WinForms, Blazor, Console) and provide advanced patterns for complex scenarios.
 
@@ -496,14 +522,14 @@ Comprehensive service scoping with support for both synchronous and asynchronous
 
 **Key Methods:**
 
-| Method | Description | Use Case |
-|--------|-------------|----------|
-| `CreateScope()` | Creates a new synchronous service scope | Scoped operations with using statement |
-| `CreateAsyncScope()` | Creates an async-capable service scope | Async operations requiring disposal |
-| `GetScopedService<T>(action)` | Executes action with scoped service | Simple scoped operations |
-| `GetScopedServiceAsync<T>(func)` | Async scoped service execution | Async operations in a scope |
-| `GetScopedKeyedService<T>(key, action)` | Scoped keyed service execution | Keyed services with automatic disposal |
-| `GetScopedOrRootService<T>()` | Gets service from scope or root | Flexible resolution with fallback |
+| Method                                  | Description                             | Use Case                               |
+| --------------------------------------- | --------------------------------------- | -------------------------------------- |
+| `CreateScope()`                         | Creates a new synchronous service scope | Scoped operations with using statement |
+| `CreateAsyncScope()`                    | Creates an async-capable service scope  | Async operations requiring disposal    |
+| `GetScopedService<T>(action)`           | Executes action with scoped service     | Simple scoped operations               |
+| `GetScopedServiceAsync<T>(func)`        | Async scoped service execution          | Async operations in a scope            |
+| `GetScopedKeyedService<T>(key, action)` | Scoped keyed service execution          | Keyed services with automatic disposal |
+| `GetScopedOrRootService<T>()`           | Gets service from scope or root         | Flexible resolution with fallback      |
 
 **Examples:**
 
@@ -541,14 +567,14 @@ Implements lazy initialization pattern for expensive-to-create services. Service
 
 **Key Methods:**
 
-| Method | Description | Lifetime |
-|--------|-------------|----------|
-| `AddLazySingleton<T, TImpl>()` | Register lazy singleton service | Singleton |
-| `AddLazyScoped<T, TImpl>()` | Register lazy scoped service | Scoped |
-| `AddLazyTransient<T, TImpl>()` | Register lazy transient service | Transient |
-| `AddLazyKeyedSingleton<T, TImpl>(key)` | Register lazy keyed singleton | Singleton |
-| `GetLazyService<T>()` | Resolve lazy-wrapped service | N/A |
-| `GetLazyKeyedService<T>(key)` | Resolve lazy keyed service | N/A |
+| Method                                 | Description                     | Lifetime  |
+| -------------------------------------- | ------------------------------- | --------- |
+| `AddLazySingleton<T, TImpl>()`         | Register lazy singleton service | Singleton |
+| `AddLazyScoped<T, TImpl>()`            | Register lazy scoped service    | Scoped    |
+| `AddLazyTransient<T, TImpl>()`         | Register lazy transient service | Transient |
+| `AddLazyKeyedSingleton<T, TImpl>(key)` | Register lazy keyed singleton   | Singleton |
+| `GetLazyService<T>()`                  | Resolve lazy-wrapped service    | N/A       |
+| `GetLazyKeyedService<T>(key)`          | Resolve lazy keyed service      | N/A       |
 
 **Examples:**
 
@@ -559,7 +585,7 @@ services.AddLazyScoped<IDataService, DataService>();
 services.AddLazyTransient<ITemporaryService, TemporaryService>();
 
 // With factory functions for complex initialization
-services.AddLazySingleton<IService>(provider => 
+services.AddLazySingleton<IService>(provider =>
     new Service(
         provider.GetRequiredService<IDependency1>(),
         provider.GetRequiredService<IDependency2>()
@@ -587,12 +613,12 @@ Enables registration of open generic types, allowing single registration for all
 
 **Key Methods:**
 
-| Method | Description | Use Case |
-|--------|-------------|----------|
+| Method                                         | Description                     | Use Case             |
+| ---------------------------------------------- | ------------------------------- | -------------------- |
 | `AddGenericSingleton(interfaceType, implType)` | Register open generic singleton | Generic repositories |
-| `AddGenericScoped(interfaceType, implType)` | Register open generic scoped | Generic validators |
-| `AddGenericTransient(interfaceType, implType)` | Register open generic transient | Generic handlers |
-| `AddGenericServices(lifetime, pairs)` | Register multiple open generics | Batch registration |
+| `AddGenericScoped(interfaceType, implType)`    | Register open generic scoped    | Generic validators   |
+| `AddGenericTransient(interfaceType, implType)` | Register open generic transient | Generic handlers     |
+| `AddGenericServices(lifetime, pairs)`          | Register multiple open generics | Batch registration   |
 
 **Examples:**
 
@@ -628,10 +654,10 @@ public interface IRepository<T> where T : class
 public class Repository<T> : IRepository<T> where T : class
 {
     private readonly DbContext _context;
-    
+
     public Repository(DbContext context) => _context = context;
-    
-    public async Task<T?> GetByIdAsync(int id) => 
+
+    public async Task<T?> GetByIdAsync(int id) =>
         await _context.Set<T>().FindAsync(id);
 }
 ```
@@ -642,19 +668,19 @@ Provides convenient methods for registering services with factory delegates, ena
 
 **Key Methods:**
 
-| Method | Description |
-|--------|-------------|
-| `RegisterFactory<T>(factory)` | Register singleton factory |
-| `RegisterTransientFactory<T>(factory)` | Register transient factory |
-| `RegisterScopedFactory<T>(factory)` | Register scoped factory |
+| Method                                   | Description                   |
+| ---------------------------------------- | ----------------------------- |
+| `RegisterFactory<T>(factory)`            | Register singleton factory    |
+| `RegisterTransientFactory<T>(factory)`   | Register transient factory    |
+| `RegisterScopedFactory<T>(factory)`      | Register scoped factory       |
 | `RegisterConditionalFactory<T>(factory)` | Conditional singleton factory |
-| `RegisterKeyedFactory<T>(key, factory)` | Keyed factory registration |
+| `RegisterKeyedFactory<T>(key, factory)`  | Keyed factory registration    |
 
 **Examples:**
 
 ```csharp
 // Simple factory registration with dependencies
-services.RegisterFactory<IService>(provider => 
+services.RegisterFactory<IService>(provider =>
     new Service(
         provider.GetRequiredService<IDependency>(),
         provider.GetRequiredService<IConfiguration>()
@@ -669,7 +695,7 @@ services.RegisterConditionalFactory<ICache>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
     var cacheType = config["Cache:Type"];
-    
+
     return cacheType switch
     {
         "Redis" => new RedisCache(config),
@@ -682,13 +708,13 @@ services.RegisterConditionalFactory<ICache>(provider =>
 services.RegisterConditionalFactory<IEmailService>(provider =>
 {
     var env = provider.GetRequiredService<IHostEnvironment>();
-    return env.IsDevelopment() 
-        ? new MockEmailService() 
+    return env.IsDevelopment()
+        ? new MockEmailService()
         : new SmtpEmailService(provider.GetRequiredService<IConfiguration>());
 });
 
 // Keyed factory services
-services.RegisterKeyedFactory<IRepository>("sql", (provider, key) => 
+services.RegisterKeyedFactory<IRepository>("sql", (provider, key) =>
     new SqlRepository(provider.GetRequiredService<IConfiguration>()));
 ```
 
@@ -698,14 +724,14 @@ Enables enumeration and filtering of registered service implementations. Essenti
 
 **Key Methods:**
 
-| Method | Description |
-|--------|-------------|
-| `GetRequiredServices<T>()` | Get all implementations |
-| `GetServices<T>(predicate)` | Filter by condition |
-| `GetFirstService<T>(predicate)` | Get first matching |
-| `ForEachService<T>(action)` | Execute for each |
-| `MapServices<T, TResult>(selector)` | Transform services |
-| `GetServiceCount<T>()` | Count implementations |
+| Method                              | Description             |
+| ----------------------------------- | ----------------------- |
+| `GetRequiredServices<T>()`          | Get all implementations |
+| `GetServices<T>(predicate)`         | Filter by condition     |
+| `GetFirstService<T>(predicate)`     | Get first matching      |
+| `ForEachService<T>(action)`         | Execute for each        |
+| `MapServices<T, TResult>(selector)` | Transform services      |
+| `GetServiceCount<T>()`              | Count implementations   |
 
 **Examples:**
 
@@ -726,7 +752,7 @@ var validator = instance.GetFirstServiceOrDefault<IValidator>(v => v.CanValidate
 instance.ForEachService<IValidator>(v => v.Validate(model));
 
 // Async execution
-await instance.ForEachServiceAsync<IInitializer>(async i => 
+await instance.ForEachServiceAsync<IInitializer>(async i =>
     await i.InitializeAsync());
 
 // Map/transform services
@@ -744,27 +770,53 @@ public async Task<ValidationResult> ValidateAsync<T>(T model)
 {
     var validators = instance.GetRequiredServices<IValidator<T>>();
     var results = new List<ValidationError>();
-    
+
     await instance.ForEachServiceAsync<IValidator<T>>(async validator =>
     {
         var result = await validator.ValidateAsync(model);
         if (!result.IsValid)
             results.AddRange(result.Errors);
     });
-    
+
     return new ValidationResult { IsValid = results.Count == 0, Errors = results };
 }
 ```
 
 ### Service Decoration Patterns
 
-Provides patterns for wrapping services with decorators or proxies for cross-cutting concerns like caching, logging, validation, and performance monitoring.
+Two approaches: **attribute-based** (source-generated, AOT-safe, preferred) and **manual** (`Decorate<T>`).
 
-**Examples:**
+#### Source-Generated Decorators
+
+Apply `[CachingDecorator]` or `[LoggingDecorator]` alongside `[AutoRegister]`. The Roslyn generator emits a concrete decorator class and wires it up in `Register()` — no DispatchProxy, no runtime reflection:
+
+```csharp
+// Caching decorator — caches sync, Task<T>, and ValueTask<T> method results
+[AutoRegister(ServiceLifetime.Singleton)]
+[CachingDecorator(seconds: 120)]
+public class ProductService : IProductService
+{
+    public Product GetById(int id) { /* sync — cached with lock */ }
+    public async Task<Product> GetByIdAsync(int id) { /* async — cached with AsyncLock */ }
+    public async ValueTask<Product> FindBySkuAsync(string sku) { /* ValueTask<T> — also cached */ }
+}
+
+// Logging decorator — wraps every interface method with [LoggerMessage] logging
+[AutoRegister(ServiceLifetime.Singleton)]
+[LoggingDecorator]
+public class OrderService : IOrderService
+{
+    public Task<Order> CreateOrderAsync(Cart cart) { /* ... */ }
+}
+```
+
+`[CachingDecorator]` emits `Blazing_CachingDecorator_ProductService`. `[LoggingDecorator]` emits `Blazing_LoggingDecorator_OrderService` with three `[LoggerMessage]` partial methods per interface method: `LogCallingXxx` (Debug), `LogCompletedXxx` (Debug), and `LogFailedXxx` (Error).
+
+#### Manual Decoration
 
 ```csharp
 // Register base service and decorate with caching
-services.AddSingleton<IRepository>(provider => 
+services.AddSingleton<IRepository>(provider =>
 {
     var inner = ActivatorUtilities.CreateInstance<SqlRepository>(provider);
     var cache = provider.GetRequiredService<ICache>();
@@ -772,7 +824,7 @@ services.AddSingleton<IRepository>(provider =>
 });
 
 // Multiple decorators (logging + caching)
-services.AddSingleton<IRepository>(provider => 
+services.AddSingleton<IRepository>(provider =>
     new CachedRepository(
         new LoggingRepository(
             new SqlRepository(provider.GetRequiredService<IConnectionString>()),
@@ -794,7 +846,7 @@ public class CachedRepository : IRepository
     public async Task<T> GetAsync<T>(int id)
     {
         var cacheKey = $"{typeof(T).Name}:{id}";
-        
+
         if (_cache.TryGet(cacheKey, out T? cached))
             return cached!;
 
@@ -805,20 +857,120 @@ public class CachedRepository : IRepository
 }
 ```
 
+### Pluggable Cache Backends
+
+The `[CachingDecorator]` generator injects `IDecoratorCache` into the generated decorator, letting you swap the cache store without changing any application code.
+
+#### Built-in Adapters
+
+| Adapter                          | Backed by                           | `RemoveByPrefix` | Notes                                                                                                      |
+| -------------------------------- | ----------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------- |
+| `DefaultDecoratorCache`          | `ConcurrentDictionary` (in-process) | ✅               | Default; registered automatically by `Register()`                                                          |
+| `MemoryCacheDecoratorCache`      | `IMemoryCache`                      | ❌ (throws)      | Register `AddMemoryCache()` first                                                                          |
+| `HybridCacheDecoratorCache`      | `HybridCache` (L1 + optional L2)    | ❌ (throws)      | Register `AddHybridCache()` first; sync path blocks                                                        |
+| `DistributedCacheDecoratorCache` | `IDistributedCache`                 | ❌ (throws)      | Register `AddDistributedMemoryCache()` (or another `IDistributedCache`) and an `IDecoratorCacheSerializer` |
+
+#### Cache Key Format
+
+```
+__{InterfaceSimpleName}__{MethodName}_{arg0}_{arg1}...
+```
+
+For example, `IProductCatalogService.GetName(1)` → `__IProductCatalogService__GetName_1`.
+
+#### Per-Key Invalidation
+
+Inject `IBlazingCacheInvalidator<TService>` to evict individual entries at runtime:
+
+```csharp
+public class MyController(IBlazingCacheInvalidator<IProductCatalogService> invalidator)
+{
+    public async Task OnProductUpdated(int productId)
+    {
+        // Evict the cached value for GetName(productId)
+        await invalidator.InvalidateAsync(nameof(IProductCatalogService.GetName),
+                                          [productId.ToString()]);
+    }
+}
+```
+
+#### Full Invalidation
+
+Cast to `IBlazingInvalidatable` to clear all entries at once:
+
+```csharp
+if (catalogService is IBlazingInvalidatable inv)
+    await inv.InvalidateAllCacheAsync();
+```
+
+#### Overriding the Default Backend
+
+`Register()` emits `TryAddSingleton<IDecoratorCache, DefaultDecoratorCache>()`, so any earlier registration wins. Register your preferred adapter **before** calling `Register()`:
+
+```csharp
+// Use IMemoryCache as the caching backend
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<IDecoratorCache, MemoryCacheDecoratorCache>();
+
+// Runs after — TryAdd is a no-op because IDecoratorCache is already registered
+builder.Services.Register();
+```
+
+#### Runtime Backend Switching
+
+For demos or feature-flag-driven switching, wrap `IDecoratorCache` in a `SwitchableDecoratorCache` singleton:
+
+```csharp
+public sealed class SwitchableDecoratorCache(IServiceProvider sp) : IDecoratorCache, IDisposable
+{
+    private volatile IDecoratorCache _current = new DefaultDecoratorCache();
+
+    public CacheBackend CurrentBackend { get; private set; } = CacheBackend.Default;
+
+    public void SwitchTo(CacheBackend backend)
+    {
+        _current = backend switch
+        {
+            CacheBackend.MemoryCache => new MemoryCacheDecoratorCache(
+                                            sp.GetRequiredService<IMemoryCache>()),
+            CacheBackend.HybridCache => new HybridCacheDecoratorCache(
+                                            sp.GetRequiredService<HybridCache>()),
+            _ => new DefaultDecoratorCache(),
+        };
+        CurrentBackend = backend;
+    }
+
+    // delegate all IDecoratorCache calls to _current …
+}
+```
+
+Register it **before** `Register()`:
+
+```csharp
+builder.Services.AddMemoryCache();
+builder.Services.AddHybridCache();
+builder.Services.AddSingleton<SwitchableDecoratorCache>();
+builder.Services.AddSingleton<IDecoratorCache>(sp =>
+    sp.GetRequiredService<SwitchableDecoratorCache>());
+builder.Services.Register();   // TryAdd is a no-op — SwitchableDecoratorCache wins
+```
+
+See [src/samples/BlazorServerExample](src/samples/BlazorServerExample), [src/samples/WpfExample](src/samples/WpfExample), and [src/samples/ConsoleExample](src/samples/ConsoleExample) for full working examples.
+
 ### Service Validation & Diagnostics
 
-Comprehensive validation and diagnostics tools for detecting circular dependencies, lifetime compatibility violations, duplicate registrations, and other configuration issues.
+Comprehensive validation, lifetime compatibility violations, duplicate registrations, and other configuration issues.
 
 **Key Methods:**
 
-| Method | Description | Use Case |
-|--------|-------------|----------|
+| Method                             | Description                          | Use Case                    |
+| ---------------------------------- | ------------------------------------ | --------------------------- |
 | `ValidateDuplicateRegistrations()` | Find duplicate service registrations | Detect configuration errors |
-| `ValidateCircularDependencies()` | Detect circular dependency cycles | Prevent runtime failures |
-| `ValidateLifetimeCompatibility()` | Check lifetime violations | Ensure proper scoping |
-| `GetServiceDependencyGraph()` | Build complete dependency graph | Visualization and analysis |
-| `GetDiagnostics()` | Get comprehensive diagnostics | Health checks |
-| `ThrowIfInvalid()` | Validate and throw on errors | Startup validation |
+| `ValidateCircularDependencies()`   | Detect circular dependency cycles    | Prevent runtime failures    |
+| `ValidateLifetimeCompatibility()`  | Check lifetime violations            | Ensure proper scoping       |
+| `GetServiceDependencyGraph()`      | Build complete dependency graph      | Visualization and analysis  |
+| `GetDiagnostics()`                 | Get comprehensive diagnostics        | Health checks               |
+| `ThrowIfInvalid()`                 | Validate and throw on errors         | Startup validation          |
 
 **Examples:**
 
@@ -887,13 +1039,15 @@ public interface IAsyncInitializable
 
 **Key Methods:**
 
-| Method | Description | Use Case |
-|--------|-------------|----------|
-| `InitializeAsync<T>()` | Initialize single service | Specific service initialization |
-| `InitializeAllAsync()` | Initialize all async services | Application startup |
-| `InitializeAllAsync<T>()` | Initialize services by interface | Grouped initialization |
-| `GetInitializationOrder()` | Get initialization order info | Diagnostics |
-| `AddStartupAction(action, priority)` | Register startup action | Custom initialization |
+| Method                               | Description                      | Use Case                        |
+| ------------------------------------ | -------------------------------- | ------------------------------- |
+| `InitializeAsync<T>()`               | Initialize single service        | Specific service initialization |
+| `InitializeAllAsync()`               | Initialize all async services    | Application startup             |
+| `InitializeAllAsync<T>()`            | Initialize services by interface | Grouped initialization          |
+| `GetInitializationOrder()`           | Get initialization order info    | Diagnostics                     |
+| `AddStartupAction(action, priority)` | Register startup action          | Custom initialization           |
+
+`AddStartupAction` is useful when you need lightweight one-off startup work that doesn't belong inside a full `IAsyncInitializable` service — for example seeding feature flags, writing a startup audit log entry, or pre-warming an external HTTP client. The `priority` parameter (higher = runs earlier) integrates the action into the same ordered sequence as `IAsyncInitializable` services, so you can precisely interleave ad-hoc actions between named services. Use it when the work is too small to justify a dedicated class, or when you need to run logic that spans multiple services without coupling them to each other.
 
 **Examples:**
 
@@ -902,10 +1056,10 @@ public interface IAsyncInitializable
 public class DatabaseService : IAsyncInitializable
 {
     private readonly IConfiguration _config;
-    
+
     public int InitializationPriority => 100; // High priority
     public IEnumerable<Type>? DependsOn => null;
-    
+
     public async Task InitializeAsync(IServiceProvider serviceProvider)
     {
         // Migrate database on startup
@@ -918,7 +1072,7 @@ public class CacheService : IAsyncInitializable
 {
     public int InitializationPriority => 50; // Lower priority
     public IEnumerable<Type> DependsOn => new[] { typeof(DatabaseService) };
-    
+
     public async Task InitializeAsync(IServiceProvider serviceProvider)
     {
         // Warm up cache after database is ready
@@ -959,109 +1113,121 @@ Complete API documentation with all extension methods organized by feature area.
 
 ### Core Methods
 
-| Method | Parameters | Returns | Description |
-|--------|------------|---------|-------------|
-| `ConfigureServices<T>` | `Action<IServiceCollection>` | `IServiceProvider` | Configure and build service provider |
-| `GetServices` | - | `IServiceProvider?` | Get associated service provider |
-| `SetServices` | `IServiceProvider?` | `void` | Set or remove service provider |
-| `GetRequiredService<T>` | - | `T` | Resolve required service |
-| `GetService<T>` | - | `T?` | Resolve optional service |
-| `GetRequiredKeyedService<T>` | `object? key` | `T` | Resolve required keyed service |
-| `GetKeyedService<T>` | `object? key` | `T?` | Resolve optional keyed service |
+| Method                       | Parameters                   | Returns             | Description                          |
+| ---------------------------- | ---------------------------- | ------------------- | ------------------------------------ |
+| `ConfigureServices<T>`       | `Action<IServiceCollection>` | `IServiceProvider`  | Configure and build service provider |
+| `GetServices`                | -                            | `IServiceProvider?` | Get associated service provider      |
+| `SetServices`                | `IServiceProvider?`          | `void`              | Set or remove service provider       |
+| `GetRequiredService<T>`      | -                            | `T`                 | Resolve required service             |
+| `GetService<T>`              | -                            | `T?`                | Resolve optional service             |
+| `GetRequiredKeyedService<T>` | `object? key`                | `T`                 | Resolve required keyed service       |
+| `GetKeyedService<T>`         | `object? key`                | `T?`                | Resolve optional keyed service       |
 
 ### Advanced Configuration
 
-| Method | Description |
-|--------|-------------|
+| Method                         | Description                                    |
+| ------------------------------ | ---------------------------------------------- |
 | `ConfigureServicesAdvanced<T>` | Configure with custom `ServiceProviderOptions` |
-| `GetServiceCollection<T>` | Get service collection for delayed building |
-| `BuildServiceProvider<T>` | Build and assign from existing collection |
+| `GetServiceCollection<T>`      | Get service collection for delayed building    |
+| `BuildServiceProvider<T>`      | Build and assign from existing collection      |
 
-### Auto-Discovery
+### Auto-Discovery (V3.0.0)
 
-| Method | Parameters | Description |
-|--------|------------|-------------|
-| `Register<TInterface>` | `ServiceLifetime` | Register all interface implementations |
-| `Register()` | - | Register all `[AutoRegister]` classes |
-| `Register` | `Assembly[]` | Register from specific assemblies |
+| Method       | Parameters | Description                                                                                             |
+| ------------ | ---------- | ------------------------------------------------------------------------------------------------------- |
+| `Register()` | —          | Source-generated: register all `[AutoRegister]` types in calling assembly and all referenced assemblies |
 
-### Assembly Management
+#### `[AutoRegister]` Properties
 
-| Method | Parameters | Returns | Description |
-|--------|------------|---------|-------------|
-| `AddAssembly<T>` | `Assembly` | `T` | Add assembly for discovery |
-| `AddAssemblies<T>` | `Assembly[]` | `T` | Add multiple assemblies |
+| Property      | Type              | Description                                                     |
+| ------------- | ----------------- | --------------------------------------------------------------- |
+| `Lifetime`    | `ServiceLifetime` | Registration lifetime (Transient default)                       |
+| `ServiceType` | `Type?`           | Optional single interface to register as                        |
+| `Key`         | `object?`         | When set, emits `AddKeyed{Lifetime}` instead of `Add{Lifetime}` |
+| `LocalOnly`   | `bool`            | When `true`, skips this type during cross-assembly discovery    |
 
-### Service Scoping (V2.1.0)
+#### `[CachingDecorator]` Properties
 
-| Method | Description |
-|--------|-------------|
-| `CreateScope()` | Create synchronous service scope |
-| `CreateAsyncScope()` | Create async service scope |
-| `GetScopedService<T>(action)` | Execute action with scoped service |
-| `GetScopedServiceAsync<T>(func)` | Async scoped service execution |
-| `GetScopedKeyedService<T>(key, action)` | Scoped keyed service execution |
+| Property  | Type  | Description                                                                                                                                                                              |
+| --------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Seconds` | `int` | Cache duration in seconds (default 300). Applied to sync non-void, `Task<T>`, and `ValueTask<T>` methods. Void and non-generic `Task`/`ValueTask` methods are always delegated directly. |
 
-### Lazy Services (V2.1.0)
+#### `[LoggingDecorator]`
 
-| Method | Description |
-|--------|-------------|
-| `AddLazySingleton<T, TImpl>()` | Register lazy singleton |
-| `AddLazyScoped<T, TImpl>()` | Register lazy scoped |
-| `AddLazyTransient<T, TImpl>()` | Register lazy transient |
-| `GetLazyService<T>()` | Resolve lazy service |
-| `GetLazyKeyedService<T>(key)` | Resolve lazy keyed service |
+Parameterless marker attribute. Emits one `[LoggerMessage]`-backed logging decorator per interface method (Calling/Completed/Failed).
 
-### Open Generics (V2.1.0)
+### Service Scoping
 
-| Method | Description |
-|--------|-------------|
+| Method                                  | Description                        |
+| --------------------------------------- | ---------------------------------- |
+| `CreateScope()`                         | Create synchronous service scope   |
+| `CreateAsyncScope()`                    | Create async service scope         |
+| `GetScopedService<T>(action)`           | Execute action with scoped service |
+| `GetScopedServiceAsync<T>(func)`        | Async scoped service execution     |
+| `GetScopedKeyedService<T>(key, action)` | Scoped keyed service execution     |
+
+### Lazy Services
+
+| Method                         | Description                |
+| ------------------------------ | -------------------------- |
+| `AddLazySingleton<T, TImpl>()` | Register lazy singleton    |
+| `AddLazyScoped<T, TImpl>()`    | Register lazy scoped       |
+| `AddLazyTransient<T, TImpl>()` | Register lazy transient    |
+| `GetLazyService<T>()`          | Resolve lazy service       |
+| `GetLazyKeyedService<T>(key)`  | Resolve lazy keyed service |
+
+### Open Generics
+
+| Method                                         | Description                     |
+| ---------------------------------------------- | ------------------------------- |
 | `AddGenericSingleton(interfaceType, implType)` | Register open generic singleton |
-| `AddGenericScoped(interfaceType, implType)` | Register open generic scoped |
+| `AddGenericScoped(interfaceType, implType)`    | Register open generic scoped    |
 | `AddGenericTransient(interfaceType, implType)` | Register open generic transient |
-| `AddGenericServices(lifetime, pairs)` | Register multiple open generics |
+| `AddGenericServices(lifetime, pairs)`          | Register multiple open generics |
 
-### Service Factories (V2.1.0)
+### Service Factories
 
-| Method | Description |
-|--------|-------------|
-| `RegisterFactory<T>(factory)` | Register singleton factory |
-| `RegisterTransientFactory<T>(factory)` | Register transient factory |
-| `RegisterScopedFactory<T>(factory)` | Register scoped factory |
+| Method                                   | Description                   |
+| ---------------------------------------- | ----------------------------- |
+| `RegisterFactory<T>(factory)`            | Register singleton factory    |
+| `RegisterTransientFactory<T>(factory)`   | Register transient factory    |
+| `RegisterScopedFactory<T>(factory)`      | Register scoped factory       |
 | `RegisterConditionalFactory<T>(factory)` | Conditional singleton factory |
-| `RegisterKeyedFactory<T>(key, factory)` | Keyed factory registration |
+| `RegisterKeyedFactory<T>(key, factory)`  | Keyed factory registration    |
 
-### Service Enumeration (V2.1.0)
+### Service Enumeration
 
-| Method | Description |
-|--------|-------------|
-| `GetRequiredServices<T>()` | Get all implementations |
-| `GetServices<T>(predicate)` | Filter by condition |
-| `GetFirstService<T>(predicate)` | Get first matching |
-| `ForEachService<T>(action)` | Execute for each |
-| `MapServices<T, TResult>(selector)` | Transform services |
-| `GetServiceCount<T>()` | Count implementations |
+| Method                              | Description             |
+| ----------------------------------- | ----------------------- |
+| `GetRequiredServices<T>()`          | Get all implementations |
+| `GetServices<T>(predicate)`         | Filter by condition     |
+| `GetFirstService<T>(predicate)`     | Get first matching      |
+| `ForEachService<T>(action)`         | Execute for each        |
+| `MapServices<T, TResult>(selector)` | Transform services      |
+| `GetServiceCount<T>()`              | Count implementations   |
 
-### Service Validation (V2.1.0)
+### Service Validation
 
-| Method | Description |
-|--------|-------------|
-| `ValidateDuplicateRegistrations()` | Find duplicate registrations |
-| `ValidateCircularDependencies()` | Detect circular dependencies |
-| `ValidateLifetimeCompatibility()` | Check lifetime violations |
-| `GetServiceDependencyGraph()` | Build dependency graph |
-| `GetDiagnostics()` | Get comprehensive diagnostics |
-| `ThrowIfInvalid()` | Validate and throw on errors |
+| Method                             | Description                   |
+| ---------------------------------- | ----------------------------- |
+| `ValidateDuplicateRegistrations()` | Find duplicate registrations  |
+| `ValidateCircularDependencies()`   | Detect circular dependencies  |
+| `ValidateLifetimeCompatibility()`  | Check lifetime violations     |
+| `GetServiceDependencyGraph()`      | Build dependency graph        |
+| `GetDiagnostics()`                 | Get comprehensive diagnostics |
+| `ThrowIfInvalid()`                 | Validate and throw on errors  |
 
-### Async Initialization (V2.1.0)
+### Async Initialization
 
-| Method | Description |
-|--------|-------------|
-| `InitializeAsync<T>()` | Initialize single service |
-| `InitializeAllAsync()` | Initialize all async services |
-| `InitializeAllAsync<T>()` | Initialize services by interface |
-| `GetInitializationOrder()` | Get initialization order |
-| `AddStartupAction(action, priority)` | Register startup action |
+| Method                               | Description                      |
+| ------------------------------------ | -------------------------------- |
+| `InitializeAsync<T>()`               | Initialize single service        |
+| `InitializeAllAsync()`               | Initialize all async services    |
+| `InitializeAllAsync<T>()`            | Initialize services by interface |
+| `GetInitializationOrder()`           | Get initialization order         |
+| `AddStartupAction(action, priority)` | Register startup action          |
+
+`AddStartupAction` is useful when you need lightweight one-off startup work that doesn't belong inside a full `IAsyncInitializable` service — for example seeding feature flags, writing a startup audit log entry, or pre-warming an external HTTP client. The `priority` parameter (higher = runs earlier) integrates the action into the same ordered sequence as `IAsyncInitializable` services, so you can precisely interleave ad-hoc actions between named services. Use it when the work is too small to justify a dedicated class, or when you need to run logic that spans multiple services without coupling them to each other.
 
 ## Sample Applications
 
@@ -1072,6 +1238,7 @@ The solution includes comprehensive sample applications demonstrating real-world
 **Location:** `src/samples/MultiTenantExample/`
 
 A comprehensive multi-tenant application demonstrating:
+
 - **Multi-Tenant Architecture** - Client/Server application with Blazor WebAssembly frontend
 - **Tenant Isolation** - Per-tenant data isolation using keyed services and middleware
 - **AutoRegister Attribute** - Automatic service discovery in both Server and Client projects
@@ -1085,6 +1252,7 @@ A comprehensive multi-tenant application demonstrating:
 - **Production-Ready Patterns** - Middleware pipeline, error handling, XML documentation, source-generated logging
 
 **Run the example:**
+
 ```bash
 dotnet run --project src/samples/MultiTenantExample/Server
 ```
@@ -1094,14 +1262,17 @@ dotnet run --project src/samples/MultiTenantExample/Server
 **Location:** `src/samples/WpfExample/`
 
 A comprehensive WPF application demonstrating:
+
 - **TabViewHandler Pattern** - Complete decoupling with automatic tab discovery via `ITabView` interface
 - **Blazing.ToggleSwitch.Wpf** - Modern toggle switch controls integrated into settings
 - **AutoRegister Attribute** - Declarative service registration for ViewModels, Views, and Services
 - **Interface-Based Discovery** - Automatic registration of all `ITabView` implementations
 - **MVVM Best Practices** - Proper View/ViewModel separation with dependency injection
 - **Service-Based Architecture** - Clean separation with `IDataService`, `IDialogService`, `IWeatherService`, and `INavigationService`
+- **Pluggable Cache Backends** - Dedicated "Caching" tab: live hit/miss detection for sync / `Task<T>` / `ValueTask<T>` methods, per-key invalidation, and runtime backend switching via `SwitchableDecoratorCache`
 
 **Run the example:**
+
 ```bash
 dotnet run --project src/samples/WpfExample --framework net10.0-windows
 ```
@@ -1111,13 +1282,16 @@ dotnet run --project src/samples/WpfExample --framework net10.0-windows
 **Location:** `src/samples/WinFormsExample/`
 
 A WinForms application demonstrating:
+
 - **AutoRegister Attributes** - All services, views, and main form marked with `[AutoRegister]`
 - **TabViewHandler Pattern** - Dynamic tab discovery using `ITabView` interface implementations
 - **Console Window Integration** - Dual output showing both GUI and detailed console logging
 - **Service Architecture** - Complete DI with `IDataService`, `IDialogService`, `IWeatherService`, and `INavigationService`
 - **Interface-Based Discovery** - Automatic tab view registration and resolution
+- **Pluggable Cache Backends** - Dedicated "Caching" tab: live hit/miss detection for sync / `Task<T>` / `ValueTask<T>` methods, per-key invalidation, and runtime backend switching via `SwitchableDecoratorCache`
 
 **Run the example:**
+
 ```bash
 dotnet run --project src/samples/WinFormsExample
 ```
@@ -1127,14 +1301,17 @@ dotnet run --project src/samples/WinFormsExample
 **Location:** `src/samples/BlazorServerExample/`
 
 A Blazor Server application demonstrating:
+
 - **AutoRegister Discovery** - Services marked with `[AutoRegister]` attribute for automatic registration
-- **Assembly Scanning** - Using `AddAssembly()` to specify assemblies for service discovery
-- **Blazor Components** - Multiple interactive server components (Home, Weather, Data, Settings)
+- **Source-Generated Discovery** - `[AutoRegister]` services discovered at compile time via Roslyn source generator
+- **Blazor Components** - Multiple interactive server components (Home, Weather, Data, Settings, Cache)
 - **Service Integration** - `IDataService` and `IWeatherService` injected into Razor components
 - **Singleton Services** - Demonstrates singleton lifetime with `DataService` for shared state
+- **Pluggable Cache Backends** - Interactive `/cache` page: live hit/miss detection, per-key invalidation, and runtime switching between Default / MemoryCache / HybridCache backends via `SwitchableDecoratorCache`
 - **Minimal Configuration** - Simple, clean DI setup in `Program.cs`
 
 **Run the example:**
+
 ```bash
 dotnet run --project src/samples/BlazorServerExample
 ```
@@ -1144,6 +1321,7 @@ dotnet run --project src/samples/BlazorServerExample
 **Location:** `src/samples/ConsoleExample/`
 
 A console application demonstrating:
+
 - **All V2.1.0 Features** - Complete demonstration of all 8 new advanced features
 - **18 Example Scenarios** - Each implementing `IExample` interface with `[AutoRegister]` attribute
 - **Service Scoping** - Synchronous and async scope management patterns
@@ -1152,12 +1330,14 @@ A console application demonstrating:
 - **Service Factories** - Conditional and keyed factory registrations
 - **Service Enumeration** - Plugin architecture and handler chain patterns
 - **Service Decoration** - Caching and logging decorator implementations
+- **Pluggable Cache Backends** - `CachingDecoratorExample` shows miss→hit for sync / `Task<T>` / `ValueTask<T>`, per-key invalidation via `IBlazingCacheInvalidator<T>`, and runtime switching between Default / MemoryCache / HybridCache via `DemoSwitchableDecoratorCache`
 - **Service Validation** - Circular dependency and lifetime violation detection
 - **Async Initialization** - Priority-based startup initialization
 - **Keyed Services** - Multiple implementations with runtime selection
 - **Performance Testing** - Timing and benchmarking of service resolution
 
 **Run the example:**
+
 ```bash
 dotnet run --project src/samples/ConsoleExample
 ```
@@ -1186,7 +1366,7 @@ Blazing.Extensions.DependencyInjection/           # Solution root
 │       ├── WpfExample/                           # WPF MVVM with TabViewHandler pattern
 │       └── MultiTenantExample/                  # Multi-tenant Blazor WebAssembly and ASP.NET Core API
 ├── tests/
-│   └── UnitTests/                                # Comprehensive unit tests (104 tests)
+│   └── Blazing.Extensions.DependencyInjection.Tests/  # Comprehensive tests (172 tests)
 ├── Directory.Build.props                         # Centralized build properties
 ├── Directory.Packages.props                      # Centralized package versions
 └── README.md                                     # This file
@@ -1257,17 +1437,49 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## History
 
+### V3.0.0 - 17 April 2026
+
+**Breaking Changes:**
+
+- Removed `services.Register<TInterface>(lifetime)` — use `[AutoRegister(lifetime, typeof(TInterface))]` on the implementation class instead
+- Removed `services.Register(Assembly[])` — cross-assembly discovery is now automatic via the source generator
+- Removed `host.AddAssembly()` / `host.AddAssemblies()` — deprecated; cross-assembly discovery is now automatic via the source generator
+- Removed `services.AddCachingDecorator<T>()` / `services.AddLoggingDecorator<T>()` — use `[CachingDecorator]` / `[LoggingDecorator]` attributes instead
+- Removed single-argument open generic overloads from `GenericServiceExtensions`
+
+**New Features:**
+
+- **Source Generator / AOT Compatible** — `services.Register()` is now powered by a Roslyn `IIncrementalGenerator`; the extension method is emitted at compile time; zero runtime reflection; fully compatible with `PublishAot=true`
+- **Cross-Assembly Discovery** — the source generator automatically discovers `[AutoRegister]` services in all referenced assemblies via `compilation.References`
+- **`[AutoRegister]` — `Key` property** — emits `AddKeyedSingleton/Scoped/Transient` for keyed service registration
+- **`[AutoRegister]` — `LocalOnly` property** — when `true`, the service is skipped during cross-assembly discovery; only registered in the declaring assembly (use for WASM-only services that depend on `HttpClient`, etc.)
+- **`[CachingDecorator(seconds)]`** — attribute-driven source-generated caching decorator for sync non-void, `Task<T>`, and `ValueTask<T>` methods; now backed by pluggable `IDecoratorCache`
+- **`[LoggingDecorator]`** — attribute-driven source-generated logging decorator; uses `[LoggerMessage]` partial methods; AOT-safe; high-performance structured logging
+- **`IDecoratorCache` abstraction** — pluggable cache backend used by generated decorators, with built-ins: `DefaultDecoratorCache`, `MemoryCacheDecoratorCache`, `HybridCacheDecoratorCache`, `DistributedCacheDecoratorCache`
+- **`IBlazingCacheInvalidator<TService>`** — injectable per-service invalidator for deterministic per-key eviction from generated caching decorators
+- **`IBlazingInvalidatable`** — cast-based full/targeted invalidation support exposed by generated caching decorators
+- **Cache key format** — deterministic key shape: `__{InterfaceSimpleName}__{MethodName}_{arg0}_{arg1}...`
+- **`SwitchableDecoratorCache` pattern** — runtime backend switching sample pattern used in Blazor, WPF, and Console demos (Default / MemoryCache / HybridCache)
+
+**Improvements:**
+
+- **Test infrastructure** — test project restructured to industry-standard `Fixtures/UnitTests/IntegrationTests` layout; renamed to `Blazing.Extensions.DependencyInjection.Tests`; 172 tests across net8.0, net9.0, net10.0
+- **Bug fix** — `InitializeAllAsync()` now correctly initialises multiple instances of the same concrete type (instance-identity tracking via `ReferenceEqualityComparer` instead of type-identity)
+
 ### V2.2.0 - 8 December 2025
 
 **Improvements:**
+
 - **Enhanced Extension Methods** - Improved AsyncInitializationExtensions, ServiceEnumerationExtensions, and ServiceValidationExtensions with better error handling and performance optimizations
 
 **New Sample:**
+
 - **MultiTenantExample** - Advanced multi-tenant ASP.NET Core Web API with Blazor WebAssembly client demonstrating enterprise-grade patterns, tenant isolation, and comprehensive DI features integration
 
 ### V2.1.0 - 21 November 2025
 
 **New Features:**
+
 - **Service Scoping** - Complete `IServiceScope` and `AsyncServiceScope` support with convenience methods for automatic disposal
 - **Lazy Initialization** - `Lazy<T>` factory pattern support for expensive-to-create services across all lifetimes
 - **Open Generic Types** - Open generic type registration for repository patterns, validators, and generic handlers
@@ -1278,30 +1490,33 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Async Initialization** - Declarative `IAsyncInitializable` interface with priority-based initialization ordering
 
 **New Sample:**
+
 - **BlazorServerExample** - Complete Blazor Server application demonstrating AutoRegister discovery and service integration
 
 **Sample Updates:**
+
 - **ConsoleExample** - Expanded from 10 to 18 comprehensive examples demonstrating all V2.1.0 features with detailed implementations for service scoping, lazy initialization, open generics, factories, enumeration, decoration, validation, and async initialization patterns
 
 **Improvements:**
+
 - **Expanded Test Coverage** - 77 comprehensive tests covering all new features with 100% pass rate
 - **Enhanced Documentation** - Reorganized README with feature-focused sections and comprehensive examples
 - **Bug Fixes** - Resolved extension method ambiguity issues with `IServiceProvider` and `IServiceScope`
 
 ### V2.0.0 - 17 November 2025
 
- -   **.NET 10.0 Support** - Added support for .NET 10.0 applications
+- **.NET 10.0 Support** - Added support for .NET 10.0 applications
 
 ### V1.0.0 (.Net 8.0+)
 
--   **Universal DI Support** - Added universal dependency injection support for any .NET object
--   **Memory Management** - Implemented `ConditionalWeakTable` based memory management for automatic cleanup
--   **Core API** - Created comprehensive API with `ConfigureServices`, `GetServices`, and `SetServices` extension methods
--   **Keyed Services** - Added full keyed services support with `GetRequiredKeyedService` and `GetKeyedService` methods
--   **Platform Support** - Supports all .Net Application types; specifically designed for a common usage pattern across WPF, WinForms, and Console applications
--   **Advanced Configuration** - Included advanced configuration options with `ServiceProviderOptions`
--   **Comprehensive Testing** - Built comprehensive test suite with 104 unit tests (100% passing)
--   **Sample Applications** - Created three sample applications: WpfExample, WinFormsExample, and ConsoleExample
--   **AutoRegister Attribute** - Added AutoRegister attribute for declarative service registration
--   **Bonus Component Libraries** - Added Blazing.ToggleSwitch.Wpf and Blazing.ToggleSwitch.WinForms component libraries
--   **Project Structure** - Established project structure with centralized build and package management
+- **Universal DI Support** - Added universal dependency injection support for any .NET object
+- **Memory Management** - Implemented `ConditionalWeakTable` based memory management for automatic cleanup
+- **Core API** - Created comprehensive API with `ConfigureServices`, `GetServices`, and `SetServices` extension methods
+- **Keyed Services** - Added full keyed services support with `GetRequiredKeyedService` and `GetKeyedService` methods
+- **Platform Support** - Supports all .Net Application types; specifically designed for a common usage pattern across WPF, WinForms, and Console applications
+- **Advanced Configuration** - Included advanced configuration options with `ServiceProviderOptions`
+- **Comprehensive Testing** - Built comprehensive test suite with 104 unit tests (100% passing)
+- **Sample Applications** - Created three sample applications: WpfExample, WinFormsExample, and ConsoleExample
+- **AutoRegister Attribute** - Added AutoRegister attribute for declarative service registration
+- **Bonus Component Libraries** - Added Blazing.ToggleSwitch.Wpf and Blazing.ToggleSwitch.WinForms component libraries
+- **Project Structure** - Established project structure with centralized build and package management

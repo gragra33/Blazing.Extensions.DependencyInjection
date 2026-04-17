@@ -1,0 +1,189 @@
+<UserControl x:Class="WpfExample.Views.CacheView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:WpfExample.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="900"
+             Background="White">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+
+            <!-- Title -->
+            <TextBlock Text="🗄️ Caching Decorator Demo"
+                       FontSize="20" FontWeight="Bold"
+                       Foreground="#0078D7"
+                       Margin="0,0,0,4"/>
+            <TextBlock TextWrapping="Wrap" Foreground="#555" Margin="0,0,0,20"
+                       Text="[CachingDecorator(seconds: 30)] on ProductCatalogService wraps every method result in IDecoratorCache. Switch backends at runtime — no restart needed."/>
+
+            <!-- ── Backend Switcher ─────────────────────────────────────────── -->
+            <GroupBox Header="⚙️ Caching Backend (runtime switch)" Margin="0,0,0,16"
+                      Padding="10">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Default (ConcurrentDictionary)"
+                                Command="{Binding SwitchToDefaultCommand}"
+                                Margin="0,0,8,0" Padding="8,4"
+                                Background="#0078D7" Foreground="White"/>
+                        <Button Content="MemoryCache (IMemoryCache)"
+                                Command="{Binding SwitchToMemoryCacheCommand}"
+                                Margin="0,0,8,0" Padding="8,4"
+                                Background="#107c10" Foreground="White"/>
+                        <Button Content="HybridCache (L1+L2)"
+                                Command="{Binding SwitchToHybridCacheCommand}"
+                                Padding="8,4"
+                                Background="#8764b8" Foreground="White"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Active: " Foreground="#555" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ActiveBackend}"
+                                   FontWeight="Bold" Foreground="#0078D7" VerticalAlignment="Center" Margin="4,0,20,0"/>
+                        <TextBlock Text="Backend calls (misses): " Foreground="#555" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding BackendCallCount}"
+                                   FontSize="18" FontWeight="Bold" Foreground="#0078D7" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- ── Product ID ────────────────────────────────────────────────── -->
+            <GroupBox Header="🔢 Product ID" Margin="0,0,0,16" Padding="10">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="ID (1-5): " VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBox Text="{Binding ProductId, UpdateSourceTrigger=PropertyChanged}"
+                             Width="60" Height="28" Padding="4,3"
+                             VerticalContentAlignment="Center"/>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- ── Method Cards ────────────────────────────────────────────────── -->
+            <UniformGrid Columns="3" Margin="0,0,0,16">
+
+                <!-- GetName (sync) -->
+                <Border BorderBrush="#ddd" BorderThickness="1" CornerRadius="4"
+                        Padding="12" Margin="0,0,8,0" Background="#fafafa">
+                    <StackPanel>
+                        <TextBlock Text="string GetName(int id)"
+                                   FontFamily="Consolas" FontSize="11" Foreground="#444"
+                                   TextWrapping="Wrap" Margin="0,0,0,4"/>
+                        <Border Background="#3d54b5" CornerRadius="8" Padding="4,2" Width="45" HorizontalAlignment="Left" Margin="0,0,0,8">
+                            <TextBlock Text="sync" FontSize="10" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        </Border>
+                        <Button Content="▶ Call"
+                                Command="{Binding ExecuteGetNameCommand}"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                Height="28" Background="#0078D7" Foreground="White" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding SyncResult}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,2"/>
+                        <TextBlock Text="{Binding SyncStatus}" FontStyle="Italic" Foreground="#555" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- GetNameAsync (Task<T>) -->
+                <Border BorderBrush="#ddd" BorderThickness="1" CornerRadius="4"
+                        Padding="12" Margin="0,0,8,0" Background="#fafafa">
+                    <StackPanel>
+                        <TextBlock Text="Task&lt;string&gt; GetNameAsync(int id)"
+                                   FontFamily="Consolas" FontSize="11" Foreground="#444"
+                                   TextWrapping="Wrap" Margin="0,0,0,4"/>
+                        <Border Background="#3d54b5" CornerRadius="8" Padding="4,2" Width="60" HorizontalAlignment="Left" Margin="0,0,0,8">
+                            <TextBlock Text="Task&lt;T&gt;" FontSize="10" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        </Border>
+                        <Button Content="▶ Call"
+                            Command="{Binding ExecuteGetNameTaskCommand}"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                Height="28" Background="#0078D7" Foreground="White" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding TaskResult}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,2"/>
+                        <TextBlock Text="{Binding TaskStatus}" FontStyle="Italic" Foreground="#555" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- GetCountAsync (ValueTask<T>) -->
+                <Border BorderBrush="#ddd" BorderThickness="1" CornerRadius="4"
+                        Padding="12" Background="#fafafa">
+                    <StackPanel>
+                        <TextBlock Text="ValueTask&lt;int&gt; GetCountAsync(int id)"
+                                   FontFamily="Consolas" FontSize="11" Foreground="#444"
+                                   TextWrapping="Wrap" Margin="0,0,0,4"/>
+                        <Border Background="#3d54b5" CornerRadius="8" Padding="4,2" Width="80" HorizontalAlignment="Left" Margin="0,0,0,8">
+                            <TextBlock Text="ValueTask&lt;T&gt;" FontSize="10" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                        </Border>
+                        <Button Content="▶ Call"
+                            Command="{Binding ExecuteGetCountValueTaskCommand}"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                                Height="28" Background="#0078D7" Foreground="White" Margin="0,0,0,8"/>
+                        <TextBlock Text="{Binding ValueTaskResult}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,2"/>
+                        <TextBlock Text="{Binding ValueTaskStatus}" FontStyle="Italic" Foreground="#555" FontSize="11"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- ── Per-key Invalidation ────────────────────────────────────────── -->
+            <GroupBox Header="🗑️ Per-Key Invalidation" Margin="0,0,0,16" Padding="10">
+                <StackPanel>
+                    <TextBlock Foreground="#555" FontSize="11" Margin="0,0,0,8"
+                               Text="Removes the cached entry for the selected product ID from the active backend."/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Invalidate GetName"
+                            Command="{Binding InvalidateGetNameSyncCommand}"
+                                Padding="8,4" Margin="0,0,8,0"
+                                Background="#d32f2f" Foreground="White"/>
+                        <Button Content="Invalidate GetNameAsync"
+                            Command="{Binding InvalidateGetNameTaskCommand}"
+                                Padding="8,4" Margin="0,0,8,0"
+                                Background="#d32f2f" Foreground="White"/>
+                        <Button Content="Invalidate GetCountAsync"
+                            Command="{Binding InvalidateGetCountValueTaskCommand}"
+                                Padding="8,4"
+                                Background="#d32f2f" Foreground="White"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- ── Activity Log ────────────────────────────────────────────────── -->
+            <GroupBox Header="📋 Activity Log" Padding="10">
+                <StackPanel>
+                    <ListView ItemsSource="{Binding ActivityLog}"
+                              MaxHeight="240"
+                              BorderBrush="#ddd" BorderThickness="1"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="4,3"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsHit}" Value="True">
+                                        <Setter Property="Background" Value="#d4edda"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsInfo}" Value="True">
+                                        <Setter Property="Background" Value="#d1ecf1"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="95"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding Time}"
+                                               FontFamily="Consolas" FontSize="11"
+                                               Foreground="#888"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Message}"
+                                               FontSize="11" TextWrapping="Wrap"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </GroupBox>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

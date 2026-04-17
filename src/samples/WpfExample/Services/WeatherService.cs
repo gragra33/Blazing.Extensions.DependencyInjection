@@ -6,7 +6,7 @@ namespace WpfExample.Services;
 [AutoRegister(ServiceLifetime.Transient, typeof(IWeatherService))]
 public class WeatherService : IWeatherService
 {
-    private readonly Random _random = new Random();
+    private readonly Random _random = new();
     private readonly string[] _conditions = ["Sunny", "Cloudy", "Rainy", "Snowy", "Partly Cloudy"];
     private readonly string[] _locations = ["Sydney", "New York", "London", "Tokyo", "Paris", "Berlin", "Toronto"];
 

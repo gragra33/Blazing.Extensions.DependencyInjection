@@ -127,7 +127,7 @@
 @code {
     private Dictionary<string, object>? configuration;
     private Dictionary<string, string>? customSettings;
-    private bool isLoading = false;
+    private bool isLoading;
     private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
@@ -177,7 +177,7 @@
         {
             var response = await TenantApi.GetTenantConfigurationAsync();
 
-            if (response?.Success == true && response.Data != null)
+            if (response is { Success: true, Data: not null })
             {
                 configuration = response.Data;
                 
@@ -210,7 +210,7 @@
         if (configuration == null || !configuration.TryGetValue(key, out var value))
             return "N/A";
 
-        return value?.ToString() ?? "N/A";
+        return value.ToString() ?? "N/A";
     }
 
     private bool WasValueCreated

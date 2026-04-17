@@ -33,7 +33,6 @@ public class AutoRegisterAttributeExample : IExample
         host.AddAssembly(typeof(Program).Assembly)
             .ConfigureServices(services =>
             {
-                services.Register<IScannedService>(ServiceLifetime.Transient);
                 services.Register();
             });
         return host;

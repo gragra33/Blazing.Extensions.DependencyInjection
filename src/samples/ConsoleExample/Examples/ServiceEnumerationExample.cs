@@ -73,8 +73,9 @@ public class ServiceEnumerationExample : IExample
 
         var enabledHandlers = _host.GetServices<IPluginHandler>(h => h.IsEnabled);
 
-        Console.WriteLine($"    + Enabled handlers: {enabledHandlers.Count()}");
-        foreach (var handler in enabledHandlers)
+        IEnumerable<IPluginHandler> pluginHandlers = enabledHandlers as IPluginHandler[] ?? enabledHandlers.ToArray();
+        Console.WriteLine($"    + Enabled handlers: {pluginHandlers.Count()}");
+        foreach (var handler in pluginHandlers)
         {
             Console.WriteLine($"      - {handler.GetType().Name}");
         }

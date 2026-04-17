@@ -31,7 +31,7 @@ public sealed partial class TenantValidationService : IAsyncInitializable
     /// <remarks>
     /// Depends on TenantMigrationService to ensure database is ready.
     /// </remarks>
-    public IEnumerable<Type> DependsOn => new[] { typeof(TenantMigrationService) };
+    public IEnumerable<Type> DependsOn => [typeof(TenantMigrationService)];
 
     /// <inheritdoc/>
     public async Task InitializeAsync(IServiceProvider serviceProvider)

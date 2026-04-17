@@ -7,4 +7,11 @@
     <!-- Samples are for demonstration, so we can relax some rules -->
     <NoWarn>$(NoWarn);CA5394;CA1031</NoWarn>
   </PropertyGroup>
+
+  <!-- Add the source generator to all sample projects so Register.g.cs is emitted -->
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Blazing.Extensions.DependencyInjection.SourceGenerators\Blazing.Extensions.DependencyInjection.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
 </Project>

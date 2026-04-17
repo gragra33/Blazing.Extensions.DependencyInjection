@@ -21,10 +21,21 @@
   <ItemGroup>
     <!-- Version managed centrally in Directory.Packages.props -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
     <!-- Only use SourceLink when in a git repository to avoid warnings -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Condition="Exists('.git')">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Bundle the source generator as an Analyzer so consuming projects get it automatically -->
+    <ProjectReference
+      Include="..\Blazing.Extensions.DependencyInjection.SourceGenerators\Blazing.Extensions.DependencyInjection.SourceGenerators.csproj"
+      OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>

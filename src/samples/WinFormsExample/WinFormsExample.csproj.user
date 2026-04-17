@@ -7,6 +7,9 @@
     <Compile Update="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Views\CachingView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Views\DataView.cs">
       <SubType>UserControl</SubType>
     </Compile>

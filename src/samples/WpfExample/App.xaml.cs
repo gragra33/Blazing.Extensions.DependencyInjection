@@ -18,47 +18,16 @@ public partial class App : Application
             // STEP 1: Configure services but don't build yet
             var services = this.GetServiceCollection(services =>
             {
+                // Register cache backends — must be done BEFORE Register() so the generated
+                // TryAddSingleton<IDecoratorCache, DefaultDecoratorCache> does not override SwitchableDecoratorCache.
+                services.AddMemoryCache();
+                services.AddHybridCache();
+                services.AddSingleton<SwitchableDecoratorCache>();
+                services.AddSingleton<IDecoratorCache>(sp => sp.GetRequiredService<SwitchableDecoratorCache>());
+
                 // Auto-discover and register all classes decorated with AutoRegisterAttribute
+                // This includes all ITabView implementations - each is tagged with [AutoRegister(Transient, typeof(ITabView))]
                 services.Register();
-
-                // Auto-discover and register all ITabView implementations from current assembly
-                // This is an example of manual discovery registration. The AutoRegisterAttribute could
-                //   also be used on ITabView implementations
-                services.Register<ITabView>(ServiceLifetime.Transient);
-
-                // ============================================================================
-                // Example of manual service registrations
-
-                /*
-                // Register ViewModels - each will be injected with required services automatically
-                // NOTE: MainViewModel is simple and doesn't know about child ViewModels (decoupled design)
-                services.AddTransient<MainViewModel>();
-                services.AddTransient<HomeViewModel>();
-                services.AddTransient<WeatherViewModel>();
-                services.AddTransient<DataViewModel>();
-                services.AddTransient<SettingsViewModel>();
-
-                // Register Views - each View resolves its own ViewModel independently (View-First pattern)
-                services.AddTransient<HomeView>();
-                services.AddTransient<WeatherView>();
-                services.AddTransient<DataView>();
-                services.AddTransient<SettingsView>();
-
-                // Auto-discover and register all ITabView implementations from current assembly
-                services.Register<ITabView>(ServiceLifetime.Transient);
-
-                // Register Services
-                services.AddSingleton<IDataService, DataService>();
-                services.AddSingleton<IDialogService, DialogService>();
-                services.AddSingleton<INavigationService, NavigationService>();
-                services.AddTransient<IWeatherService, WeatherService>();
-                
-                // Register TabViewHandler service for automatic tab discovery and loose coupling
-                services.AddSingleton<ITabViewHandler, TabViewHandler>();
-                
-                // Register MainWindow
-                services.AddTransient<MainWindow>();
-                */
             });
 
             // STEP 2: BuildServiceProvider and assign services - this is the critical step!

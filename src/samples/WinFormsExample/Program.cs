@@ -34,6 +34,14 @@ internal static class Program
             Console.WriteLine(@"\n--- STEP 1: Configuring Services ---");
             var services = new ServiceCollection();
 
+            // Register cache backends before services.Register() so the generated
+            // TryAddSingleton<IDecoratorCache, DefaultDecoratorCache>() does not override
+            // the switchable cache wrapper used by the Caching tab.
+            services.AddMemoryCache();
+            services.AddHybridCache();
+            services.AddSingleton<SwitchableDecoratorCache>();
+            services.AddSingleton<IDecoratorCache>(sp => sp.GetRequiredService<SwitchableDecoratorCache>());
+
             // Auto-discover and register all classes with AutoRegister attribute from current assembly
             // This includes all ITabView implementations, MainForm, and all services decorated with [AutoRegister]
             Console.WriteLine(@"Auto-discovering and registering services with [AutoRegister] attribute...");

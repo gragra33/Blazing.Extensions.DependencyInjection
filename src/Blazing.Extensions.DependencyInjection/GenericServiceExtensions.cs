@@ -151,66 +151,6 @@ public static class GenericServiceExtensions
     }
 
     /// <summary>
-    /// Registers an open generic service with its implementation type derived from the interface.
-    /// Assumes the implementation type has the same name as the interface (without the 'I' prefix).
-    /// 
-    /// Example: IRepository&lt;&gt; -> Repository&lt;&gt;
-    /// 
-    /// Usage:
-    ///   services.AddGenericSingleton(typeof(IRepository&lt;&gt;));
-    /// </summary>
-    /// <param name="services">The service collection</param>
-    /// <param name="genericInterfaceType">The open generic interface type</param>
-    /// <returns>The service collection for chaining</returns>
-    /// <exception cref="InvalidOperationException">Thrown if implementation type cannot be automatically determined</exception>
-    public static IServiceCollection AddGenericSingleton(
-        this IServiceCollection services,
-        Type genericInterfaceType)
-    {
-        ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(genericInterfaceType);
-
-        var implementationType = DeriveImplementationType(genericInterfaceType);
-        return services.AddGenericSingleton(genericInterfaceType, implementationType);
-    }
-
-    /// <summary>
-    /// Registers an open generic transient service with derived implementation type.
-    /// </summary>
-    /// <param name="services">The service collection</param>
-    /// <param name="genericInterfaceType">The open generic interface type</param>
-    /// <returns>The service collection for chaining</returns>
-    /// <exception cref="InvalidOperationException">Thrown if implementation type cannot be automatically determined</exception>
-    public static IServiceCollection AddGenericTransient(
-        this IServiceCollection services,
-        Type genericInterfaceType)
-    {
-        ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(genericInterfaceType);
-
-        var implementationType = DeriveImplementationType(genericInterfaceType);
-        return services.AddGenericTransient(genericInterfaceType, implementationType);
-    }
-
-    /// <summary>
-    /// Registers an open generic scoped service with derived implementation type.
-    /// </summary>
-    /// <param name="services">The service collection</param>
-    /// <param name="genericInterfaceType">The open generic interface type</param>
-    /// <returns>The service collection for chaining</returns>
-    /// <exception cref="InvalidOperationException">Thrown if implementation type cannot be automatically determined</exception>
-    public static IServiceCollection AddGenericScoped(
-        this IServiceCollection services,
-        Type genericInterfaceType)
-    {
-        ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(genericInterfaceType);
-
-        var implementationType = DeriveImplementationType(genericInterfaceType);
-        return services.AddGenericScoped(genericInterfaceType, implementationType);
-    }
-
-    /// <summary>
     /// Validates that a type pair represents valid open generic types for registration.
     /// </summary>
     /// <param name="interfaceType">The interface type to validate</param>
@@ -239,43 +179,5 @@ public static class GenericServiceExtensions
                 $"Generic argument count mismatch: {interfaceType.Name} has {interfaceGenericArgs.Length} arguments, " +
                 $"but {implementationType.Name} has {implementationGenericArgs.Length} arguments");
         }
-    }
-
-    /// <summary>
-    /// Derives an implementation type from an interface type by removing the 'I' prefix.
-    /// For example: IRepository&lt;&gt; -> Repository&lt;&gt;
-    /// </summary>
-    /// <param name="interfaceType">The interface type</param>
-    /// <returns>The derived implementation type</returns>
-    /// <exception cref="InvalidOperationException">Thrown if implementation type cannot be found</exception>
-    private static Type DeriveImplementationType(Type interfaceType)
-    {
-        if (!interfaceType.IsInterface || !interfaceType.IsGenericTypeDefinition)
-        {
-            throw new InvalidOperationException(
-                $"Cannot automatically derive implementation type from '{interfaceType.Name}'. " +
-                "Please provide both interface and implementation types explicitly.");
-        }
-
-        var interfaceName = interfaceType.Name;
-        if (!interfaceName.StartsWith('I') || interfaceName.Length < 2)
-        {
-            throw new InvalidOperationException(
-                $"Cannot derive implementation type from '{interfaceName}': interface name must start with 'I'");
-        }
-
-        var implementationTypeName = interfaceName.Substring(1); // Remove 'I' prefix
-        var implementationType = interfaceType.Assembly.GetType(
-            interfaceType.Namespace + "." + implementationTypeName,
-            throwOnError: false);
-
-        if (implementationType == null)
-        {
-            throw new InvalidOperationException(
-                $"Could not find implementation type '{implementationTypeName}' in namespace '{interfaceType.Namespace}'. " +
-                "Please register the generic service with both interface and implementation types explicitly.");
-        }
-
-        return implementationType;
     }
 }

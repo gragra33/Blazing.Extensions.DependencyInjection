@@ -31,11 +31,11 @@ public sealed partial class TenantCacheInitializer : IAsyncInitializable
     /// <remarks>
     /// Depends on validation to ensure all tenants are valid before caching.
     /// </remarks>
-    public IEnumerable<Type> DependsOn => new[]
-    {
+    public IEnumerable<Type> DependsOn =>
+    [
         typeof(TenantMigrationService),
         typeof(TenantValidationService)
-    };
+    ];
 
     /// <inheritdoc/>
     public async Task InitializeAsync(IServiceProvider serviceProvider)

@@ -9,3 +9,6 @@ global using Microsoft.AspNetCore.Components.Web;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using BlazorServerExample.Services;
+global using Blazing.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Caching.Hybrid;
+global using Microsoft.Extensions.Caching.Memory;

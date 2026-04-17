@@ -8,10 +8,9 @@ namespace MultiTenantExample.Client.Shared;
 /// </summary>
 public partial class NavBar : ComponentBase, IDisposable
 {
-    [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
-    [Inject] private NavigationManager Navigation { get; set; } = default!;
+    [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
 
-    private bool isMenuOpen = false;
+    private bool isMenuOpen;
     private DotNetObjectReference<NavBar>? dotNetRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

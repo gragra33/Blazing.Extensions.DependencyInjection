@@ -1,5 +1,7 @@
 global using System;
+global using System.Threading;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Caching.Memory;
 global using Blazing.Extensions.DependencyInjection;
 global using ConsoleExample.Examples;
 global using ConsoleExample.Helpers;

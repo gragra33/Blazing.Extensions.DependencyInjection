@@ -4,17 +4,17 @@ A modern, flexible WPF ToggleSwitch control inspired by Windows 10/11 design pat
 
 ## Table of Contents
 
--   [Overview](#overview)
--   [Features](#features)
--   [Installation](#installation)
--   [Quick Start](#quick-start)
--   [Basic Usage](#basic-usage)
--   [Advanced Usage](#advanced-usage)
--   [Properties Reference](#properties-reference)
--   [Styling and Theming](#styling-and-theming)
--   [Examples](#examples)
--   [Architecture](#architecture)
--   [Credits](#credits)
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Basic Usage](#basic-usage)
+- [Advanced Usage](#advanced-usage)
+- [Properties Reference](#properties-reference)
+- [Styling and Theming](#styling-and-theming)
+- [Examples](#examples)
+- [Architecture](#architecture)
+- [Credits](#credits)
 
 ## Overview
 
@@ -26,15 +26,15 @@ This control is inspired by the original CodeProject article "[Flexible WPF Togg
 
 ## Features
 
--   ✅ **Modern Design**: Sleek toggle switch control for contemporary WPF applications
--   ✅ **Highly Customizable**: Extensive styling options for colors, text, positioning, and animations
--   ✅ **Flexible Layout**: Position header content and switch elements in any arrangement
--   ✅ **Data Binding**: Full support for WPF data binding with dependency properties
--   ✅ **Smooth Animations**: Built-in animations for state changes and hover effects
--   ✅ **Accessibility**: Proper keyboard navigation and screen reader support
--   ✅ **Lookless Control**: Complete template customization capability
--   ✅ **SharedSizeGroup**: Consistent alignment across multiple controls
--   ✅ **Well Documented**: Comprehensive XML documentation and examples
+- ✅ **Modern Design**: Sleek toggle switch control for contemporary WPF applications
+- ✅ **Highly Customizable**: Extensive styling options for colors, text, positioning, and animations
+- ✅ **Flexible Layout**: Position header content and switch elements in any arrangement
+- ✅ **Data Binding**: Full support for WPF data binding with dependency properties
+- ✅ **Smooth Animations**: Built-in animations for state changes and hover effects
+- ✅ **Accessibility**: Proper keyboard navigation and screen reader support
+- ✅ **Lookless Control**: Complete template customization capability
+- ✅ **SharedSizeGroup**: Consistent alignment across multiple controls
+- ✅ **Well Documented**: Comprehensive XML documentation and examples
 
 ## Installation
 
@@ -50,8 +50,8 @@ Add a project reference to include the ToggleSwitch control:
 
 ### Requirements
 
--   .NET 8.0 or later
--   WPF application target (`UseWPF` enabled)
+- .NET 8.0 or later
+- WPF application target (`UseWPF` enabled)
 
 ## Quick Start
 
@@ -401,9 +401,9 @@ ToggleSwitch (extends ToggleButton)
 
 ### Key Classes
 
--   **`ToggleSwitch`**: Main control class extending `ToggleButton`
--   **`ToggleSwitchOffsetConverter`**: Value converter for switch thumb positioning
--   **`DependencyObjectExtension`**: Extension methods for visual tree navigation
+- **`ToggleSwitch`**: Main control class extending `ToggleButton`
+- **`ToggleSwitchOffsetConverter`**: Value converter for switch thumb positioning
+- **`DependencyObjectExtension`**: Extension methods for visual tree navigation
 
 ### Files Structure
 
@@ -429,19 +429,19 @@ Blazing.ToggleSwitch.Wpf/
 
 This control is inspired by and builds upon the excellent work from:
 
--   **Original Article**: "[Flexible WPF ToggleSwitch Lookless Control in C# & VB](https://www.codeproject.com/articles/WPF-ToggleSwitch-Control)" by Graeme Grant
--   **Microsoft Design Guidelines**: Windows 10/11 toggle switch patterns
--   **WPF Community**: Best practices and patterns from the WPF development community
+- **Original Article**: "[Flexible WPF ToggleSwitch Lookless Control in C# & VB](https://www.codeproject.com/articles/WPF-ToggleSwitch-Control)" by Graeme Grant
+- **Microsoft Design Guidelines**: Windows 10/11 toggle switch patterns
+- **WPF Community**: Best practices and patterns from the WPF development community
 
 ### Enhancements in This Version
 
--   Comprehensive XML documentation
--   Modern C# language features and patterns
--   Enhanced property system with better defaults
--   Improved performance and memory efficiency
--   Extended customization options
--   Better accessibility support
--   Cleaner architecture with separation of concerns
+- Comprehensive XML documentation
+- Modern C# language features and patterns
+- Enhanced property system with better defaults
+- Improved performance and memory efficiency
+- Extended customization options
+- Better accessibility support
+- Cleaner architecture with separation of concerns
 
 ## Contributing
 
@@ -449,7 +449,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests to
 
 ## License
 
-[Specify your license here]
+This project is licensed under the MIT License - see the [LICENSE](../../../LICENSE) file for details.
 
 ---
 

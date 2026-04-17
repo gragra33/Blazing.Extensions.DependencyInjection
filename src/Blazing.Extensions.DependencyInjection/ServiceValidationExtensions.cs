@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Blazing.Extensions.DependencyInjection;
 
@@ -71,6 +72,8 @@ public static class ServiceValidationExtensions
     /// </summary>
     /// <param name="services">The service collection to validate</param>
     /// <returns>Enumerable of circular dependency info</returns>
+    [RequiresUnreferencedCode("ValidateCircularDependencies uses reflection to inspect constructor parameters.")]
+    [RequiresDynamicCode("ValidateCircularDependencies uses reflection to inspect constructor parameters.")]
     public static IEnumerable<ServiceCircularDependencyInfo> ValidateCircularDependencies(
         this IServiceCollection services)
     {
@@ -110,6 +113,8 @@ public static class ServiceValidationExtensions
     /// </summary>
     /// <param name="services">The service collection to validate</param>
     /// <returns>Enumerable of lifetime validation errors</returns>
+    [RequiresUnreferencedCode("ValidateLifetimeCompatibility uses reflection to inspect constructor parameters.")]
+    [RequiresDynamicCode("ValidateLifetimeCompatibility uses reflection to inspect constructor parameters.")]
     public static IEnumerable<ServiceLifetimeValidationError> ValidateLifetimeCompatibility(
         this IServiceCollection services)
     {
@@ -186,6 +191,8 @@ public static class ServiceValidationExtensions
     /// </summary>
     /// <param name="services">The service collection</param>
     /// <returns>Complete dependency graph</returns>
+    [RequiresUnreferencedCode("GetServiceDependencyGraph uses reflection to inspect constructor parameters.")]
+    [RequiresDynamicCode("GetServiceDependencyGraph uses reflection to inspect constructor parameters.")]
     public static ServiceDependencyGraph GetServiceDependencyGraph(
         this IServiceCollection services)
     {
@@ -247,6 +254,8 @@ public static class ServiceValidationExtensions
     /// </summary>
     /// <param name="services">The service collection</param>
     /// <returns>Diagnostic information</returns>
+    [RequiresUnreferencedCode("GetDiagnostics uses reflection to inspect constructor parameters.")]
+    [RequiresDynamicCode("GetDiagnostics uses reflection to inspect constructor parameters.")]
     public static ServiceCollectionDiagnostics GetDiagnostics(
         this IServiceCollection services)
     {
@@ -324,6 +333,8 @@ public static class ServiceValidationExtensions
     /// </summary>
     /// <param name="services">The service collection to validate</param>
     /// <exception cref="InvalidOperationException">Thrown if validation fails</exception>
+    [RequiresUnreferencedCode("ThrowIfInvalid uses reflection to inspect constructor parameters.")]
+    [RequiresDynamicCode("ThrowIfInvalid uses reflection to inspect constructor parameters.")]
     public static void ThrowIfInvalid(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -333,7 +344,7 @@ public static class ServiceValidationExtensions
         {
             var message = string.Join(
                 Environment.NewLine,
-                violations.Select(v => $"  • {v.ErrorMessage}"));
+                violations.Select(v => $"  ï¿½ {v.ErrorMessage}"));
             throw new InvalidOperationException(
                 $"Service collection validation failed:{Environment.NewLine}{message}");
         }
@@ -343,7 +354,7 @@ public static class ServiceValidationExtensions
         {
             var message = string.Join(
                 Environment.NewLine,
-                cycles.Select(c => $"  • {c.Description}"));
+                cycles.Select(c => $"  ï¿½ {c.Description}"));
             throw new InvalidOperationException(
                 $"Circular dependencies detected:{Environment.NewLine}{message}");
         }
@@ -351,6 +362,8 @@ public static class ServiceValidationExtensions
 
     // Private helper methods
 
+    [RequiresUnreferencedCode("BuildDependencyGraph uses reflection to inspect constructor parameters.")]
+    [RequiresDynamicCode("BuildDependencyGraph uses reflection to inspect constructor parameters.")]
     private static Dictionary<Type, List<Type>> BuildDependencyGraph(IServiceCollection services)
     {
         var graph = new Dictionary<Type, List<Type>>();

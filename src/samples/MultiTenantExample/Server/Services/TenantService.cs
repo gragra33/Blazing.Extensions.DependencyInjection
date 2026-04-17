@@ -25,7 +25,7 @@ public sealed partial class TenantService : ITenantService
         // Initialize with sample tenants for demonstration
         _tenants = new Dictionary<string, Tenant>(StringComparer.OrdinalIgnoreCase)
         {
-            ["tenant-a"] = new Tenant
+            ["tenant-a"] = new()
             {
                 Id = "tenant-a",
                 Name = "Contoso Corporation",
@@ -38,7 +38,7 @@ public sealed partial class TenantService : ITenantService
                     ["StorageQuotaGB"] = "50"
                 }
             },
-            ["tenant-b"] = new Tenant
+            ["tenant-b"] = new()
             {
                 Id = "tenant-b",
                 Name = "Fabrikam Industries",
@@ -51,7 +51,7 @@ public sealed partial class TenantService : ITenantService
                     ["StorageQuotaGB"] = "25"
                 }
             },
-            ["tenant-c"] = new Tenant
+            ["tenant-c"] = new()
             {
                 Id = "tenant-c",
                 Name = "Adventure Works",

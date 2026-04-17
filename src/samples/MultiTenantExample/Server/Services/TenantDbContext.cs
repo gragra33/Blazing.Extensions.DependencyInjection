@@ -26,8 +26,8 @@ public sealed partial class TenantDbContext : ITenantDbContext
         _tenantId = tenantId ?? throw new ArgumentNullException(nameof(tenantId));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        _orders = new List<Order>();
-        _products = new List<Product>();
+        _orders = [];
+        _products = [];
 
         InitializeSampleData();
 
@@ -147,8 +147,8 @@ public sealed partial class TenantDbContext : ITenantDbContext
                 TotalAmount = _products[0].Price,
                 Status = OrderStatus.Processing,
                 CreatedAt = DateTime.UtcNow.AddDays(-2),
-                Items = new List<OrderItem>
-                {
+                Items =
+                [
                     new()
                     {
                         Id = 1,
@@ -158,7 +158,7 @@ public sealed partial class TenantDbContext : ITenantDbContext
                         Quantity = 1,
                         UnitPrice = _products[0].Price
                     }
-                }
+                ]
             });
         }
     }

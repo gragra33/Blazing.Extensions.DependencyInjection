@@ -8,7 +8,7 @@ namespace MultiTenantExample.Client.Services;
 /// Registered using AutoRegister attribute for automatic discovery.
 /// Changed to Scoped to match HttpClient's lifetime in Blazor WASM.
 /// </summary>
-[AutoRegister(ServiceLifetime.Scoped)]
+[AutoRegister(ServiceLifetime.Scoped, LocalOnly = true)]
 public sealed class TenantApiService
 {
     private readonly HttpClient _httpClient;
