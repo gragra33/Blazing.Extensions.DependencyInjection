@@ -56,35 +56,36 @@ public static class AsyncInitializationExtensions
         ArgumentNullException.ThrowIfNull(serviceProvider);
 
         var allServices = serviceProvider.GetServices<IAsyncInitializable>().ToList();
-        var initialized = new HashSet<Type>();
-        var initializing = new HashSet<Type>();
+        // Track by instance so multiple registrations of the same concrete type are all initialized.
+        var initializedInstances = new HashSet<IAsyncInitializable>(ReferenceEqualityComparer.Instance);
+        // Track by type per call-chain to detect circular dependencies.
+        var initializingTypes = new HashSet<Type>();
 
         async Task InitializeService(IAsyncInitializable service)
         {
-            var serviceType = service.GetType();
-
-            if (initialized.Contains(serviceType))
+            if (initializedInstances.Contains(service))
                 return;
 
-            if (initializing.Contains(serviceType))
+            var serviceType = service.GetType();
+
+            if (initializingTypes.Contains(serviceType))
                 throw new InvalidOperationException($"Circular dependency detected in {serviceType.Name}");
 
-            initializing.Add(serviceType);
+            initializingTypes.Add(serviceType);
 
-            // Initialize dependencies first
+            // Initialize all instances of each dependency type first
             if (service.DependsOn != null)
             {
                 foreach (var depType in service.DependsOn)
                 {
-                    var depService = allServices.FirstOrDefault(s => s.GetType() == depType);
-                    if (depService != null)
+                    foreach (var depService in allServices.Where(s => s.GetType() == depType))
                         await InitializeService(depService).ConfigureAwait(false);
                 }
             }
 
             await service.InitializeAsync(serviceProvider).ConfigureAwait(false);
-            initialized.Add(serviceType);
-            initializing.Remove(serviceType);
+            initializedInstances.Add(service);
+            initializingTypes.Remove(serviceType);
         }
 
         // Sort by priority (higher first) then by dependencies
@@ -110,28 +111,33 @@ public static class AsyncInitializationExtensions
         ArgumentNullException.ThrowIfNull(serviceProvider);
 
         var services = serviceProvider.GetServices<TInterface>().Cast<IAsyncInitializable>().ToList();
-        var initialized = new HashSet<Type>();
+        var initializedInstances = new HashSet<IAsyncInitializable>(ReferenceEqualityComparer.Instance);
+        var initializingTypes = new HashSet<Type>();
 
         async Task InitializeService(IAsyncInitializable service)
         {
-            var serviceType = service.GetType();
-
-            if (initialized.Contains(serviceType))
+            if (initializedInstances.Contains(service))
                 return;
 
-            // Initialize dependencies first
+            var serviceType = service.GetType();
+
+            if (initializingTypes.Contains(serviceType))
+                throw new InvalidOperationException($"Circular dependency detected in {serviceType.Name}");
+
+            initializingTypes.Add(serviceType);
+
             if (service.DependsOn != null)
             {
                 foreach (var depType in service.DependsOn)
                 {
-                    var depService = services.FirstOrDefault(s => s.GetType() == depType);
-                    if (depService != null)
+                    foreach (var depService in services.Where(s => s.GetType() == depType))
                         await InitializeService(depService).ConfigureAwait(false);
                 }
             }
 
             await service.InitializeAsync(serviceProvider).ConfigureAwait(false);
-            initialized.Add(serviceType);
+            initializedInstances.Add(service);
+            initializingTypes.Remove(serviceType);
         }
 
         // Sort by priority (higher first)
@@ -252,22 +258,14 @@ public class InitializationStep
 /// <summary>
 /// Internal implementation of IAsyncInitializable for startup actions.
 /// </summary>
-internal sealed class StartupAction : IAsyncInitializable
+internal sealed class StartupAction(Func<IServiceProvider, Task> action, int priority) : IAsyncInitializable
 {
-    private readonly Func<IServiceProvider, Task> _action;
-    private readonly int _priority;
+    public int InitializationPriority { get; } = priority;
 
-    public int InitializationPriority => _priority;
     public IEnumerable<Type>? DependsOn => null;
-
-    public StartupAction(Func<IServiceProvider, Task> action, int priority)
-    {
-        _action = action;
-        _priority = priority;
-    }
 
     public Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        return _action(serviceProvider);
+        return action(serviceProvider);
     }
 }

@@ -20,6 +20,21 @@ public sealed class AutoRegisterAttribute : Attribute
     public Type? ServiceType { get; }
 
     /// <summary>
+    /// When set, registers the service as a keyed service using <c>AddKeyed{Lifetime}</c> instead of <c>Add{Lifetime}</c>.
+    /// Accepts any compile-time constant: <see langword="string"/>, <see langword="int"/>, or an enum value.
+    /// </summary>
+    public object? Key { get; init; }
+
+    /// <summary>
+    /// When <see langword="true"/>, the service is only registered in the assembly that declares it.
+    /// External assemblies that scan references (e.g. a Blazor Server host that references a
+    /// WASM Client project) will skip this type during auto-discovery.
+    /// Use this for services that depend on runtime infrastructure that is not present in the
+    /// consuming host, such as <see cref="System.Net.Http.HttpClient"/> in a WASM client.
+    /// </summary>
+    public bool LocalOnly { get; init; }
+
+    /// <summary>
     /// Initializes a new instance of the AutoRegisterAttribute with the default Transient lifetime.
     /// </summary>
     public AutoRegisterAttribute() : this(ServiceLifetime.Transient)

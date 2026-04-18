@@ -5,6 +5,7 @@ namespace WpfExample.Views;
 /// Uses View-First pattern with injected services for weather data retrieval.
 /// Shows complete decoupling - MainViewModel has no knowledge of this View.
 /// </summary>
+[AutoRegister(ServiceLifetime.Transient, typeof(ITabView))]
 public partial class WeatherView : UserControl, ITabView
 {
     private readonly IWeatherService _weatherService;

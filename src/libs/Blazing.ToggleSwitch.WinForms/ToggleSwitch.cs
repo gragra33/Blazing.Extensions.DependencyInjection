@@ -26,7 +26,7 @@ public sealed class ToggleSwitch : Control, ISupportInitialize
     private int _currentStep;
     private bool _initializing;
     private bool _autoSize = true;
-    private Size _switchSize = new Size(44, 20); // Default switch size
+    private Size _switchSize = new(44, 20); // Default switch size
     private bool _showText = true; // Show text labels next to switch
 
     /// <summary>
@@ -273,19 +273,17 @@ public sealed class ToggleSwitch : Control, ISupportInitialize
         if (_showText)
         {
             // Measure text size
-            using (var g = CreateGraphics())
-            {
-                var checkedSize = TextRenderer.MeasureText(g, _checkedText, Font);
-                var uncheckedSize = TextRenderer.MeasureText(g, _uncheckedText, Font);
-                var maxTextWidth = Math.Max(checkedSize.Width, uncheckedSize.Width);
-                var maxTextHeight = Math.Max(checkedSize.Height, uncheckedSize.Height);
+            using var g = CreateGraphics();
+            var checkedSize = TextRenderer.MeasureText(g, _checkedText, Font);
+            var uncheckedSize = TextRenderer.MeasureText(g, _uncheckedText, Font);
+            var maxTextWidth = Math.Max(checkedSize.Width, uncheckedSize.Width);
+            var maxTextHeight = Math.Max(checkedSize.Height, uncheckedSize.Height);
                 
-                // Total width = switch width + padding + text width
-                // Total height = max of switch height and text height
-                totalSize = new Size(
-                    _switchSize.Width + 8 + maxTextWidth, // 8px padding between switch and text
-                    Math.Max(_switchSize.Height, maxTextHeight));
-            }
+            // Total width = switch width + padding + text width
+            // Total height = max of switch height and text height
+            totalSize = new Size(
+                _switchSize.Width + 8 + maxTextWidth, // 8px padding between switch and text
+                Math.Max(_switchSize.Height, maxTextHeight));
         }
         else
         {
@@ -305,17 +303,15 @@ public sealed class ToggleSwitch : Control, ISupportInitialize
     {
         if (_showText)
         {
-            using (var g = CreateGraphics())
-            {
-                var checkedSize = TextRenderer.MeasureText(g, _checkedText, Font);
-                var uncheckedSize = TextRenderer.MeasureText(g, _uncheckedText, Font);
-                var maxTextWidth = Math.Max(checkedSize.Width, uncheckedSize.Width);
-                var maxTextHeight = Math.Max(checkedSize.Height, uncheckedSize.Height);
+            using var g = CreateGraphics();
+            var checkedSize = TextRenderer.MeasureText(g, _checkedText, Font);
+            var uncheckedSize = TextRenderer.MeasureText(g, _uncheckedText, Font);
+            var maxTextWidth = Math.Max(checkedSize.Width, uncheckedSize.Width);
+            var maxTextHeight = Math.Max(checkedSize.Height, uncheckedSize.Height);
                 
-                return new Size(
-                    _switchSize.Width + 8 + maxTextWidth,
-                    Math.Max(_switchSize.Height, maxTextHeight));
-            }
+            return new Size(
+                _switchSize.Width + 8 + maxTextWidth,
+                Math.Max(_switchSize.Height, maxTextHeight));
         }
         return _switchSize;
     }
@@ -556,10 +552,8 @@ internal static class GraphicsExtensions
             return;
         }
 
-        using (var path = CreateRoundedRectanglePath(rect, cornerRadius))
-        {
-            graphics.FillPath(brush, path);
-        }
+        using var path = CreateRoundedRectanglePath(rect, cornerRadius);
+        graphics.FillPath(brush, path);
     }
 
     /// <summary>
@@ -573,10 +567,8 @@ internal static class GraphicsExtensions
             return;
         }
 
-        using (var path = CreateRoundedRectanglePath(rect, cornerRadius))
-        {
-            graphics.DrawPath(pen, path);
-        }
+        using var path = CreateRoundedRectanglePath(rect, cornerRadius);
+        graphics.DrawPath(pen, path);
     }
 
     private static GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int cornerRadius)

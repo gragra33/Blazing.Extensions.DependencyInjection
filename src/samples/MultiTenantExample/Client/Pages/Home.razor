@@ -113,7 +113,7 @@
 
 @code {
     private Tenant[]? tenants;
-    private bool isLoading = false;
+    private bool isLoading;
     private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
@@ -135,7 +135,7 @@
         try
         {
             var response = await TenantApi.GetAllTenantsAsync();
-            if (response?.Success == true && response.Data != null)
+            if (response is { Success: true, Data: not null })
             {
                 tenants = response.Data.ToArray();
             }

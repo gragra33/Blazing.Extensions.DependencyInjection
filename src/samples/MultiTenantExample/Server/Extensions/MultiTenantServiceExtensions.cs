@@ -14,19 +14,16 @@ public static class MultiTenantServiceExtensions
     /// </summary>
     public static IServiceCollection AddMultiTenantServices(this IServiceCollection services)
     {
-        // 1. Add assembly for AutoRegister scanning
-        services.AddAssembly(typeof(Program).Assembly);
-
-        // 2. AutoRegister - Automatic service discovery and registration
+        // 1. AutoRegister - Automatic service discovery and registration
         // This scans for all [AutoRegister] attributes and registers services automatically
         // Examples: TenantService, TenantMigrationService, TenantValidationService, TenantCacheInitializer
         services.Register();
 
-        // 3. Service Factories - Conditional service creation
+        // 2. Service Factories - Conditional service creation
         // Register TenantDbContextFactory for creating tenant-specific database contexts
         services.AddSingleton<TenantDbContextFactory>();
 
-        // 4. Lazy Services - Deferred initialization for performance
+        // 3. Lazy Services - Deferred initialization for performance
         // Register tenant configurations as lazy singletons (loaded on-demand)
         services.AddLazyKeyedSingleton<TenantConfigurationService>("tenant-a",
             (provider, key) => new TenantConfigurationService(

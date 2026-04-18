@@ -15,15 +15,12 @@ builder.Services.AddScoped(sp => new HttpClient
 // BLAZING.EXTENSIONS.DEPENDENCYINJECTION - Client-side Configuration
 // ========================================================================
 
-// 1. Add assembly for AutoRegister scanning
-builder.Services.AddAssembly(typeof(Program).Assembly);
-
-// 2. AutoRegister - Automatic service discovery and registration
+// 1. AutoRegister - Automatic service discovery and registration
 // This scans for all [AutoRegister] attributes in the client assembly
 // Examples: TenantApiService, TenantStateService
 builder.Services.Register();
 
-// 3. Service Validation - Detect configuration issues at startup
+// 2. Service Validation - Detect configuration issues at startup
 var diagnostics = builder.Services.GetDiagnostics();
 Console.WriteLine("=".PadRight(70, '='));
 Console.WriteLine("MultiTenantExample Client - Service Diagnostics");

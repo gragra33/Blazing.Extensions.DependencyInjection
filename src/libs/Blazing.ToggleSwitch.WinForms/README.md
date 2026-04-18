@@ -45,3 +45,17 @@ toggleSwitch.CheckedChanged += (sender, e) =>
 ## Events
 
 - `CheckedChanged` - Raised when the Checked property changes
+
+---
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues or pull requests to improve the control.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](../../../LICENSE) file for details.
+
+---
+
+_Part of the Blazing.Extensions.DependencyInjection solution - see the [main README](../../../README.md) for the complete solution overview._

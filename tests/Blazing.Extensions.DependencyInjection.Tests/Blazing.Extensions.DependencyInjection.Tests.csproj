@@ -11,6 +11,7 @@
     <!-- All versions managed centrally in Directory.Packages.props -->
     <PackageReference Include="Shouldly" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
@@ -21,6 +22,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +32,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Blazing.Extensions.DependencyInjection\Blazing.Extensions.DependencyInjection.csproj" />
+    <!-- Reference the generator assembly so tests can instantiate generator types AND so the generator runs on the test project -->
+    <ProjectReference Include="..\..\src\Blazing.Extensions.DependencyInjection.SourceGenerators\Blazing.Extensions.DependencyInjection.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="true" />
   </ItemGroup>
 
 </Project>

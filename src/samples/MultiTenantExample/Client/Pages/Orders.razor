@@ -2,7 +2,6 @@
 @using MultiTenantExample.Client.Components
 @inject TenantStateService TenantState
 @inject TenantApiService TenantApi
-@inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 @implements IDisposable
 
@@ -90,7 +89,7 @@
 
 @code {
     private Order[]? orders;
-    private bool isLoading = false;
+    private bool isLoading;
     private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
@@ -140,7 +139,7 @@
         try
         {
             var response = await TenantApi.GetOrdersAsync();
-            if (response?.Success == true && response.Data != null)
+            if (response is { Success: true, Data: not null })
             {
                 orders = response.Data.ToArray();
             }

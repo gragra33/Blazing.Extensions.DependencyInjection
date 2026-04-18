@@ -47,7 +47,7 @@
 </div>
 
 @code {
-    private bool isDropdownOpen = false;
+    private bool isDropdownOpen;
     private Tenant[]? tenants;
 
     protected override async Task OnInitializedAsync()
@@ -61,7 +61,7 @@
         try
         {
             var response = await TenantApi.GetAllTenantsAsync();
-            if (response?.Success == true && response.Data != null)
+            if (response is { Success: true, Data: not null })
             {
                 tenants = response.Data.ToArray();
             }

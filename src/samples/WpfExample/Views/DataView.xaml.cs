@@ -5,6 +5,7 @@ namespace WpfExample.Views;
 /// Implements ITabView for automatic discovery by TabViewHandler.
 /// Shows complete decoupling - MainViewModel has no knowledge of this View.
 /// </summary>
+[AutoRegister(ServiceLifetime.Transient, typeof(ITabView))]
 public partial class DataView : UserControl, ITabView
 {
     /// <inheritdoc/>

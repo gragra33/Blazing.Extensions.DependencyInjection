@@ -24,6 +24,15 @@ This example demonstrates dependency injection in a WinForms application with a 
 - **Data Services**: Mock data operations demonstrating CRUD functionality
 - **Weather Services**: Simulated API calls with async data retrieval
 - **Navigation Services**: Tab-based navigation coordination
+- **Product Catalog Service**: Demonstrates the `[CachingDecorator]` source-generated caching pattern
+
+### Caching Decorator
+
+- **`[CachingDecorator]` attribute**: Source-generated decorator wraps `IProductCatalogService` methods with `IDecoratorCache`
+- **Runtime backend switching**: Toggle between Default, MemoryCache, and HybridCache without restarting
+- **Cache hit/miss tracking**: Live counters showing backend calls vs cache hits
+- **Per-key invalidation**: Invalidate individual cached entries via `IBlazingCacheInvalidator<T>`
+- **`SwitchableDecoratorCache`**: Custom `IDecoratorCache` wrapper registered before `services.Register()` to override the source-generated default
 
 ## Blazing.ToggleSwitch.WinForms Integration
 
@@ -41,14 +50,14 @@ This example showcases the **Blazing.ToggleSwitch.WinForms** control library, wh
 var toggleSwitch = new ToggleSwitch
 {
     CheckedText = "ON",
-    UncheckedText = "OFF", 
+    UncheckedText = "OFF",
     CheckedBackColor = Color.FromArgb(0, 120, 215),
     UncheckedBackColor = Color.Gray,
     SwitchWidth = 60,
     SwitchHeight = 30
 };
 
-toggleSwitch.CheckedChanged += (sender, e) => 
+toggleSwitch.CheckedChanged += (sender, e) =>
 {
     // Handle state change
 };
@@ -57,20 +66,29 @@ toggleSwitch.CheckedChanged += (sender, e) =>
 ## Application Structure
 
 ### Views (UserControls)
+
 - **HomeView**: Welcome screen with application information
 - **WeatherView**: Demonstrates async service calls and data display
 - **DataView**: Shows CRUD operations with list management
 - **SettingsView**: Features multiple ToggleSwitch controls for configuration
+- **CachingView**: Interactive caching demo with runtime backend switching, hit/miss counters, and per-key invalidation
+- **ITabView**: Interface for automatic tab discovery via `[AutoRegister]`
 
 ### Services
-- **IDialogService**: Abstraction for user dialogs and messages
-- **IDataService**: Data operations with async methods
-- **IWeatherService**: Weather data retrieval simulation
-- **INavigationService**: Tab navigation coordination
+
+- **IDialogService** / **DialogService**: Abstraction for user dialogs and messages
+- **IDataService** / **DataService**: Data operations with async methods
+- **IWeatherService** / **WeatherService**: Weather data retrieval simulation
+- **INavigationService** / **NavigationService**: Tab navigation coordination
+- **IProductCatalogService** / **ProductCatalogService**: Product catalog with `[CachingDecorator(seconds: 30)]`
+- **SwitchableDecoratorCache**: Runtime-switchable `IDecoratorCache` wrapper (Default / MemoryCache / HybridCache)
+- **ITabViewHandler** / **TabViewHandler**: Automatic tab discovery and management
+- **TabInfo**: Static tab metadata record
 
 ### Key Components
+
 - **MainForm**: Main application window with TabControl
-- **Program**: Application entry point with DI container setup
+- **Program**: Application entry point — uses `services.Register()` to auto-discover all `[AutoRegister]`-decorated services and `ITabView` implementations
 - **ToggleSwitch**: Custom control for boolean settings
 
 ## Running the Application
@@ -78,16 +96,19 @@ toggleSwitch.CheckedChanged += (sender, e) =>
 1. Build the solution to restore dependencies
 2. Run the WinFormsExample project
 3. Navigate through the tabs to see different features:
-   - **Home**: Overview and basic dialog example
-   - **Weather**: Async data loading demonstration
-   - **Data**: List management with CRUD operations
-   - **Settings**: ToggleSwitch controls and form handling
+    - **Home**: Overview and basic dialog example
+    - **Weather**: Async data loading demonstration
+    - **Data**: List management with CRUD operations
+    - **Settings**: ToggleSwitch controls and form handling
+    - **Caching**: Runtime backend switching, cache hit/miss counters, and per-key invalidation
 
 ## Dependencies
 
-- .NET 8.0+ or .NET 9.0+ (Windows)
+- .NET 8.0, 9.0, or 10.0 (Windows)
 - Blazing.Extensions.DependencyInjection
 - Blazing.ToggleSwitch.WinForms (custom control library)
+- Microsoft.Extensions.Caching.Memory
+- Microsoft.Extensions.Caching.Hybrid
 
 ## Architecture Benefits
 

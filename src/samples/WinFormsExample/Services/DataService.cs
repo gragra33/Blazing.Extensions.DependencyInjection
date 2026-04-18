@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace WinFormsExample.Services;
 
 /// <summary>
@@ -10,17 +8,17 @@ public class DataService : IDataService
 {
     private readonly List<DataItem> _data =
     [
-        new DataItem
+        new()
         {
             Id = 1, Name = "Sample Item 1", Description = "First sample item", CreatedDate = DateTime.Now.AddDays(-5),
             IsActive = true
         },
-        new DataItem
+        new()
         {
             Id = 2, Name = "Sample Item 2", Description = "Second sample item", CreatedDate = DateTime.Now.AddDays(-3),
             IsActive = false
         },
-        new DataItem
+        new()
         {
             Id = 3, Name = "Sample Item 3", Description = "Third sample item", CreatedDate = DateTime.Now.AddDays(-1),
             IsActive = true

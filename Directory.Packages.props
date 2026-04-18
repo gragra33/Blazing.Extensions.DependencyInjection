@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Microsoft.Extensions.DependencyInjection - Use stable v9.0.0 (v10 RC has breaking bugs) -->
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
 
 	  <!-- ASP.NET Core packages with conditions -->
     <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" Condition="'$(TargetFramework)' == 'net8.0'" />
@@ -48,6 +48,27 @@
 
     <!-- SourceLink for debugging -->
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+
+    <!-- Roslyn source generator dependencies (netstandard2.0 generator project) -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" />
+
+    <!-- Roslyn source generator testing (xUnit-based CSharpSourceGeneratorTest<T>) -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing.XUnit" Version="1.1.2" />
+
+    <!-- Pin transitive Roslyn packages to 4.9.2 to avoid NU1608 conflicts with the
+         Microsoft.CodeAnalysis.CSharp.Workspaces 3.8.0 pulled in by the testing package. -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="4.9.2" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.9.2" />
+
+    <!-- Logging abstractions for generated decorator constructors -->
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
+
+    <!-- Caching abstractions and adapters for pluggable IDecoratorCache -->
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.5" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="9.3.0" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.5" />
     
     <!-- CommunityToolkit.Mvvm for WPF MVVM -->
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.3.2" />

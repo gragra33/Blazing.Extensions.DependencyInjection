@@ -53,7 +53,8 @@ public partial class HomeView : UserControl, ITabView
     {
         Console.WriteLine(@"HomeView: ShowInfoButton_Click executed!");
         _dialogService.ShowMessage("This HomeView was resolved via Dependency Injection!\n\n" +
-            "The IDialogService was automatically injected into the constructor.",
+            "The IDialogService was automatically injected into the constructor.\n\n" +
+            "Try the 🗄️ Caching tab to see source-generated caching decorators in action.",
             "Dependency Injection Info");
     }
 
@@ -62,7 +63,12 @@ public partial class HomeView : UserControl, ITabView
         Console.WriteLine(@"HomeView: UpdateWelcomeMessage called");
         if (welcomeLabel != null)
         {
-            welcomeLabel.Text = @"Welcome to the Blazing.Extensions.DependencyInjection Demo!";
+            welcomeLabel.Text = @"Welcome to the Blazing.Extensions.DependencyInjection Demo! Explore the 🗄️ Caching tab for hit/miss tracking and invalidation.";
+        }
+
+        if (benefit4Label != null)
+        {
+            benefit4Label.Text = @"• Caching demo: Use the Caching tab for backend switching, cache hits, and invalidation";
         }
         
         if (lastRefreshedLabel != null)

@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Reflection;
 
 namespace Blazing.Extensions.DependencyInjection;
 
@@ -25,10 +24,6 @@ public static class ServiceExtensions
     // This prevents memory leaks while maintaining the association between instances and their context
     private static readonly ConditionalWeakTable<object, InstanceContext> _instanceContexts = new();
     
-    // Thread-local storage for the current instance being configured
-    // This allows Register methods to access the instance context during configuration
-    private static readonly ThreadLocal<object?> _currentInstance = new();
-
     /// <summary>
     /// Gets the service provider associated with this object instance.
     /// Returns null if no service provider has been configured.
@@ -68,7 +63,7 @@ public static class ServiceExtensions
             }
             else
             {
-                var newContext = new InstanceContext(serviceProvider, []);
+                var newContext = new InstanceContext(serviceProvider);
                 _instanceContexts.AddOrUpdate(instance, newContext);
             }
         }
@@ -94,17 +89,7 @@ public static class ServiceExtensions
         ArgumentNullException.ThrowIfNull(configureServices);
 
         var services = new ServiceCollection();
-        
-        // Set the current instance for thread-local access during service configuration
-        _currentInstance.Value = instance;
-        try
-        {
-            configureServices(services);
-        }
-        finally
-        {
-            _currentInstance.Value = null;
-        }
+        configureServices(services);
         
         var serviceProvider = services.BuildServiceProvider();
         
@@ -116,7 +101,7 @@ public static class ServiceExtensions
         }
         else
         {
-            var newContext = new InstanceContext(serviceProvider, []);
+            var newContext = new InstanceContext(serviceProvider);
             _instanceContexts.AddOrUpdate(instance, newContext);
         }
         
@@ -155,7 +140,7 @@ public static class ServiceExtensions
         }
         else
         {
-            var newContext = new InstanceContext(serviceProvider, []);
+            var newContext = new InstanceContext(serviceProvider);
             _instanceContexts.AddOrUpdate(instance, newContext);
         }
         
@@ -187,7 +172,7 @@ public static class ServiceExtensions
         }
         else
         {
-            var newContext = new InstanceContext(serviceProvider, []);
+            var newContext = new InstanceContext(serviceProvider);
             _instanceContexts.AddOrUpdate(instance, newContext);
         }
         
@@ -239,7 +224,7 @@ public static class ServiceExtensions
         }
         else
         {
-            var newContext = new InstanceContext(serviceProvider, []);
+            var newContext = new InstanceContext(serviceProvider);
             _instanceContexts.AddOrUpdate(instance, newContext);
         }
 
@@ -472,126 +457,5 @@ public static class ServiceExtensions
     public static bool ClearServices(this object instance)
     {
         return _instanceContexts.Remove(instance);
-    }
-
-    /// <summary>
-    /// Adds an assembly to the instance's assembly collection for auto-discovery.
-    /// Multiple calls will add to the existing collection.
-    /// 
-    /// Usage:
-    ///   host.AddAssembly(typeof(MyClass).Assembly)
-    ///       .AddAssembly(typeof(OtherClass).Assembly);
-    /// </summary>
-    /// <typeparam name="T">The type of the instance</typeparam>
-    /// <param name="instance">The object instance</param>
-    /// <param name="assembly">The assembly to add</param>
-    /// <returns>The instance for fluent chaining</returns>
-    public static T AddAssembly<T>(this T instance, Assembly assembly) where T : class
-    {
-        ArgumentNullException.ThrowIfNull(instance);
-        ArgumentNullException.ThrowIfNull(assembly);
-
-        if (_instanceContexts.TryGetValue(instance, out var existingContext))
-        {
-            existingContext.Assemblies.Add(assembly);
-        }
-        else
-        {
-            var assemblies = new HashSet<Assembly> { assembly };
-            var newContext = new InstanceContext(null, assemblies);
-            _instanceContexts.AddOrUpdate(instance, newContext);
-        }
-        
-        return instance;
-    }
-
-    /// <summary>
-    /// Adds multiple assemblies to the instance's assembly collection for auto-discovery.
-    /// Multiple calls will add to the existing collection.
-    /// 
-    /// Usage:
-    ///   host.AddAssemblies(typeof(MyClass).Assembly, typeof(OtherClass).Assembly)
-    ///       .AddAssemblies(typeof(ThirdClass).Assembly);
-    /// </summary>
-    /// <typeparam name="T">The type of the instance</typeparam>
-    /// <param name="instance">The object instance</param>
-    /// <param name="assemblies">The assemblies to add</param>
-    /// <returns>The instance for fluent chaining</returns>
-    public static T AddAssemblies<T>(this T instance, params Assembly[] assemblies) where T : class
-    {
-        ArgumentNullException.ThrowIfNull(instance);
-        ArgumentNullException.ThrowIfNull(assemblies);
-
-        if (_instanceContexts.TryGetValue(instance, out var existingContext))
-        {
-            foreach (var assembly in assemblies)
-            {
-                existingContext.Assemblies.Add(assembly);
-            }
-        }
-        else
-        {
-            var instanceAssemblies = new HashSet<Assembly>();
-            foreach (var assembly in assemblies)
-            {
-                instanceAssemblies.Add(assembly);
-            }
-            var newContext = new InstanceContext(null, instanceAssemblies);
-            _instanceContexts.AddOrUpdate(instance, newContext);
-        }
-        
-        return instance;
-    }
-
-    /// <summary>
-    /// Gets the assemblies associated with this instance for auto-discovery.
-    /// If no assemblies have been added, returns the calling assembly.
-    /// </summary>
-    /// <param name="instance">The object instance</param>
-    /// <returns>The assemblies to scan for auto-discovery</returns>
-    internal static Assembly[] GetAssembliesForDiscovery(this object instance)
-    {
-        if (_instanceContexts.TryGetValue(instance, out var context) && context.Assemblies.Count > 0)
-        {
-            return context.Assemblies.ToArray();
-        }
-
-        // Default to calling assembly if no assemblies specified
-        return [Assembly.GetCallingAssembly()];
-    }
-
-    /// <summary>
-    /// Gets the assemblies for the current instance being configured.
-    /// This is used by Register methods during service configuration.
-    /// </summary>
-    /// <returns>The assemblies to scan for auto-discovery</returns>
-    internal static Assembly[] GetCurrentInstanceAssemblies()
-    {
-        var currentInstance = _currentInstance.Value;
-        if (currentInstance != null)
-        {
-            return currentInstance.GetAssembliesForDiscovery();
-        }
-
-        // Fallback: Use reflection to get the calling assembly 2 levels up
-        // This handles cases where Register() is called directly on ServiceCollection without instance context
-        var stackTrace = new System.Diagnostics.StackTrace();
-        for (int i = 2; i < stackTrace.FrameCount; i++)
-        {
-            var frame = stackTrace.GetFrame(i);
-            var method = frame?.GetMethod();
-            if (method?.DeclaringType?.Assembly != null)
-            {
-                var assembly = method.DeclaringType.Assembly;
-                // Skip our own assemblies to find the actual calling assembly
-                if (!assembly.FullName?.StartsWith("Blazing.Extensions.DependencyInjection", StringComparison.Ordinal) == true)
-                {
-                    return [assembly];
-                }
-            }
-        }
-
-        // Final fallback to calling assembly
-        return [Assembly.GetCallingAssembly()];
     }
 }

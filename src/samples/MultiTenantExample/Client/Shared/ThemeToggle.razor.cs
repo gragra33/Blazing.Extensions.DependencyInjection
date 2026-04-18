@@ -8,7 +8,7 @@ namespace MultiTenantExample.Client.Shared;
 /// </summary>
 public partial class ThemeToggle : ComponentBase
 {
-    [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
+    [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

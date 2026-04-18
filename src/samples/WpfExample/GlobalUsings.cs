@@ -12,3 +12,5 @@ global using CommunityToolkit.Mvvm.Input;
 global using WpfExample.Services;
 global using WpfExample.ViewModels;
 global using WpfExample.Views;
+global using Microsoft.Extensions.Caching.Hybrid;
+global using Microsoft.Extensions.Caching.Memory;

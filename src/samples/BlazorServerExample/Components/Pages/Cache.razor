@@ -1,0 +1,340 @@
+@page "/caching"
+@page "/cache"
+@rendermode InteractiveServer
+@layout MainLayout
+@inject IProductCatalogService ProductCatalog
+@inject SwitchableDecoratorCache SwitchableCache
+@inject IBlazingCacheInvalidator<IProductCatalogService> CacheInvalidator
+@using Blazing.Extensions.DependencyInjection
+
+<PageTitle>Caching Decorator Demo</PageTitle>
+
+<div class="cache-container">
+    <h2>🗄️ Caching Decorator Demo</h2>
+
+    <div class="info-box">
+        <h3>How it works</h3>
+        <ul>
+            <li><strong>[CachingDecorator(seconds: 30)]</strong> on <code>ProductCatalogService</code> — the source generator wraps every method result in <code>IDecoratorCache</code>.</li>
+            <li>The <strong>Backend calls</strong> counter tracks how many times the real service was invoked. A cache hit leaves the counter unchanged.</li>
+            <li>Switch backends at runtime — new entries go into the selected store; old entries stay in their original store and expire naturally.</li>
+        </ul>
+    </div>
+
+    <!-- Backend selector ─────────────────────────────────────────────────── -->
+    <div class="cache-section">
+        <h3>⚙️ Caching Backend (runtime switch — no restart needed)</h3>
+        <div class="backend-row">
+            @foreach (var backend in Enum.GetValues<CacheBackend>())
+            {
+                <button class="btn @(SwitchableCache.CurrentBackend == backend ? "btn-primary" : "btn-secondary")"
+                        @onclick="() => SwitchBackend(backend)">
+                    @BackendLabel(backend)
+                </button>
+            }
+            <span class="badge-active">Active: <strong>@SwitchableCache.CurrentBackend</strong></span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Backend calls (cache misses):</span>
+            <span class="stat-value">@_backendCalls</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Cache hits:</span>
+            <span class="stat-value">@_cacheHits</span>
+        </div>
+    </div>
+
+    <!-- Product ID picker ────────────────────────────────────────────────── -->
+    <div class="cache-section">
+        <h3>🔢 Product ID</h3>
+        <div class="id-picker">
+            @for (int i = 1; i <= 5; i++)
+            {
+                var id = i;
+                <button class="btn @(_selectedId == id ? "btn-primary" : "btn-secondary")"
+                        @onclick="() => _selectedId = id">
+                    #@id
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- Method cards ─────────────────────────────────────────────────────── -->
+    <div class="method-grid">
+
+        <!-- sync: GetName -->
+        <div class="method-card">
+            <div class="method-sig">string <strong>GetName</strong>(int id)</div>
+            <div class="method-tag">sync</div>
+            <button class="btn btn-primary btn-full" @onclick="CallGetName" disabled="@_busy">
+                @if (_busy && _lastOp == "GetName") { <span>⏳ Calling…</span> } else { <span>▶ Call</span> }
+            </button>
+            @if (_getNameResult is not null)
+            {
+                <div class="result-row @(_getNameHit ? "hit" : "miss")">
+                    <span class="result-icon">@(_getNameHit ? "⚡ HIT" : "💾 MISS")</span>
+                    <span class="result-value">@_getNameResult</span>
+                    <span class="result-ms">@_getNameMs ms</span>
+                </div>
+            }
+        </div>
+
+        <!-- async Task<T>: GetNameAsync -->
+        <div class="method-card">
+            <div class="method-sig">Task&lt;string&gt; <strong>GetNameAsync</strong>(int id)</div>
+            <div class="method-tag">Task&lt;T&gt;</div>
+            <button class="btn btn-primary btn-full" @onclick="CallGetNameAsync" disabled="@_busy">
+                @if (_busy && _lastOp == "GetNameAsync") { <span>⏳ Calling…</span> } else { <span>▶ Call</span> }
+            </button>
+            @if (_getNameAsyncResult is not null)
+            {
+                <div class="result-row @(_getNameAsyncHit ? "hit" : "miss")">
+                    <span class="result-icon">@(_getNameAsyncHit ? "⚡ HIT" : "💾 MISS")</span>
+                    <span class="result-value">@_getNameAsyncResult</span>
+                    <span class="result-ms">@_getNameAsyncMs ms</span>
+                </div>
+            }
+        </div>
+
+        <!-- async ValueTask<int>: GetCountAsync -->
+        <div class="method-card">
+            <div class="method-sig">ValueTask&lt;int&gt; <strong>GetCountAsync</strong>(int id)</div>
+            <div class="method-tag">ValueTask&lt;T&gt;</div>
+            <button class="btn btn-primary btn-full" @onclick="CallGetCountAsync" disabled="@_busy">
+                @if (_busy && _lastOp == "GetCountAsync") { <span>⏳ Calling…</span> } else { <span>▶ Call</span> }
+            </button>
+            @if (_getCountResult is not null)
+            {
+                <div class="result-row @(_getCountHit ? "hit" : "miss")">
+                    <span class="result-icon">@(_getCountHit ? "⚡ HIT" : "💾 MISS")</span>
+                    <span class="result-value">stock: @_getCountResult</span>
+                    <span class="result-ms">@_getCountMs ms</span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Per-key invalidation ─────────────────────────────────────────────── -->
+    <div class="cache-section">
+        <h3>🗑️ Per-Key Invalidation  <span class="hint">(selected product #@_selectedId)</span></h3>
+        <div class="button-group">
+            <button class="btn btn-danger" @onclick="() => Invalidate(nameof(IProductCatalogService.GetName))">
+                Invalidate GetName #@_selectedId
+            </button>
+            <button class="btn btn-danger" @onclick="() => Invalidate(nameof(IProductCatalogService.GetNameAsync))">
+                Invalidate GetNameAsync #@_selectedId
+            </button>
+            <button class="btn btn-danger" @onclick="() => Invalidate(nameof(IProductCatalogService.GetCountAsync))">
+                Invalidate GetCountAsync #@_selectedId
+            </button>
+        </div>
+    </div>
+
+    <!-- Activity log ─────────────────────────────────────────────────────── -->
+    <div class="cache-section">
+        <div class="log-header">
+            <h3>📋 Activity Log</h3>
+            <button class="btn btn-secondary btn-sm" @onclick="() => _log.Clear()">Clear</button>
+        </div>
+        @if (_log.Count == 0)
+        {
+            <p class="no-data">No activity yet — call a method above.</p>
+        }
+        else
+        {
+            <div class="log-list">
+                @foreach (var entry in _log.AsEnumerable().Reverse())
+                {
+                    <div class="log-entry @(entry.IsHit ? "hit" : entry.IsInvalidation ? "invalidation" : "miss")">
+                        <span class="log-time">@entry.Time</span>
+                        <span class="log-msg">@entry.Message</span>
+                        @if (entry.ElapsedMs >= 0)
+                        {
+                            <span class="log-ms">@entry.ElapsedMs ms</span>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    // ── state ─────────────────────────────────────────────────────────────
+    private int _selectedId = 1;
+    private bool _busy;
+    private string? _lastOp;
+    private int _backendCalls;
+    private int _cacheHits;
+    private int _observedCalls;
+    private bool _decoratorActive;
+
+    // result per method
+    private string? _getNameResult;
+    private bool _getNameHit;
+    private long _getNameMs;
+    private string? _getNameAsyncResult;
+    private bool _getNameAsyncHit;
+    private long _getNameAsyncMs;
+    private int? _getCountResult;
+    private bool _getCountHit;
+    private long _getCountMs;
+
+    private readonly List<LogEntry> _log = [];
+
+    protected override void OnInitialized()
+    {
+        _decoratorActive = ProductCatalog is IBlazingInvalidatable;
+
+        if (_decoratorActive)
+        {
+            AddLog($"Caching decorator active: {ProductCatalog.GetType().Name}", isInvalidation: true);
+        }
+        else
+        {
+            AddLog(
+                $"Caching decorator not detected on {ProductCatalog.GetType().Name}; using backend-count fallback for hit/miss counters.",
+                isInvalidation: true);
+        }
+    }
+
+    // ── backend switching ─────────────────────────────────────────────────
+    private void SwitchBackend(CacheBackend backend)
+    {
+        SwitchableCache.SwitchTo(backend);
+        AddLog($"Switched cache backend to {backend}", isInvalidation: true);
+    }
+
+    private static string BackendLabel(CacheBackend b) => b switch
+    {
+        CacheBackend.Default    => "Default (ConcurrentDictionary)",
+        CacheBackend.MemoryCache => "MemoryCache (IMemoryCache)",
+        CacheBackend.HybridCache => "HybridCache (L1+L2)",
+        _ => b.ToString()
+    };
+
+    // ── method calls ──────────────────────────────────────────────────────
+    private async Task CallGetName()
+    {
+        _busy = true;
+        _lastOp = "GetName";
+        var beforeBackendCalls = ProductCatalogService.TotalBackendCallCount;
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+
+        try
+        {
+            _getNameResult = await Task.Run(() => ProductCatalog.GetName(_selectedId));
+
+            sw.Stop();
+            var access = SwitchableCache.LastAccess;
+            _getNameMs = sw.ElapsedMilliseconds;
+
+            var (hit, source, backendLabel) = ApplyCounters(access, beforeBackendCalls);
+            _getNameHit = hit;
+
+            AddMethodLog($"GetName(#{_selectedId})", _getNameResult, source, backendLabel, hit, _getNameMs);
+        }
+        finally
+        {
+            _busy = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task CallGetNameAsync()
+    {
+        _busy = true;
+        _lastOp = "GetNameAsync";
+        var beforeBackendCalls = ProductCatalogService.TotalBackendCallCount;
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+
+        try
+        {
+            _getNameAsyncResult = await ProductCatalog.GetNameAsync(_selectedId);
+
+            sw.Stop();
+            var access = SwitchableCache.LastAccess;
+            _getNameAsyncMs = sw.ElapsedMilliseconds;
+
+            var (hit, source, backendLabel) = ApplyCounters(access, beforeBackendCalls);
+            _getNameAsyncHit = hit;
+
+            AddMethodLog($"GetNameAsync(#{_selectedId})", _getNameAsyncResult, source, backendLabel, hit, _getNameAsyncMs);
+        }
+        finally
+        {
+            _busy = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task CallGetCountAsync()
+    {
+        _busy = true;
+        _lastOp = "GetCountAsync";
+        var beforeBackendCalls = ProductCatalogService.TotalBackendCallCount;
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+
+        try
+        {
+            _getCountResult = await ProductCatalog.GetCountAsync(_selectedId);
+
+            sw.Stop();
+            var access = SwitchableCache.LastAccess;
+            _getCountMs = sw.ElapsedMilliseconds;
+
+            var (hit, source, backendLabel) = ApplyCounters(access, beforeBackendCalls);
+            _getCountHit = hit;
+
+            AddMethodLog($"GetCountAsync(#{_selectedId})", $"stock: {_getCountResult}", source, backendLabel, hit, _getCountMs);
+        }
+        finally
+        {
+            _busy = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    // ── per-key invalidation ──────────────────────────────────────────────
+    private async Task Invalidate(string methodName)
+    {
+        await CacheInvalidator.InvalidateAsync(methodName, [_selectedId.ToString()]);
+        AddLog($"Invalidated {methodName}(#{_selectedId}) on {SwitchableCache.CurrentBackend}", isInvalidation: true);
+    }
+
+    // ── log helpers ───────────────────────────────────────────────────────
+    private void AddLog(string message, bool isHit = false, long elapsedMs = -1, bool isInvalidation = false)
+    {
+        _log.Add(new LogEntry(DateTime.Now.ToString("HH:mm:ss.fff"), message, isHit, isInvalidation, elapsedMs));
+        if (_log.Count > 50) _log.RemoveAt(0);
+    }
+
+    private (bool Hit, string Source, string BackendLabel) ApplyCounters(CacheAccessInfo? access, int beforeBackendCalls)
+    {
+        // Preferred path: explicit telemetry from SwitchableDecoratorCache.
+        if (access is not null)
+        {
+            _backendCalls = SwitchableCache.TotalBackendCalls;
+            _cacheHits = SwitchableCache.TotalCacheHits;
+            return (access.Hit, access.Hit ? "CACHE" : "BACKEND", access.Backend.ToString());
+        }
+
+        // Fallback path: infer hit/miss from backend call-count delta when decorator telemetry is unavailable.
+        var afterBackendCalls = ProductCatalogService.TotalBackendCallCount;
+        var hit = afterBackendCalls == beforeBackendCalls;
+        _backendCalls = afterBackendCalls;
+
+        _observedCalls++;
+        _cacheHits = hit ? _cacheHits + 1 : _cacheHits;
+
+        return (hit, hit ? "CACHE (inferred)" : "BACKEND (inferred)", _decoratorActive ? SwitchableCache.CurrentBackend.ToString() : "DecoratorBypassed");
+    }
+
+    private void AddMethodLog(string call, string? value, string source, string backendLabel, bool hit, long elapsedMs)
+    {
+        var message = $"{call} → \"{value}\" [{source}] via {backendLabel}";
+        AddLog(message, isHit: hit, elapsedMs: elapsedMs);
+    }
+
+    private record LogEntry(string Time, string Message, bool IsHit, bool IsInvalidation, long ElapsedMs);
+}
