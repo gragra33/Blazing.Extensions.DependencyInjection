@@ -34,8 +34,7 @@ public class GenericConstrainedServicesExample : IExample
     private ApplicationHost CreateGenericConstrainedHost()
     {
         var host = new ApplicationHost();
-        host.AddAssembly(typeof(Program).Assembly)
-            .ConfigureServices(services =>
+        host.ConfigureServices(services =>
             {
                 ConfigureDataProviders(services);
                 services.Register();

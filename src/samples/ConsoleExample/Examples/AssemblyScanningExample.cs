@@ -37,8 +37,7 @@ public class AssemblyScanningExample : IExample
     private ApplicationHost CreateAssemblyScanningHost()
     {
         var host = new ApplicationHost();
-        host.AddAssembly(typeof(Program).Assembly)
-            .ConfigureServices(services =>
+        host.ConfigureServices(services =>
             {
                 services.Register();
             });

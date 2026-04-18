@@ -15,8 +15,7 @@ public class ExampleRunner
     public ExampleRunner()
     {
         _host = new ApplicationHost();
-        _host.AddAssembly(typeof(Program).Assembly)
-             .ConfigureServices(services =>
+        _host.ConfigureServices(services =>
         {
             // Register all services with AutoRegister attribute, including IExample implementations
             services.Register();

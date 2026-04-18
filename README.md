@@ -1443,7 +1443,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Removed `services.Register<TInterface>(lifetime)` — use `[AutoRegister(lifetime, typeof(TInterface))]` on the implementation class instead
 - Removed `services.Register(Assembly[])` — cross-assembly discovery is now automatic via the source generator
-- Removed `host.AddAssembly()` / `host.AddAssemblies()` — deprecated; cross-assembly discovery is now automatic via the source generator
+- Removed `host.AddAssembly()` / `host.AddAssemblies()` — breaking change; cross-assembly discovery is now automatic via the source generator, so call `services.Register()` directly
 - Removed `services.AddCachingDecorator<T>()` / `services.AddLoggingDecorator<T>()` — use `[CachingDecorator]` / `[LoggingDecorator]` attributes instead
 - Removed single-argument open generic overloads from `GenericServiceExtensions`
 

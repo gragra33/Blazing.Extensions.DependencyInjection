@@ -148,7 +148,6 @@ public sealed class TenantMigrationService : IAsyncInitializable { }
 // In Extensions/MultiTenantServiceExtensions.cs
 public static IServiceCollection AddMultiTenantServices(this IServiceCollection services)
 {
-    services.AddAssembly(typeof(Program).Assembly);
     services.Register();  // Discovers and registers all marked services
     // ...
 }

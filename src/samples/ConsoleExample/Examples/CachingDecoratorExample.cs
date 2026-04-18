@@ -159,8 +159,7 @@ public class CachingDecoratorExample : IExample
     private static async Task RunAsync()
     {
         var host = new ApplicationHost();
-        host.AddAssembly(typeof(CachingDecoratorExample).Assembly)
-            .ConfigureServices(services =>
+        host.ConfigureServices(services =>
             {
                 services.AddMemoryCache();
                 services.AddHybridCache();

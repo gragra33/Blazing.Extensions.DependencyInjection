@@ -6,9 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Add your assembly for scanning with Blazing.Extensions.DependencyInjection
-builder.Services.AddAssembly(typeof(Program).Assembly);
-
 // Register cache backends — must be done BEFORE Register() so TryAddSingleton<IDecoratorCache> inside
 // the generated Register() call does not override the SwitchableDecoratorCache singleton.
 builder.Services.AddMemoryCache();

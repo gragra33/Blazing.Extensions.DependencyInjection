@@ -7,7 +7,6 @@ This example demonstrates dependency injection in a **Blazor Server** applicatio
 ### Core Architecture Patterns
 
 - **`[AutoRegister]` Attribute**: Declarative service registration — `services.Register()` discovers all decorated services automatically, eliminating boilerplate `AddSingleton`/`AddTransient` calls
-- **Assembly Scanning**: `builder.Services.AddAssembly(typeof(Program).Assembly)` registers the assembly for scanning before `Register()` is called
 - **Service Abstraction**: Interfaces for data, weather, and product catalog services injected directly into Razor components via `@inject`
 - **Async Operations**: Async service calls with `await` patterns and Blazor's `OnInitializedAsync` lifecycle hooks
 
@@ -29,7 +28,7 @@ This example demonstrates dependency injection in a **Blazor Server** applicatio
 
 ```
 BlazorServerExample/
-├── Program.cs                           # DI setup with AddAssembly + Register()
+├── Program.cs                           # DI setup with Register()
 ├── Components/
 │   ├── App.razor                        # Root component
 │   ├── Routes.razor                     # Router configuration
@@ -53,12 +52,9 @@ BlazorServerExample/
 
 ## Key Implementation Details
 
-### AutoRegister + Assembly Scanning in Program.cs
+### AutoRegister in Program.cs
 
 ```csharp
-// Register the assembly for scanning
-builder.Services.AddAssembly(typeof(Program).Assembly);
-
 // Register cache backends BEFORE Register() to prevent the source-generated
 // TryAddSingleton<IDecoratorCache, DefaultDecoratorCache> from overriding SwitchableDecoratorCache
 builder.Services.AddMemoryCache();
