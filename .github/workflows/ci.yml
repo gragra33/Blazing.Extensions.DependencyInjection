@@ -39,10 +39,10 @@ jobs:
                 framework: ["net8.0", "net9.0", "net10.0"]
 
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Setup .NET
-              uses: actions/setup-dotnet@v4
+              uses: actions/setup-dotnet@v5
               with:
                   dotnet-version: |
                       8.0.x
@@ -64,7 +64,7 @@ jobs:
                     --logger "trx;LogFileName=test-results-${{ matrix.framework }}.trx"
 
             - name: Upload test results
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v5
               if: always()
               continue-on-error: true
               with:
