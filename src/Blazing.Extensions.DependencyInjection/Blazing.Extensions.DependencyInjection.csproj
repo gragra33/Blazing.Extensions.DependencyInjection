@@ -35,6 +35,11 @@
       Include="..\Blazing.Extensions.DependencyInjection.SourceGenerators\Blazing.Extensions.DependencyInjection.SourceGenerators.csproj"
       OutputItemType="Analyzer"
       ReferenceOutputAssembly="false" />
+    <!-- Explicitly embed the generator DLL in the main package under analyzers/dotnet/cs/ -->
+    <None Include="$(MSBuildThisFileDirectory)..\Blazing.Extensions.DependencyInjection.SourceGenerators\bin\$(Configuration)\netstandard2.0\Blazing.Extensions.DependencyInjection.SourceGenerators.dll"
+          Pack="true"
+          PackagePath="analyzers/dotnet/cs"
+          Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

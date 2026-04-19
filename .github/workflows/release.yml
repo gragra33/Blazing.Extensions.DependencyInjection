@@ -77,8 +77,6 @@ jobs:
               run: |
                   dotnet pack src/Blazing.Extensions.DependencyInjection/Blazing.Extensions.DependencyInjection.csproj \
                     --no-build --configuration Release --output ./artifacts
-                  dotnet pack src/Blazing.Extensions.DependencyInjection.SourceGenerators/Blazing.Extensions.DependencyInjection.SourceGenerators.csproj \
-                    --no-build --configuration Release --output ./artifacts
 
             - name: Create GitHub Release
               if: steps.tag_check.outputs.exists == 'false'
@@ -109,20 +107,4 @@ jobs:
                     --source https://api.nuget.org/v3/index.json \
                     --skip-duplicate
 
-            - name: Push Blazing.Extensions.DependencyInjection.SourceGenerators to NuGet.org
-              if: steps.tag_check.outputs.exists == 'false'
-              run: |
-                  dotnet nuget push \
-                    "./artifacts/Blazing.Extensions.DependencyInjection.SourceGenerators.${{ steps.version.outputs.version }}.nupkg" \
-                    --api-key "$NUGET_API_KEY" \
-                    --source https://api.nuget.org/v3/index.json \
-                    --skip-duplicate
 
-            - name: Push Blazing.Extensions.DependencyInjection.SourceGenerators symbols to NuGet.org
-              if: steps.tag_check.outputs.exists == 'false'
-              run: |
-                  dotnet nuget push \
-                    "./artifacts/Blazing.Extensions.DependencyInjection.SourceGenerators.${{ steps.version.outputs.version }}.snupkg" \
-                    --api-key "$NUGET_API_KEY" \
-                    --source https://api.nuget.org/v3/index.json \
-                    --skip-duplicate

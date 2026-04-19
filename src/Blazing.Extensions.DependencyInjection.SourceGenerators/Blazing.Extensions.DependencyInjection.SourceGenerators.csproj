@@ -7,11 +7,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IsRoslynComponent>true</IsRoslynComponent>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <!-- Do not emit build output into consuming projects -->
+    <!-- This project is embedded as an analyzer in the main package via ProjectReference OutputItemType=Analyzer -->
+    <!-- It must NOT be published as a standalone NuGet package -->
+    <IsPackable>false</IsPackable>
+    <!-- Do not emit build output into consuming projects directly -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <!-- Suppress nuspec dependency groups when packing — source generators have no runtime dependencies -->
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Suppress docs warning for generated code helpers -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
