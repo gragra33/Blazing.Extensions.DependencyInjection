@@ -438,6 +438,10 @@ $RECYCLE.BIN/
 !.gitignore
 !.gitattributes
 !.editorconfig
+!.github/
+!.github/workflows/
+!.github/workflows/*.yml
+!.github/workflows/*.yaml
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
