@@ -10,7 +10,7 @@
     <!-- Do not emit build output into consuming projects -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <!-- Suppress nuspec dependency group for netstandard2.0 — source generators have no runtime deps -->
+    <!-- Suppress nuspec dependency groups when packing — source generators have no runtime dependencies -->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Suppress docs warning for generated code helpers -->
