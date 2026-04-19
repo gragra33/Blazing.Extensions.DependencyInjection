@@ -1,0 +1,44 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/samples/">
+    <Project Path="src/samples/BlazorServerExample/BlazorServerExample.csproj" />
+    <Project Path="src/samples/ConsoleExample/ConsoleExample.csproj" />
+    <Project Path="src/samples/WinFormsExample/WinFormsExample.csproj" />
+    <Project Path="src/samples/WpfExample/WpfExample.csproj" />
+  </Folder>
+  <Folder Name="/samples/libs/">
+    <Project Path="src/libs/Blazing.ToggleSwitch.Blazor/Blazing.ToggleSwitch.Blazor.csproj" />
+    <Project Path="src/libs/Blazing.ToggleSwitch.WinForms/Blazing.ToggleSwitch.WinForms.csproj" />
+    <Project Path="src/libs/Blazing.ToggleSwitch.Wpf/Blazing.ToggleSwitch.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/samples/MultiTenant/">
+    <File Path="src/samples/MultiTenantExample/README.md" />
+    <Project Path="src/samples/MultiTenantExample/Client/MultiTenantExample.Client.csproj" />
+    <Project Path="src/samples/MultiTenantExample/Server/MultiTenantExample.Server.csproj" />
+    <Project Path="src/samples/MultiTenantExample/Shared/MultiTenantExample.Shared.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="cleanbuild.ps1" />
+    <File Path="CODE_OF_CONDUCT.md" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="HISTORY.md" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/samples/">
+    <File Path="src/samples/Directory.Build.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Blazing.Extensions.DependencyInjection.SourceGenerators/Blazing.Extensions.DependencyInjection.SourceGenerators.csproj" />
+    <Project Path="src/Blazing.Extensions.DependencyInjection/Blazing.Extensions.DependencyInjection.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Blazing.Extensions.DependencyInjection.Tests/Blazing.Extensions.DependencyInjection.Tests.csproj" />
+  </Folder>
+</Solution>

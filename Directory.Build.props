@@ -31,11 +31,14 @@
 	  <Copyright>Copyright (c) 2025 Graeme Grant</Copyright>
 	  <Authors>Graeme Grant (@gragra33)</Authors>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/gragra33/Blazing.Extensions.DependencyInjection</PackageProjectUrl>
 
 	  <!-- SourceLink settings -->
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSource>true</IncludeSource>
   </PropertyGroup>
   
   <!-- Note: Individual projects specify their own TargetFramework or TargetFrameworks -->
