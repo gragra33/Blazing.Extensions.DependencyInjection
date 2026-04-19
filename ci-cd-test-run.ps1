@@ -163,7 +163,7 @@ if ($Mode -in @('dry', 'all') -and $hasAct -and $dockerAvailable) {
             $dryRunLines = @($out | Where-Object { $_ -match '\*DRYRUN\* \[[^\]]+\]' })
             if ($dryRunLines.Count -eq 0) {
                 Add-Warning "$($wf.Name) dry-run: no jobs were staged — workflow may have been skipped. Verify trigger ref and branch filter."
-            } elseif ($LASTEXITCODE -eq 0 -or $failed.Count -eq 0) {
+            } elseif ($LASTEXITCODE -eq 0 -and $failed.Count -eq 0) {
                 Write-Pass "$($wf.Name) dry-run succeeded"
             } else {
                 $out | Where-Object { $_ -match '(FAIL|error|warn)' } | ForEach-Object { Write-Host "    $_" -ForegroundColor Yellow }

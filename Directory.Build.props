@@ -30,7 +30,7 @@
 	  <RepositoryType>git</RepositoryType>
 	  <Copyright>Copyright (c) 2025 Graeme Grant</Copyright>
 	  <Authors>Graeme Grant (@gragra33)</Authors>
-	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/gragra33/Blazing.Extensions.DependencyInjection</PackageProjectUrl>
 
 	  <!-- SourceLink settings -->
