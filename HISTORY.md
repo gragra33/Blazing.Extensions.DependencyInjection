@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### V3.0.1 - 19 April 2026
+
+**Bug Fixes:**
+
+- **Missing source generator in NuGet package** — The Roslyn source generator DLL was not included in the published NuGet package. Consumers who installed v3.0.0 from NuGet.org did not receive the compile-time auto-registration code generation. The generator is now correctly embedded under `analyzers/dotnet/cs/` via an explicit `<None Pack="true">` item.
+- **snupkg symbol package rejected by NuGet.org** — The symbol package upload failed with `pdb(s) for a corresponding dll(s) not found` because the generator's separate `.pdb` file was included in the snupkg but NuGet.org only validates PDBs against `lib/` assemblies. Fixed by setting `<DebugType>embedded</DebugType>` on the source generator project, which bakes the PDB into the DLL and produces no standalone `.pdb` file.
+
 ### V3.0.0 - 17 April 2026
 
 **Breaking Changes:**

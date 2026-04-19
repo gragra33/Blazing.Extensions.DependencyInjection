@@ -9,7 +9,7 @@
     <Product>Blazing.Extensions.DependencyInjection</Product>
     <Description>Brings and enhances Microsoft's DI container for any .NET application-WPF, WinForms, Blazor, Console apps, and more. Enterprise-grade features including keyed services, attribute-based auto-registration, lazy initialization, service scoping, open generics, service validation, and async initialization that extend beyond standard Microsoft DI capabilities.</Description>
     <PackageTags>dependency-injection;di;ioc;microsoft-extensions;wpf;winforms;console;blazor;net8;net9;net10;keyed-services;auto-registration;lazy-initialization;service-scoping;open-generics;service-validation;async-initialization;enterprise</PackageTags>
-    <PackageReleaseNotes>Version 2.2.0: Major feature release with 8 enterprise-grade enhancements - Service Scoping with async disposal, Lazy Initialization, Open Generic Types, Service Factories, Service Enumeration &amp; Filtering, Service Decoration patterns, Service Validation &amp; Diagnostics, and Async Initialization with dependency ordering. Includes expanded test coverage (77 tests) and comprehensive documentation updates.</PackageReleaseNotes>
+    <PackageReleaseNotes>Version 3.0.1: Patch release — fixes missing source generator in NuGet package. The Roslyn source generator DLL is now correctly embedded under analyzers/dotnet/cs/ so consumers receive auto-registration code generation when installing from NuGet. Also fixes snupkg symbol package validation by embedding the generator PDB into the DLL (DebugType=embedded) to prevent NuGet.org rejection.</PackageReleaseNotes>
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!-- Generate XML documentation files for package consumers -->

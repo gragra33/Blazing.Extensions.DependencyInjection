@@ -13,6 +13,11 @@
     <!-- Do not emit build output into consuming projects directly -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <!-- Embed PDB inside the DLL — no separate .pdb file is generated.
+         Without this, dotnet pack includes the generator PDB in the .snupkg.
+         NuGet.org snupkg validation only checks lib/ assemblies, not analyzers/,
+         so it rejects the PDB as having no matching DLL and refuses the upload. -->
+    <DebugType>embedded</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Suppress docs warning for generated code helpers -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
