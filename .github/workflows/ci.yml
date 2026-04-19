@@ -50,10 +50,10 @@ jobs:
                       10.0.x
 
             - name: Restore
-              run: dotnet restore tests/Blazing.Extensions.DependencyInjection.Tests/Blazing.Extensions.DependencyInjection.Tests.csproj
+              run: dotnet restore Blazing.Extensions.DependencyInjection.CI.slnx
 
             - name: Build
-              run: dotnet build tests/Blazing.Extensions.DependencyInjection.Tests/Blazing.Extensions.DependencyInjection.Tests.csproj --no-restore --configuration Release -p:GeneratePackageOnBuild=false
+              run: dotnet build Blazing.Extensions.DependencyInjection.CI.slnx --no-restore --configuration Release -p:GeneratePackageOnBuild=false
 
             - name: Test (${{ matrix.framework }})
               run: |
