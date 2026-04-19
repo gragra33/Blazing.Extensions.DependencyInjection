@@ -135,7 +135,22 @@ if ($Mode -in @('dry', 'all') -and $hasAct -and $dockerAvailable) {
         Write-Section "Dry-run $($wf.Name) workflow"
         Push-Location $RepoRoot
         try {
-            $out = act push --workflows $wf.File -n 2>&1
+            $actArgs = @('push', '--workflows', $wf.File, '-n')
+            $eventPath = $null
+
+            # Release workflow is gated on push to main; this act version doesn't
+            # support --ref, so provide an explicit push event payload instead.
+            if ($wf.Name -eq 'Release') {
+                $eventPath = [System.IO.Path]::GetTempFileName()
+                @{
+                    ref = 'refs/heads/main'
+                    repository = @{ default_branch = 'main' }
+                    head_commit = @{ id = 'local-dry-run' }
+                } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $eventPath -Encoding UTF8
+                $actArgs += @('-e', $eventPath)
+            }
+
+            $out = & act @actArgs 2>&1
             $failed = @($out | Where-Object {
                 $_ -match '(FAIL|error)' -and
                 $_ -notmatch 'DRYRUN' -and
@@ -144,13 +159,20 @@ if ($Mode -in @('dry', 'all') -and $hasAct -and $dockerAvailable) {
                 $_ -notmatch 'The system cannot find the file specified'
             })
 
-            if ($LASTEXITCODE -eq 0 -or $failed.Count -eq 0) {
+            # Detect when act ran but no dry-run jobs were staged (workflow likely skipped)
+            $dryRunLines = @($out | Where-Object { $_ -match '\*DRYRUN\* \[[^\]]+\]' })
+            if ($dryRunLines.Count -eq 0) {
+                Add-Warning "$($wf.Name) dry-run: no jobs were staged — workflow may have been skipped. Verify trigger ref and branch filter."
+            } elseif ($LASTEXITCODE -eq 0 -or $failed.Count -eq 0) {
                 Write-Pass "$($wf.Name) dry-run succeeded"
             } else {
                 $out | Where-Object { $_ -match '(FAIL|error|warn)' } | ForEach-Object { Write-Host "    $_" -ForegroundColor Yellow }
                 Add-Error "$($wf.Name) dry-run reported issues"
             }
         } finally {
+            if ($null -ne $eventPath -and (Test-Path -LiteralPath $eventPath)) {
+                Remove-Item -LiteralPath $eventPath -Force -ErrorAction SilentlyContinue
+            }
             Pop-Location
         }
     }
